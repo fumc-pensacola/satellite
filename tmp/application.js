@@ -1,6 +1,7 @@
 (function() {
 
 window.Fumc = Ember.Application.create();
+Fumc.ApplicationAdapter = DS.FixtureAdapter.extend();
 
 // These requires will be appended to this file using grunt-neuter
 
@@ -15,7 +16,7 @@ Ember.Application.initializer({
 	initialize: function (container, application) {
 		// Basic idea of an initializer
 		// Do things like setup injections here
-		
+		Ember.FEATURES['ember-routing-drop-deprecated-action-style'] = true;
 	}
 });
 
@@ -24,13 +25,14 @@ Ember.Application.initializer({
 
 (function() {
 
-Fumc.TodoModalMixin = Ember.Mixin.create({
-	closeModal: function (modal) {
-		var controller = this;
-		
-		controller.transitionToRoute('todos.index');
-		
-	}
+Fumc.FileUploadComponent = Ember.Component.extend({
+  didInsertElement: function () {
+    var component = this;
+    component.get('element').querySelector('input[type=file]').addEventListener('change', function() {
+      var file = this.files[0];
+      component.sendAction('change', file);
+    }, false);
+  }
 });
 
 
@@ -38,11 +40,126 @@ Fumc.TodoModalMixin = Ember.Mixin.create({
 
 (function() {
 
-Fumc.TodoItemComponent = Ember.Component.extend({
+Fumc.Bulletin = DS.Model.extend({
+  date: DS.attr('date'),
+  service: DS.attr('string'),
+  visible: DS.attr('boolean'),
+  file: DS.attr('string')
+});
 
-	classNames: ['item'],	
+Fumc.Bulletin.FIXTURES = [{
+  id: 1,
+  date: moment().startOf('week').subtract(1, 'weeks'),
+  service: 'ICON',
+  visible: true
+}];
 
-	classNameBindings: ['todo.done']
+
+})();
+
+(function() {
+
+Fumc.FileUploadModel = Ember.Object.extend({
+
+  // Name is used for the upload property
+  name: '',
+
+  // {Property} Human readable size of the selected file
+  size: "0 KB",
+
+  // {Property} Raw file size of the selected file
+  rawSize: 0,
+
+  // {Property} Will be an HTML5 File
+  fileToUpload: null,
+
+  // {Property} Will be a $.ajax jqXHR
+  uploadJqXHR: null,
+
+  // {Property} Promise for when a file was uploaded
+  uploadPromise: null,
+
+  // {Property} Upload progress 0-100
+  uploadProgress: null,
+
+  // {Property} If a file is currently being uploaded
+  isUploading: false,
+
+  // {Property} If the file was uploaded successfully
+  didUpload: false,
+
+  init: function() {
+    this._super();
+    Ember.assert("File to upload required on init.", !!this.get('fileToUpload'));
+    this.set('uploadPromise', Ember.Deferred.create());
+  },
+
+  readFile: function() {
+    var self = this;
+    var fileToUpload = this.get('fileToUpload');
+
+    this.set('name', fileToUpload.name);
+    this.set('rawSize', fileToUpload.size);
+    // this.set('size', App.humanReadableFileSize(fileToUpload.size));
+
+  }.on('init'),
+
+  uploadFile: function() {
+    if (this.get('isUploading') || this.get('didUpload') || this.get('didError')) {
+      return this.get('uploadPromise');
+    }
+
+    var fileToUpload = this.get('fileToUpload');
+    var name = this.get('name');
+    var key = "public-uploads/" + (new Date).getTime() + '-' + name;
+    var fd = new FormData();
+    var self = this;
+
+    fd.append('key', key);
+    fd.append('acl', 'public-read-write');
+    fd.append('success_action_status', '201');
+    fd.append('Content-Type', fileToUpload.type);
+    fd.append('file', fileToUpload);
+
+    this.set('isUploading', true);
+
+    $.ajax({
+      url: 'http://s3.amazonaws.com/fumcappfiles',
+      type: 'POST',
+      data: fd,
+      processData: false,
+      contentType: false,
+      xhr: function () {
+        var xhr = $.ajaxSettings.xhr();
+        // set the onprogress event handler
+        xhr.upload.onprogress = function (evt) {
+          self.set('progress', (evt.loaded / evt.total * 100));
+        };
+        return xhr;
+      }
+    }).then(function (data, textStatus, jqXHR) {
+      var value = '';
+      try {
+        value = data.getElementsByTagName('Location')[0].textContent;
+      } catch (e) {}
+      self.set('isUploading', false);
+      self.set('didUpload', true);
+      self.get('uploadPromise').resolve(value);
+    }, function (jqXHR, textStatus, errorThrown) {
+      self.set('isUploading', false);
+      self.set('didError', true);
+      self.get('uploadPromise').reject(errorThrown);
+    });
+
+    return this.get('uploadPromise');
+  },
+
+  showProgressBar: Ember.computed.or('isUploading', 'didUpload'),
+
+  progressStyle: function() {
+    return 'width: %@%'.fmt(this.get('progress'));
+  }.property('progress')
+
 });
 
 
@@ -50,14 +167,20 @@ Fumc.TodoItemComponent = Ember.Component.extend({
 
 (function() {
 
-Fumc.Todo = DS.Model.extend({
-	title: DS.attr('string'),
-	done: DS.attr('boolean'),
+Fumc.AuthenticatedRoute = Ember.Route.extend({
 
-	// Update the database immediately upon checking done
-	doneDidChange: function () {
-		if (this.get('isDirty')) this.save();
-	}.observes('done')
+  beforeModel: function (transition) {
+    if (!this.controllerFor('application').get('token')) {
+      this.redirectToLogin(transition);
+    }
+  },
+
+  redirectToLogin: function (transition) {
+    var loginController = this.controllerFor('login');
+    loginController.set('attemptedTransition', transition);
+    this.transitionTo('login');
+  },
+
 });
 
 
@@ -65,25 +188,9 @@ Fumc.Todo = DS.Model.extend({
 
 (function() {
 
-Fumc.IndexRoute = Ember.Route.extend({
-	model: function (params) {
-		return this.store.find('todo');
-	}
-});
-
-
-})();
-
-(function() {
-
-Fumc.TodosNewRoute = Ember.Route.extend({
+Fumc.BulletinsRoute = Fumc.AuthenticatedRoute.extend({
 	model: function () {
-		return this.store.createRecord('todo');
-	},
-	actions: {
-		error: function () {
-			console.log('error', arguments);
-		}
+		return this.store.find('bulletin');
 	}
 });
 
@@ -92,10 +199,18 @@ Fumc.TodosNewRoute = Ember.Route.extend({
 
 (function() {
 
-Fumc.TodosRoute = Ember.Route.extend({
-	model: function () {
-		return this.store.find('todo');
-	}
+Fumc.ApplicationController = Ember.Controller.extend({
+
+  token: localStorage.token,
+  name: localStorage.name,
+  email: localStorage.email,
+
+  tokenChanged: function() {
+    localStorage.token = this.get('token');
+    localStorage.name = this.get('name');
+    localStorage.email = this.get('email');
+  }.observes('token')
+
 });
 
 
@@ -103,23 +218,79 @@ Fumc.TodosRoute = Ember.Route.extend({
 
 (function() {
 
-Fumc.TodosEditController = Ember.ObjectController.extend(Fumc.TodoModalMixin, {
-	actions: {
-		save: function (modal) {
-			var controller = this,
-				person = this.get('model');
+Fumc.BulletinController = Ember.ObjectController.extend({
 
-			person.save().then(function () {
-				controller.closeModal(modal);
+  editing: false,
+  fileUpload: null,
+
+  init: function () {
+    if (~this.get('currentState.stateName').indexOf('uncommitted')) {
+      this.set('editing', true);
+    }
+  },
+
+  formattedDate: function () {
+    return moment(this.get('date')).format('dddd, MMMM Do YYYY');
+  }.property('date'),
+
+  actions: {
+
+    toggleEditing: function () {
+      this.toggleProperty('editing');
+    },
+
+    save: function () {
+
+      var fileUpload = this.get('fileUpload'),
+          model = this.get('model'),
+          saved = function () {
+            this.set('editing', false);
+          }.bind(this);
+
+      this.set('date', new Date(this.get('date')));
+
+      if (fileUpload) {
+        fileUpload.uploadFile().then(function (url) {
+          this.set('file', url);
+          model.save().then(saved);
+        })
+      } else {
+        model.save().then(saved);
+      }
+    },
+
+    cancel: function () {
+      var bulletin = this.get('model');
+      bulletin.rollback();
+      this.set('editing', false);
+    },
+
+    remove: function () {
+      console.log(this);
+    },
+
+    fileSelected: function (file) {
+      this.set('fileUpload', Fumc.FileUploadModel.create({
+        fileToUpload: file
+      }));
+    }
+  }
+})
+
+
+})();
+
+(function() {
+
+Fumc.BulletinsController = Ember.ArrayController.extend({
+	itemController: 'bulletin',
+	sortProperties: ['date'],
+	sortAscending: false,
+	actions: {
+		newBulletin: function () {
+			var bulletin = this.store.createRecord('bulletin', {
+				date: moment().startOf('week').add(1, 'week')
 			});
-		},
-
-		cancel: function (modal) {
-			var person = this.get('model');
-
-			person.rollback();
-
-			this.closeModal(modal);
 		}
 	}
 });
@@ -129,42 +300,54 @@ Fumc.TodosEditController = Ember.ObjectController.extend(Fumc.TodoModalMixin, {
 
 (function() {
 
-Fumc.TodosNewController = Ember.ObjectController.extend(Fumc.TodoModalMixin, {
-	actions: {
-		save: function (modal) {
-			var controller = this,
-				person = this.get('model');
+Fumc.LoginController = Ember.Controller.extend({
 
-			person.save().then(function () {
-				controller.closeModal(modal);
-			});
-		},
+  needs: ['application'],
+  queryParams: ['access_token'],
+  access_token: null,
+  attemptedTransition: null,
 
-		cancel: function (modal) {
-			var person = this.get('model');
+  token: Ember.computed.alias('controllers.application.token'),
+  name: Ember.computed.alias('controllers.application.name'),
+  email: Ember.computed.alias('controllers.application.email'),
 
-			person.deleteRecord();
+  init: function () {
 
-			this.closeModal(modal);
-		}
-	}
+  },
+
+  actions: {
+    login: function () {
+      options = { scope: 'profile' };
+      amazon.Login.authorize(options, '/#/authenticate');
+    }
+  }
+
 });
 
+Fumc.AuthenticateRoute = Ember.Route.extend({
+  beforeModel: function (transition) {
+    var token = transition.queryParams.access_token;
+    if (token) {
+      Ember.$.post('/authenticate', { access_token: token }).then(function (response) {
+        if (response.success) {
 
+          var loginController = this.controllerFor('login'),
+              attemptedTransition = loginController.get('attemptedTransition');
+          loginController.set('token', response.token);
+          loginController.set('name', response.name);
+          loginController.set('email', response.email);
 
-})();
-
-(function() {
-
-Fumc.TodosController = Ember.ArrayController.extend({
-	actions: {
-		removeDone: function () {
-			var doneTodos = this.filterBy('done');
-			doneTodos.invoke('deleteRecord');
-			doneTodos.invoke('save');
-		}
-	}
-});
+          if (attemptedTransition) {
+            attemptedTransition.retry();
+            loginController.set('attemptedTransition', null);
+          } else {
+            this.transitionTo('index');
+          }
+        }
+      }.bind(this));
+    }
+  }
+})
 
 
 })();
@@ -180,17 +363,10 @@ Fumc.ApplicationView = Ember.View.extend({
 
 (function() {
 
-Fumc.TodosEditView = Ember.View.extend({
-
-	classNames: ['ui', 'modal'],
-
-	didInsertElement: function () {
-		var view = this;
-		this.$().modal('setting', {
-			closable: false
-		}).modal('show');
-	}
-
+Fumc.BulletinsView = Ember.View.extend({
+  didInsertElement: function () {
+    this.$().find('.ui.checkbox').checkbox();
+  }
 });
 
 
@@ -198,8 +374,44 @@ Fumc.TodosEditView = Ember.View.extend({
 
 (function() {
 
-Fumc.TodosNewView = Fumc.TodosEditView.extend({
-	templateName: 'todos/edit',
+Fumc.DateField = Ember.TextField.extend({
+  picker: null,
+
+  updateValue: function() {
+    var date = moment(this.get('date'));
+    if (date.isValid()) {
+      this.set('value', date.format('L'));
+      this.get('picker').setDate(date.format('L'));
+    } else {
+      this.set('value', null);
+    }
+  }.observes('date'),
+
+  updateDate: function() {
+    var date = moment(this.get('value'));
+    if (date.isValid()) {
+      this.set('date', date.toDate());
+    } else {
+      this.set('date', null);
+    }
+  }.observes('value'),
+
+  didInsertElement: function() {
+    var picker = new Pikaday({
+      field: this.$()[0],
+      format: 'MM/DD/YYYY'
+    });
+    this.set('picker', picker);
+    this.updateValue();
+  },
+
+  willDestroyElement: function(){
+    var picker = this.get('picker');
+    if (picker) {
+      picker.destroy();
+    }
+    this.set('picker', null);
+  }
 });
 
 
@@ -208,7 +420,15 @@ Fumc.TodosNewView = Fumc.TodosEditView.extend({
 (function() {
 
 Fumc.ApplicationAdapter = DS.RESTAdapter.extend({
+
 	namespace: 'api',
+
+	headers: function () {
+		return {
+			token: localStorage.token
+		};
+	}.property().volatile(),
+
 	ajaxError: function(jqXHR) {
 		var error = this._super(jqXHR);
 
@@ -282,12 +502,9 @@ Fumc.ApplicationSerializer = DS.RESTSerializer.extend({
 (function() {
 
 Fumc.Router.map(function () {
-	this.resource('todos', function () {
-		this.route('new');
-		this.route('edit', {
-			path: '/:todo_id'
-		});
-	});
+	this.route('login');
+	this.route('authenticate');
+	this.resource('bulletins');
 	this.route('about');
 	this.route('contact');
 	this.route('error404', { path: '*:' });

@@ -1,22 +1,53 @@
 body {
-	
+	font-family: 'Myriad Pro';
 }
 
-.done {
-	background: #FF9999;
-	text-decoration: line-through;
+.hidden {
+	display: none !important;
 }
 
-.todos {
-	list-style: none;
+.slide {
+	-webkit-transition: max-height .3s;
+	transition: max-height .3s;
+	overflow: hidden;
 }
 
-.todos input {
-	margin-bottom: 0px;
+.hidden.slide {
+	max-height: 0 !important;
 }
 
-.todos li {
-	border: 1px solid #EEE;
-	border-radius: 3px;
-	padding: 0px 5px;
+.inline {
+	display: inline-block;
+}
+
+.list .item .content .button {
+	vertical-align: top;
+}
+
+.space-below {
+	margin-bottom: 25px;
+}
+
+.bulletin .editing.row {
+	padding-top: 0;
+	margin: 10px 0;
+	max-height: 200px;
+	cursor: default;
+}
+
+.bulletin.item.editing, .bulletin.item.editing:active {
+	background-color: rgba(0, 0, 0, .02) !important;
+	color: rgba(0, 0, 0, .7);
+}
+
+.bulletin.item .unhide.icon {
+	line-height: 200%;
+}
+
+.ui.buttons .or::before {
+	line-height: 1.75;
+}
+
+.ui.grid .row .right.column {
+	text-align: right;
 }

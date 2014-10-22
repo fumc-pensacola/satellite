@@ -1,5 +1,13 @@
 Fumc.ApplicationAdapter = DS.RESTAdapter.extend({
+
 	namespace: 'api',
+
+	headers: function () {
+		return {
+			token: localStorage.token
+		};
+	}.property().volatile(),
+
 	ajaxError: function(jqXHR) {
 		var error = this._super(jqXHR);
 

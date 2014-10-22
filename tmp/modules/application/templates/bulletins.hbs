@@ -1,0 +1,71 @@
+<h1 class="ui header">Bulletins</h1>
+
+<button class="ui blue button" {{action 'newBulletin'}}>New Bulletin</button>
+
+<div class="ui selection link divided list">
+	{{#each bulletin in controller}}
+		<div {{bind-attr class=":item :bulletin bulletin.editing: editing"}}>
+			<div class="ui grid">
+
+				<a href="#" class="row" {{action 'toggleEditing'}}>
+					<div class="one wide column">
+						{{#if bulletin.visible}}
+							<i class="unhide icon"></i>
+						{{/if}}
+					</div>
+					<div class="twelve wide column">
+						<div class="header">{{bulletin.formattedDate}}</div>
+						{{bulletin.service}}
+					</div>
+					<div class="three wide right column">
+						<button class="ui small red button" {{action 'remove'}}>Delete</button>
+					</div>
+				</a>
+
+				<div {{bind-attr class=":editing :row :slide bulletin.editing::hidden"}}>
+					<div class="sixteen wide column">
+						<form class="ui fluid form">
+							<div class="field">
+								{{file-upload change="fileSelected"}}
+							</div>
+							<div class="two fields">
+								<div class="field">
+									<label>Service</label>
+									<div class="ui left labeled input">
+										{{input value=service placeholder="e.g. ICON"}}
+										{{#if errors.service}}
+											<div class="ui red pointing above label">{{errors.service}}</div>
+										{{/if}}
+									</div>
+								</div>
+								<div class="date field">
+									<label>Service Date</label>
+									<div class="ui left labeled input">
+										{{view Fumc.DateField date=date}}
+										{{#if errors.date}}
+											<div class="ui red pointing above label">{{errors.date}}</div>
+										{{/if}}
+									</div>
+								</div>
+							</div>
+							<div class="field">
+								<div class="ui checkbox">
+									{{input type="checkbox" checked=visible}}
+									<label>Publish to app/website</label>
+								</div>
+							</div>
+							<div class="ui buttons">
+								<button class="ui button" {{action 'cancel'}}>Cancel</button>
+								<div class="or"></div>
+								<button class="ui green button" {{action 'save'}}>Save</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	{{/each}}
+</div>
+
+{{outlet}}

@@ -1,36 +1,38 @@
 {
-	"name": "fumc",
-	"version": "0.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"start": "grunt server"
-	},
-	"repository": {
-		"type": "git",
-		"url": "ssh://git@bitbucket.org/"
-	},
-	"author": "Author Name <email@email.com>",
-	"dependencies": {
-		"express": "~3.4.4",
-		"orm": "~2.1.3",
-		"mysql": "~2.0.0-alpha9",
-		"natural": "~0.1.24"
-	},
-	"devDependencies": {
-		"grunt": "~0.4.4",
-		"grunt-contrib-clean": "~0.5.0",
-		"grunt-contrib-compass": "~0.5.0",
-		"grunt-contrib-concat": "~0.4.0",
-		"grunt-contrib-copy": "~0.5.0",
-		"grunt-contrib-cssmin": "~0.9.0",
-		"grunt-contrib-less": "~0.11.0",
-		"grunt-contrib-uglify": "~0.4.0",
-		"grunt-ember-templates": "~0.4.17",
-		"grunt-express": "~1.2.1",
-		"grunt-neuter": "~0.6.0",
-		"grunt-usemin": "~2.1.1",
-		"load-grunt-config": "~0.8.0",
-		"sqlite3": "~2.2.3"
-	}
+  "name": "fumc",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "grunt server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@bitbucket.org/"
+  },
+  "author": "Author Name <email@email.com>",
+  "dependencies": {
+    "express": "~3.4.4",
+    "orm": "~2.1.3",
+    "mysql": "~2.0.1",
+    "natural": "~0.1.24",
+    "sequelize": "~2.0.0-rc1",
+    "pg": "~3.5.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-compass": "~0.5.0",
+    "grunt-contrib-concat": "~0.4.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-cssmin": "~0.9.0",
+    "grunt-contrib-less": "~0.11.0",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-ember-templates": "~0.4.17",
+    "grunt-express": "~1.2.1",
+    "grunt-neuter": "~0.6.0",
+    "grunt-usemin": "~2.1.1",
+    "load-grunt-config": "~0.8.0",
+    "sqlite3": "~2.2.3"
+  }
 }

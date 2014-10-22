@@ -1,10 +1,7 @@
 Fumc.Router.map(function () {
-	this.resource('todos', function () {
-		this.route('new');
-		this.route('edit', {
-			path: '/:todo_id'
-		});
-	});
+	this.route('login');
+	this.route('authenticate');
+	this.resource('bulletins');
 	this.route('about');
 	this.route('contact');
 	this.route('error404', { path: '*:' });

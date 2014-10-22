@@ -1,4 +1,5 @@
 window.Fumc = Ember.Application.create();
+Fumc.ApplicationAdapter = DS.FixtureAdapter.extend();
 
 // These requires will be appended to this file using grunt-neuter
 require('./initializers/*');
