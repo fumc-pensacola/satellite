@@ -7,8 +7,6 @@ Fumc.AuthenticatedRoute = Ember.Route.extend({
   },
 
   redirectToLogin: function (transition) {
-    alert('You must log in!');
-
     var loginController = this.controllerFor('login');
     loginController.set('attemptedTransition', transition);
     this.transitionTo('login');

@@ -36,11 +36,9 @@ Fumc.AuthenticateRoute = Ember.Route.extend({
           loginController.set('email', response.email);
 
           if (attemptedTransition) {
-            console.log('Retrying transition');
             attemptedTransition.retry();
             loginController.set('attemptedTransition', null);
           } else {
-            console.log('Transitioning to index');
             this.transitionTo('index');
           }
         }

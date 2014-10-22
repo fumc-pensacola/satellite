@@ -3,7 +3,6 @@ Fumc.ApplicationAdapter = DS.RESTAdapter.extend({
 	namespace: 'api',
 
 	headers: function () {
-		console.log(localStorage.token);
 		return {
 			token: localStorage.token
 		};
