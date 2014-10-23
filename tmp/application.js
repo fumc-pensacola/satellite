@@ -110,34 +110,21 @@ Fumc.FileUploadModel = Ember.Object.extend({
     }
 
     var fileToUpload = this.get('fileToUpload');
-    var name = this.get('name');
-    var key = "public-uploads/" + (new Date).getTime() + '-' + name;
-    var fd = new FormData();
     var self = this;
-
-    fd.append('key', key);
-    fd.append('acl', 'public-read-write');
-    fd.append('success_action_status', '201');
-    fd.append('Content-Type', fileToUpload.type);
-    fd.append('file', fileToUpload);
 
     this.set('isUploading', true);
 
-    $.ajax({
-      url: 'http://s3.amazonaws.com/fumcappfiles',
-      type: 'POST',
-      data: fd,
-      processData: false,
-      contentType: false,
-      xhr: function () {
-        var xhr = $.ajaxSettings.xhr();
-        // set the onprogress event handler
-        xhr.upload.onprogress = function (evt) {
-          self.set('progress', (evt.loaded / evt.total * 100));
-        };
-        return xhr;
+    Fumc.s3.putObject({
+      Key: this.get('name'),
+      ContentType: fileToUpload.type,
+      Body: fileToUpload
+    }, function (err, data) {
+      if (err) {
+        self.set('isUploading', false);
+        self.set('didError', true);
+        self.get('uploadPromise').reject(err);
       }
-    }).then(function (data, textStatus, jqXHR) {
+
       var value = '';
       try {
         value = data.getElementsByTagName('Location')[0].textContent;
@@ -145,10 +132,6 @@ Fumc.FileUploadModel = Ember.Object.extend({
       self.set('isUploading', false);
       self.set('didUpload', true);
       self.get('uploadPromise').resolve(value);
-    }, function (jqXHR, textStatus, errorThrown) {
-      self.set('isUploading', false);
-      self.set('didError', true);
-      self.get('uploadPromise').reject(errorThrown);
     });
 
     return this.get('uploadPromise');
@@ -181,6 +164,14 @@ Fumc.AuthenticatedRoute = Ember.Route.extend({
     this.transitionTo('login');
   },
 
+  actions: {
+    error: function (error, transition) {
+      if (error && error.status === 401) { // Invalid token, probably expired
+        this.redirectToLogin(transition);
+      }
+    }
+  }
+
 });
 
 
@@ -205,11 +196,30 @@ Fumc.ApplicationController = Ember.Controller.extend({
   name: localStorage.name,
   email: localStorage.email,
 
-  tokenChanged: function() {
+  init: function () {
+    this.setupAWS();
+  },
+
+  tokenChanged: function () {
     localStorage.token = this.get('token');
     localStorage.name = this.get('name');
     localStorage.email = this.get('email');
-  }.observes('token')
+    this.setupAWS();
+  }.observes('token'),
+
+  setupAWS: function () {
+    AWS.config.credentials = new AWS.WebIdentityCredentials({
+      RoleArn: 'arn:aws:iam::885099591831:role/content-managers',
+      ProviderId: 'www.amazon.com',
+      WebIdentityToken: this.get('token')
+    });
+
+    Fumc.s3 = new AWS.S3({
+      params: {
+        Bucket: 'fumcappfiles'
+      }
+    });
+  }
 
 });
 
@@ -220,8 +230,10 @@ Fumc.ApplicationController = Ember.Controller.extend({
 
 Fumc.BulletinController = Ember.ObjectController.extend({
 
+  needs: ['application'],
   editing: false,
   fileUpload: null,
+  s3: Ember.computed.alias('controllers.application.s3'),
 
   init: function () {
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {

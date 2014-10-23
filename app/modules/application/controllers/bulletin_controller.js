@@ -1,7 +1,9 @@
 Fumc.BulletinController = Ember.ObjectController.extend({
 
+  needs: ['application'],
   editing: false,
   fileUpload: null,
+  s3: Ember.computed.alias('controllers.application.s3'),
 
   init: function () {
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {

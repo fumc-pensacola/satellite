@@ -12,4 +12,12 @@ Fumc.AuthenticatedRoute = Ember.Route.extend({
     this.transitionTo('login');
   },
 
+  actions: {
+    error: function (error, transition) {
+      if (error && error.status === 401) { // Invalid token, probably expired
+        this.redirectToLogin(transition);
+      }
+    }
+  }
+
 });
