@@ -12,7 +12,7 @@ Fumc.DateField = Ember.TextField.extend({
   }.observes('date'),
 
   updateDate: function() {
-    var date = moment(this.get('value'));
+    var date = moment(new Date(this.get('value')));
     if (date.isValid()) {
       this.set('date', date.toDate());
     } else {

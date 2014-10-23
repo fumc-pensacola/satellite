@@ -32,7 +32,7 @@
 								<div class="field">
 									<label>Service</label>
 									<div class="ui left labeled input">
-										{{input value=service placeholder="e.g. ICON"}}
+										{{input value=bulletin.service placeholder="e.g. ICON"}}
 										{{#if errors.service}}
 											<div class="ui red pointing above label">{{errors.service}}</div>
 										{{/if}}
@@ -41,7 +41,7 @@
 								<div class="date field">
 									<label>Service Date</label>
 									<div class="ui left labeled input">
-										{{view Fumc.DateField date=date}}
+										{{view Fumc.DateField date=bulletin.date}}
 										{{#if errors.date}}
 											<div class="ui red pointing above label">{{errors.date}}</div>
 										{{/if}}
@@ -50,7 +50,7 @@
 							</div>
 							<div class="field">
 								<div class="ui checkbox">
-									{{input type="checkbox" checked=visible}}
+									{{input type="checkbox" checked=bulletin.visible}}
 									<label>Publish to app/website</label>
 								</div>
 							</div>

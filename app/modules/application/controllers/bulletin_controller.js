@@ -32,8 +32,8 @@ Fumc.BulletinController = Ember.ObjectController.extend({
       this.set('date', new Date(this.get('date')));
 
       if (fileUpload) {
-        fileUpload.uploadFile().then(function (url) {
-          this.set('file', url);
+        fileUpload.uploadFile().then(function (key) {
+          this.set('file', key);
           model.save().then(saved);
         }.bind(this));
       } else {

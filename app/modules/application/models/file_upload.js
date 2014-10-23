@@ -30,7 +30,7 @@ Fumc.FileUploadModel = Ember.Object.extend({
   init: function() {
     this._super();
     Ember.assert("File to upload required on init.", !!this.get('fileToUpload'));
-    this.set('uploadPromise', Ember.Deferred.create());
+    this.set('uploadPromise', new Ember.RSVP.defer());
   },
 
   readFile: function() {
@@ -64,16 +64,12 @@ Fumc.FileUploadModel = Ember.Object.extend({
         self.get('uploadPromise').reject(err);
       }
 
-      var value = '';
-      try {
-        value = data.getElementsByTagName('Location')[0].textContent;
-      } catch (e) {}
       self.set('isUploading', false);
       self.set('didUpload', true);
-      self.get('uploadPromise').resolve(value);
+      self.get('uploadPromise').resolve(fileToUpload.name);
     });
 
-    return this.get('uploadPromise');
+    return this.get('uploadPromise').promise;
   },
 
   showProgressBar: Ember.computed.or('isUploading', 'didUpload'),
