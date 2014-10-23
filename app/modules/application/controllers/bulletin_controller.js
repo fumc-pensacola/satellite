@@ -1,9 +1,11 @@
 Fumc.BulletinController = Ember.ObjectController.extend({
 
-  needs: ['application'],
+  needs: ['application', 'bulletins'],
   editing: false,
   fileUpload: null,
   s3: Ember.computed.alias('controllers.application.s3'),
+  modal: Ember.computed.alias('controllers.bulletins.modal'),
+  showBulletinUrl: Ember.computed.alias('controllers.bulletins.showBulletinUrl'),
 
   init: function () {
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {
@@ -55,6 +57,15 @@ Fumc.BulletinController = Ember.ObjectController.extend({
       this.set('fileUpload', Fumc.FileUploadModel.create({
         fileToUpload: file
       }));
+    },
+
+    viewFile: function () {
+      var modal = this.get('modal');
+      modal.show();
+      Fumc.s3.getSignedUrl('getObject', { Key: this.get('file') }, function (err, url) {
+        // TODO make this not suck so hard
+        modal.$('.content').html('<object class="pdf" type="application/pdf" data="' + url + '"></object>');
+      }.bind(this));
     }
   }
 })

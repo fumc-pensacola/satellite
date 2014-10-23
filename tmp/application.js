@@ -25,6 +25,26 @@ Ember.Application.initializer({
 
 (function() {
 
+Fumc.BasicModalComponent = Ember.Component.extend({
+
+  classNames: ['ui', 'basic', 'modal'],
+
+  didInsertElement: function () {
+    this.sendAction('initialize', this);
+    this.$().addClass(this.get('class'));
+  },
+
+  show: function () {
+    this.$().modal('show');
+  }
+
+});
+
+
+})();
+
+(function() {
+
 Fumc.FileUploadComponent = Ember.Component.extend({
   didInsertElement: function () {
     var component = this;
@@ -226,10 +246,12 @@ Fumc.ApplicationController = Ember.Controller.extend({
 
 Fumc.BulletinController = Ember.ObjectController.extend({
 
-  needs: ['application'],
+  needs: ['application', 'bulletins'],
   editing: false,
   fileUpload: null,
   s3: Ember.computed.alias('controllers.application.s3'),
+  modal: Ember.computed.alias('controllers.bulletins.modal'),
+  showBulletinUrl: Ember.computed.alias('controllers.bulletins.showBulletinUrl'),
 
   init: function () {
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {
@@ -281,6 +303,15 @@ Fumc.BulletinController = Ember.ObjectController.extend({
       this.set('fileUpload', Fumc.FileUploadModel.create({
         fileToUpload: file
       }));
+    },
+
+    viewFile: function () {
+      var modal = this.get('modal');
+      modal.show();
+      Fumc.s3.getSignedUrl('getObject', { Key: this.get('file') }, function (err, url) {
+        // TODO make this not suck so hard
+        modal.$('.content').html('<object class="pdf" type="application/pdf" data="' + url + '"></object>');
+      }.bind(this));
     }
   }
 })
@@ -294,12 +325,26 @@ Fumc.BulletinsController = Ember.ArrayController.extend({
 	itemController: 'bulletin',
 	sortProperties: ['date'],
 	sortAscending: false,
+
+	modal: null,
+	showBulletingUrl: null,
+
+	pdfChanged: function () {
+		this.get('modal').$('object.pdf').trigger('change');
+	}.observes('showBulletinUrl'),
+
 	actions: {
+
 		newBulletin: function () {
 			var bulletin = this.store.createRecord('bulletin', {
 				date: moment().startOf('week').add(1, 'week')
 			});
+		},
+
+		registerModal: function (modal) {
+			this.set('modal', modal);
 		}
+
 	}
 });
 
@@ -372,9 +417,11 @@ Fumc.ApplicationView = Ember.View.extend({
 (function() {
 
 Fumc.BulletinsView = Ember.View.extend({
+
   didInsertElement: function () {
-    this.$().find('.ui.checkbox').checkbox();
+    this.$('.ui.checkbox').checkbox();
   }
+
 });
 
 

@@ -7,20 +7,23 @@
 		<div {{bind-attr class=":item :bulletin bulletin.editing: editing"}}>
 			<div class="ui grid">
 
-				<a href="#" class="row" {{action 'toggleEditing'}}>
+				<div class="row" {{action 'toggleEditing'}}>
 					<div class="one wide column">
 						{{#if bulletin.visible}}
 							<i class="unhide icon"></i>
 						{{/if}}
 					</div>
-					<div class="twelve wide column">
+					<div class="eleven wide column">
 						<div class="header">{{bulletin.formattedDate}}</div>
 						{{bulletin.service}}
 					</div>
-					<div class="three wide right column">
-						<button class="ui small red button" {{action 'remove'}}>Delete</button>
+					<div class="four wide right column">
+						{{#if bulletin.file}}
+							<button class="ui small blue button" {{action 'viewFile' bubbles=false}}>View</a>
+						{{/if}}
+						<button class="ui small red button" {{action 'remove' bubbles=false}}>Delete</button>
 					</div>
-				</a>
+				</div>
 
 				<div {{bind-attr class=":editing :row :slide bulletin.editing::hidden"}}>
 					<div class="sixteen wide column">
@@ -68,4 +71,4 @@
 	{{/each}}
 </div>
 
-{{outlet}}
+{{#basic-modal class="file-viewer" initialize="registerModal" title=showBulletinTitle}}{{/basic-modal}}

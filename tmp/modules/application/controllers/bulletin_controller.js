@@ -1,9 +1,11 @@
 Fumc.BulletinController = Ember.ObjectController.extend({
 
-  needs: ['application'],
+  needs: ['application', 'bulletins'],
   editing: false,
   fileUpload: null,
   s3: Ember.computed.alias('controllers.application.s3'),
+  modal: Ember.computed.alias('controllers.bulletins.modal'),
+  showBulletinUrl: Ember.computed.alias('controllers.bulletins.showBulletinUrl'),
 
   init: function () {
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {
@@ -12,7 +14,7 @@ Fumc.BulletinController = Ember.ObjectController.extend({
   },
 
   formattedDate: function () {
-    //return moment(new Date(this.get('date'))).format('dddd, MMMM Do YYYY');
+    return moment(this.get('date')).format('dddd, MMMM Do YYYY');
   }.property('date'),
 
   actions: {
@@ -55,6 +57,13 @@ Fumc.BulletinController = Ember.ObjectController.extend({
       this.set('fileUpload', Fumc.FileUploadModel.create({
         fileToUpload: file
       }));
+    },
+
+    viewFile: function () {
+      this.get('modal').show();
+      Fumc.s3.getSignedUrl('getObject', { Key: this.get('file') }, function (err, url) {
+        this.set('showBulletinUrl', url);
+      }.bind(this));
     }
   }
 })

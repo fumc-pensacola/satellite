@@ -1,5 +1,7 @@
 body {
 	font-family: 'Myriad Pro';
+	margin: 0;
+	height: auto !important;
 }
 
 .hidden {
@@ -50,4 +52,28 @@ body {
 
 .ui.grid .row .right.column {
 	text-align: right;
+}
+
+.right .button {
+	margin-left: 10px;
+	margin-right: 0;
+}
+
+.pdf {
+	width: 100%;
+}
+
+.file-viewer.modal {
+	margin-top: 0 !important;
+	top: 0;
+	height: 100%;
+}
+
+.file-viewer.modal .content {
+	height: 90%;
+}
+
+.file-viewer.modal object {
+	height: 100%;
+	top: 0;
 }
