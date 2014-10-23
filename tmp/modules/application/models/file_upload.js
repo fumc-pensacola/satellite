@@ -61,7 +61,7 @@ Fumc.FileUploadModel = Ember.Object.extend({
       if (err) {
         self.set('isUploading', false);
         self.set('didError', true);
-        self.get('uploadPromise').reject(errorThrown);
+        self.get('uploadPromise').reject(err);
       }
 
       var value = '';

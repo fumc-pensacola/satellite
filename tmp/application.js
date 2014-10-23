@@ -47,12 +47,12 @@ Fumc.Bulletin = DS.Model.extend({
   file: DS.attr('string')
 });
 
-Fumc.Bulletin.FIXTURES = [{
-  id: 1,
-  date: moment().startOf('week').subtract(1, 'weeks'),
-  service: 'ICON',
-  visible: true
-}];
+// Fumc.Bulletin.FIXTURES = [{
+//   id: 1,
+//   date: moment().startOf('week').subtract(1, 'weeks'),
+//   service: 'ICON',
+//   visible: true
+// }];
 
 
 })();
@@ -265,7 +265,7 @@ Fumc.BulletinController = Ember.ObjectController.extend({
         fileUpload.uploadFile().then(function (url) {
           this.set('file', url);
           model.save().then(saved);
-        })
+        }.bind(this));
       } else {
         model.save().then(saved);
       }

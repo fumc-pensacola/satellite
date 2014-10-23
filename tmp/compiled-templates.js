@@ -120,7 +120,7 @@ function program1(depth0,data) {
   },hashTypes:{'change': "STRING"},hashContexts:{'change': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "file-upload", options))));
   data.buffer.push(" </div> <div class=\"two fields\"> <div class=\"field\"> <label>Service</label> <div class=\"ui left labeled input\"> ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
-    'value': ("service"),
+    'value': ("bulletin.service"),
     'placeholder': ("e.g. ICON")
   },hashTypes:{'value': "ID",'placeholder': "STRING"},hashContexts:{'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push(" ");
@@ -128,7 +128,7 @@ function program1(depth0,data) {
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> </div> <div class=\"date field\"> <label>Service Date</label> <div class=\"ui left labeled input\"> ");
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "Fumc.DateField", {hash:{
-    'date': ("date")
+    'date': ("bulletin.date")
   },hashTypes:{'date': "ID"},hashContexts:{'date': depth0},contexts:[depth0],types:["ID"],data:data})));
   data.buffer.push(" ");
   stack1 = helpers['if'].call(depth0, "errors.date", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],data:data});
@@ -136,7 +136,7 @@ function program1(depth0,data) {
   data.buffer.push(" </div> </div> </div> <div class=\"field\"> <div class=\"ui checkbox\"> ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("checkbox"),
-    'checked': ("visible")
+    'checked': ("bulletin.visible")
   },hashTypes:{'type': "STRING",'checked': "ID"},hashContexts:{'type': depth0,'checked': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push(" <label>Publish to app/website</label> </div> </div> <div class=\"ui buttons\"> <button class=\"ui button\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "cancel", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
