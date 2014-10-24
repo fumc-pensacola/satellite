@@ -67,6 +67,8 @@ Fumc.FileUploadModel = Ember.Object.extend({
       self.set('isUploading', false);
       self.set('didUpload', true);
       self.get('uploadPromise').resolve(fileToUpload.name);
+    }).on('httpUploadProgress', function (progress, response) {
+      self.set('progress', progress.loaded / progress.total * 100);
     });
 
     return this.get('uploadPromise').promise;

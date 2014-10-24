@@ -27,13 +27,21 @@ Fumc.BulletinController = Ember.ObjectController.extend({
 
       var fileUpload = this.get('fileUpload'),
           model = this.get('model'),
+          oldFile = this.get('file'),
           saved = function () {
-            this.set('editing', false);
+            setTimeout(function () { this.set('editing', false) }.bind(this), 600);
           }.bind(this);
+
+      if (fileUpload && fileUpload.isUploading) {
+        return false;
+      }
 
       this.set('date', new Date(this.get('date')));
 
       if (fileUpload) {
+        if (fileUpload.name !== oldFile) {
+          Fumc.s3.deleteObject({ Key: oldFile }).send();
+        }
         fileUpload.uploadFile().then(function (key) {
           this.set('file', key);
           model.save().then(saved);

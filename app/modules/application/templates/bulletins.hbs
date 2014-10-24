@@ -19,7 +19,7 @@
 					</div>
 					<div class="four wide right column">
 						{{#if bulletin.file}}
-							<button class="ui small blue button" {{action 'viewFile' bubbles=false}}>View</a>
+							<button class="ui small black button" {{action 'viewFile' bubbles=false}}>View</button>
 						{{/if}}
 						<button class="ui small red button" {{action 'remove' bubbles=false}}>Delete</button>
 					</div>
@@ -29,7 +29,7 @@
 					<div class="sixteen wide column">
 						<form class="ui fluid form">
 							<div class="field">
-								{{file-upload change="fileSelected"}}
+								{{file-upload oldFile=bulletin.file change="fileSelected"}}
 							</div>
 							<div class="two fields">
 								<div class="field">
@@ -57,10 +57,13 @@
 									<label>Publish to app/website</label>
 								</div>
 							</div>
-							<div class="ui buttons">
+							<div class="ui buttons field">
 								<button class="ui button" {{action 'cancel'}}>Cancel</button>
 								<div class="or"></div>
-								<button class="ui green button" {{action 'save'}}>Save</button>
+								<button {{bind-attr class=":ui :blue :button bulletin.fileUpload.isUploading:disabled"}} {{action 'save'}}>Save</button>
+							</div>
+							<div {{bind-attr class=":ui :blue :progress bulletin.fileUpload.showProgressBar::hidden bulletin.fileUpload.didUpload:successful"}}>
+								<div class="bar" {{bind-attr style="bulletin.fileUpload.progressStyle"}}></div>
 							</div>
 						</form>
 					</div>

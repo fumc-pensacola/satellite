@@ -33,7 +33,6 @@ body {
 .bulletin .editing.row {
 	padding-top: 0;
 	margin: 10px 0;
-	max-height: 200px;
 	cursor: default;
 }
 
@@ -76,4 +75,13 @@ body {
 .file-viewer.modal object {
 	height: 100%;
 	top: 0;
+}
+
+.ui.progress .bar {
+	-webkit-transition: width .1s;
+	transition: width .1s;
+}
+
+.ui.horizontal.label {
+	margin-top: 0 !important;
 }
