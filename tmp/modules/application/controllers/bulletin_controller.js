@@ -60,9 +60,11 @@ Fumc.BulletinController = Ember.ObjectController.extend({
     },
 
     viewFile: function () {
-      this.get('modal').show();
+      var modal = this.get('modal');
+      modal.show();
       Fumc.s3.getSignedUrl('getObject', { Key: this.get('file') }, function (err, url) {
-        this.set('showBulletinUrl', url);
+        // TODO make this not suck so hard
+        modal.$('.content').html('<object class="pdf" type="application/pdf" data="' + url + '"></object>');
       }.bind(this));
     }
   }

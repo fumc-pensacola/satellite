@@ -4,7 +4,7 @@ Fumc.ApplicationAdapter = DS.RESTAdapter.extend({
 
 	headers: function () {
 		return {
-			token: localStorage.token
+			token: Cookies.get('token')
 		};
 	}.property().volatile(),
 

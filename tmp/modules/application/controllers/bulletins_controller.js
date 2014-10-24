@@ -6,6 +6,10 @@ Fumc.BulletinsController = Ember.ArrayController.extend({
 	modal: null,
 	showBulletingUrl: null,
 
+	pdfChanged: function () {
+		this.get('modal').$('object.pdf').trigger('change');
+	}.observes('showBulletinUrl'),
+
 	actions: {
 
 		newBulletin: function () {

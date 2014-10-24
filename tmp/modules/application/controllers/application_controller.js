@@ -1,17 +1,17 @@
 Fumc.ApplicationController = Ember.Controller.extend({
 
-  token: localStorage.token,
-  name: localStorage.name,
-  email: localStorage.email,
+  token: Cookies.get('token'),
+  name: Cookies.get('name'),
+  email: Cookies.get('email'),
 
   init: function () {
     this.setupAWS();
   },
 
   tokenChanged: function () {
-    localStorage.token = this.get('token');
-    localStorage.name = this.get('name');
-    localStorage.email = this.get('email');
+    Cookies.set('token', this.get('token'), { expires: 3600 });
+    Cookies.set('name', this.get('name'));
+    Cookies.set('email', this.get('email'));
     this.setupAWS();
   }.observes('token'),
 
