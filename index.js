@@ -10,7 +10,6 @@ server.configure(function() {
 require('./app')(server);
 require('./server')(server);
 
-console.log(NODE_ENV);
 if (NODE_ENV === 'production') {
 	server.listen(process.env.PORT || 8001);
 } else {
