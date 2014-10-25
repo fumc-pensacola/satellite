@@ -11,7 +11,7 @@ require('./app')(server);
 require('./server')(server);
 
 if (NODE_ENV === 'production') {
-	server.listen(8001, 'localhost');
+	server.listen(process.env.PORT || 8001);
 } else {
 	// Export server in dev to work with grunt-express
 	module.exports = server;
