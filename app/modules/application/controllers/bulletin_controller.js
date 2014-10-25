@@ -14,7 +14,7 @@ Fumc.BulletinController = Ember.ObjectController.extend({
   },
 
   formattedDate: function () {
-    return moment(this.get('date')).format('dddd, MMMM Do YYYY');
+    return moment(this.get('date')).format('MMMM D, YYYY');
   }.property('date'),
 
   actions: {
@@ -58,7 +58,11 @@ Fumc.BulletinController = Ember.ObjectController.extend({
     },
 
     remove: function () {
-      console.log(this);
+      var file = this.get('file');
+      if (file) {
+        Fumc.s3.deleteObject({ Key: file }).send();
+      }
+      this.get('model').destroyRecord();
     },
 
     fileSelected: function (file) {
