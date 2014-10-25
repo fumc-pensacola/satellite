@@ -1,10 +1,19 @@
 module.exports = {
 	// Copy bootstrap fonts
-	bootstrap: {
+	fonts: {
 		files: [{
 			expand: true,
 			cwd: 'bower_components/semantic-ui/build/packaged/',
 			src: ['fonts/**'],
+			dest: 'tmp/assets/'
+		}]
+	},
+
+	images: {
+		files: [{
+			expand: true,
+			cwd: 'bower_components/semantic-ui/build/packaged/',
+			src: ['images/**'],
 			dest: 'tmp/assets/'
 		}]
 	},
@@ -36,7 +45,7 @@ module.exports = {
 		files: [{
 			expand: true,
 			cwd: 'tmp/',
-			src: ['index.html', 'assets/fonts/**', 'assets/img/**'],
+			src: ['index.html', 'assets/fonts/**', 'assets/images/**'],
 			dest: 'dist/'
 		}]
 	},
