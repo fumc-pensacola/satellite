@@ -3,7 +3,7 @@ module.exports = {
 	bootstrap: {
 		files: [{
 			expand: true,
-			cwd: 'bower_components/bootstrap/dist/',
+			cwd: 'bower_components/semantic-ui/build/packaged/',
 			src: ['fonts/**'],
 			dest: 'tmp/assets/'
 		}]
