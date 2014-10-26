@@ -1,8 +1,10 @@
 Fumc.BulletinController = Ember.ObjectController.extend({
 
   needs: ['application', 'bulletins'],
+
   editing: false,
   fileUpload: null,
+
   s3: Ember.computed.alias('controllers.application.s3'),
   modal: Ember.computed.alias('controllers.bulletins.modal'),
   showBulletinUrl: Ember.computed.alias('controllers.bulletins.showBulletinUrl'),
@@ -52,9 +54,13 @@ Fumc.BulletinController = Ember.ObjectController.extend({
     },
 
     cancel: function () {
-      var bulletin = this.get('model');
-      bulletin.rollback();
-      this.set('editing', false);
+      var model = this.get('model');
+      if (~this.get('currentState.stateName').indexOf('created.uncommitted')) {
+        model.destroyRecord();
+      } else {
+        model.rollback();
+        this.set('editing', false);
+      }
     },
 
     remove: function () {
@@ -66,6 +72,28 @@ Fumc.BulletinController = Ember.ObjectController.extend({
     },
 
     fileSelected: function (file) {
+      var initialDate = this.get('date'),
+          date = new Date(file.name
+            .replace(/[-–—_]/g, '/')
+            .replace(/[^0-9\/]/g, '')
+            .replace(/^\//, '')
+            .replace(/\/$/, '')
+          );
+      if (initialDate && moment().startOf('week').add(1, 'week').isSame(initialDate, 'day')) { // Only do it if it hasn't been manually changed
+
+        if (!isNaN(date.getDate()) && date.getFullYear() - new Date().getFullYear() <= 1) {
+          this.set('date', date);
+        }
+      }
+
+      if (!this.get('service')) {
+        if (~file.name.toLowerCase().indexOf('icon')) {
+          this.set('service', 'ICON');
+        } else if (date.getDay() === 0) {
+          this.set('service', 'Traditional services');
+        }
+      }
+
       this.set('fileUpload', Fumc.FileUploadModel.create({
         fileToUpload: file
       }));
