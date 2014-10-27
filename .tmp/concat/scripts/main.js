@@ -56,33 +56,50 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES["application"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, helper, options, self=this, helperMissing=helpers.helperMissing;
+  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
   
-  data.buffer.push("Home");
+  data.buffer.push("<i class=\"home icon\"></i> Home");
   }
 
 function program3(depth0,data) {
   
   
-  data.buffer.push("Bulletins");
+  data.buffer.push("<i class=\"file icon\"></i> Bulletins");
   }
 
 function program5(depth0,data) {
   
-  
-  data.buffer.push("About");
+  var buffer = '', stack1;
+  data.buffer.push(" <div class=\"right menu\"> <div class=\"item\"> <i class=\"user icon\"></i> Hello, ");
+  stack1 = helpers._triageMustache.call(depth0, "name", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> <a class=\"item\" href=\"#\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "logout", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Log out</a> </div> ");
+  return buffer;
   }
 
 function program7(depth0,data) {
   
+  var buffer = '', stack1, helper, options;
+  data.buffer.push(" <div class=\"right menu\"> ");
+  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
+    'class': ("item")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "login", options) : helperMissing.call(depth0, "link-to", "login", options));
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> ");
+  return buffer;
+  }
+function program8(depth0,data) {
   
-  data.buffer.push("Contact");
+  
+  data.buffer.push("Log in");
   }
 
-  data.buffer.push(" <div class=\"ui one column page grid\"> <div class=\"column\"> <div class=\"ui menu\"> ");
+  data.buffer.push(" <div class=\"ui one column page grid\"> <div class=\"column\"> <div class=\"ui teal inverted menu\"> ");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'class': ("item")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "index", options) : helperMissing.call(depth0, "link-to", "index", options));
@@ -93,14 +110,7 @@ function program7(depth0,data) {
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "bulletins", options) : helperMissing.call(depth0, "link-to", "bulletins", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" ");
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'class': ("item")
-  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "about", options) : helperMissing.call(depth0, "link-to", "about", options));
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push(" ");
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
-    'class': ("item")
-  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "contact", options) : helperMissing.call(depth0, "link-to", "contact", options));
+  stack1 = helpers['if'].call(depth0, "loggedIn", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(7, program7, data),fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> </div> </div> <div class=\"ui one column page grid\"> <div class=\"column\"> ");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
@@ -120,22 +130,52 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
-Ember.TEMPLATES["bulletins"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+Ember.TEMPLATES["bulletin"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
-  var buffer = '', stack1, helper, options;
-  data.buffer.push(" <div ");
-  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
-    'class': (":item :bulletin bulletin.editing: editing")
-  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push("> <div class=\"ui grid\"> <div class=\"row\" ");
+  
+  data.buffer.push(" <i class=\"unhide icon\"></i> ");
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" <button class=\"ui small black button\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "viewFile", {hash:{
+    'bubbles': (false)
+  },hashTypes:{'bubbles': "BOOLEAN"},hashContexts:{'bubbles': depth0},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">View</button> ");
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" <div class=\"ui red pointing above label\">");
+  stack1 = helpers._triageMustache.call(depth0, "errors.service", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</div> ");
+  return buffer;
+  }
+
+function program7(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" <div class=\"ui red pointing above label\">");
+  stack1 = helpers._triageMustache.call(depth0, "errors.date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</div> ");
+  return buffer;
+  }
+
+  data.buffer.push(" <div class=\"ui grid\"> <div class=\"row\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleEditing", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
   data.buffer.push("> <div class=\"one wide column\"> ");
-  stack1 = helpers['if'].call(depth0, "bulletin.visible", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "bulletin.visible", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> <div class=\"eleven wide column\"> <div class=\"header\">");
   stack1 = helpers._triageMustache.call(depth0, "bulletin.formattedDate", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
@@ -144,7 +184,7 @@ function program1(depth0,data) {
   stack1 = helpers._triageMustache.call(depth0, "bulletin.service", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> <div class=\"four wide right column\"> ");
-  stack1 = helpers['if'].call(depth0, "bulletin.file", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "bulletin.file", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" <button class=\"ui small red button\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "remove", {hash:{
@@ -165,14 +205,14 @@ function program1(depth0,data) {
     'placeholder': ("e.g. ICON")
   },hashTypes:{'value': "ID",'placeholder': "STRING"},hashContexts:{'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push(" ");
-  stack1 = helpers['if'].call(depth0, "errors.service", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "errors.service", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> </div> <div class=\"date field\"> <label>Service Date</label> <div class=\"ui left labeled input\"> ");
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "Fumc.DateField", {hash:{
     'date': ("bulletin.date")
   },hashTypes:{'date': "ID"},hashContexts:{'date': depth0},contexts:[depth0],types:["ID"],data:data})));
   data.buffer.push(" ");
-  stack1 = helpers['if'].call(depth0, "errors.date", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "errors.date", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> </div> </div> <div class=\"field\"> <div class=\"ui checkbox\"> ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
@@ -195,47 +235,26 @@ function program1(depth0,data) {
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'style': ("bulletin.fileUpload.progressStyle")
   },hashTypes:{'style': "STRING"},hashContexts:{'style': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push("></div> </div> </form> </div> </div> </div> </div> ");
+  data.buffer.push("></div> </div> </form> </div> </div> </div> ");
   return buffer;
-  }
-function program2(depth0,data) {
   
-  
-  data.buffer.push(" <i class=\"unhide icon\"></i> ");
-  }
+});
 
-function program4(depth0,data) {
+Ember.TEMPLATES["bulletins"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
   
   var buffer = '';
-  data.buffer.push(" <button class=\"ui small black button\" ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "viewFile", {hash:{
-    'bubbles': (false)
-  },hashTypes:{'bubbles': "BOOLEAN"},hashContexts:{'bubbles': depth0},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push(">View</button> ");
+  data.buffer.push(" ");
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "bulletin", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(" ");
   return buffer;
   }
 
-function program6(depth0,data) {
-  
-  var buffer = '', stack1;
-  data.buffer.push(" <div class=\"ui red pointing above label\">");
-  stack1 = helpers._triageMustache.call(depth0, "errors.service", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div> ");
-  return buffer;
-  }
-
-function program8(depth0,data) {
-  
-  var buffer = '', stack1;
-  data.buffer.push(" <div class=\"ui red pointing above label\">");
-  stack1 = helpers._triageMustache.call(depth0, "errors.date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div> ");
-  return buffer;
-  }
-
-function program10(depth0,data) {
+function program3(depth0,data) {
   
   var buffer = '';
   return buffer;
@@ -251,7 +270,7 @@ function program10(depth0,data) {
     'class': ("file-viewer"),
     'initialize': ("registerModal"),
     'title': ("showBulletinTitle")
-  },hashTypes:{'class': "STRING",'initialize': "STRING",'title': "ID"},hashContexts:{'class': depth0,'initialize': depth0,'title': depth0},inverse:self.noop,fn:self.program(10, program10, data),contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "basic-modal", options));
+  },hashTypes:{'class': "STRING",'initialize': "STRING",'title': "ID"},hashContexts:{'class': depth0,'initialize': depth0,'title': depth0},inverse:self.noop,fn:self.program(3, program3, data),contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "basic-modal", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" ");
   return buffer;
@@ -566,9 +585,13 @@ Fumc.BulletinsRoute = Fumc.AuthenticatedRoute.extend({
 
 Fumc.ApplicationController = Ember.Controller.extend({
 
-  token: Cookies.get('token'),
-  name: Cookies.get('name'),
-  email: Cookies.get('email'),
+  token: Cookies.get('token') === 'null' ? null : Cookies.get('token'),
+  name: Cookies.get('name') === 'null' ? null : Cookies.get('name'),
+  email: Cookies.get('email') === 'null' ? null : Cookies.get('email'),
+
+  loggedIn: function () {
+    return this.get('token') && this.get('name') && this.get('email');
+  }.property('token', 'name', 'email'),
 
   init: function () {
     this.setupAWS();
@@ -576,8 +599,8 @@ Fumc.ApplicationController = Ember.Controller.extend({
 
   tokenChanged: function () {
     Cookies.set('token', this.get('token'), { expires: 3600 });
-    Cookies.set('name', this.get('name'));
-    Cookies.set('email', this.get('email'));
+    Cookies.set('name', this.get('name'), { expires: 3600 });
+    Cookies.set('email', this.get('email'), { expires: 3600 });
     this.setupAWS();
   }.observes('token'),
 
@@ -593,6 +616,19 @@ Fumc.ApplicationController = Ember.Controller.extend({
         Bucket: 'fumcappfiles'
       }
     });
+  },
+
+  actions: {
+    logout: function () {
+      amazon.Login.logout();
+      this.set('token', null);
+      this.set('name', null);
+      this.set('email', null);
+      Cookies.expire('token');
+      Cookies.expire('name');
+      Cookies.expire('email');
+      this.transitionToRoute('index');
+    }
   }
 
 });
@@ -605,13 +641,17 @@ Fumc.ApplicationController = Ember.Controller.extend({
 Fumc.BulletinController = Ember.ObjectController.extend({
 
   needs: ['application', 'bulletins'],
+
   editing: false,
   fileUpload: null,
+  initialDate: null,
+
   s3: Ember.computed.alias('controllers.application.s3'),
   modal: Ember.computed.alias('controllers.bulletins.modal'),
   showBulletinUrl: Ember.computed.alias('controllers.bulletins.showBulletinUrl'),
 
   init: function () {
+    this.set('initialDate', this.get('date'));
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {
       this.set('editing', true);
     }
@@ -656,9 +696,13 @@ Fumc.BulletinController = Ember.ObjectController.extend({
     },
 
     cancel: function () {
-      var bulletin = this.get('model');
-      bulletin.rollback();
-      this.set('editing', false);
+      var model = this.get('model');
+      if (~this.get('currentState.stateName').indexOf('created.uncommitted')) {
+        model.destroyRecord();
+      } else {
+        model.rollback();
+        this.set('editing', false);
+      }
     },
 
     remove: function () {
@@ -670,6 +714,27 @@ Fumc.BulletinController = Ember.ObjectController.extend({
     },
 
     fileSelected: function (file) {
+      var date = new Date(file.name
+        .replace(/[-–—_]/g, '/')
+        .replace(/[^0-9\/]/g, '')
+        .replace(/^\//, '')
+        .replace(/\/$/, '')
+      );
+
+      if (moment(this.get('initialDate')).isSame(this.get('date'), 'day')) { // Only do it if it hasn't been changed manually
+        if (!isNaN(date.getDate()) && date.getFullYear() - new Date().getFullYear() <= 1) {
+          this.set('date', date);
+        }
+      }
+
+      if (!this.get('service')) {
+        if (~file.name.toLowerCase().indexOf('icon')) {
+          this.set('service', 'ICON');
+        } else if (date.getDay() === 0) {
+          this.set('service', 'Traditional services');
+        }
+      }
+
       this.set('fileUpload', Fumc.FileUploadModel.create({
         fileToUpload: file
       }));
@@ -734,10 +799,6 @@ Fumc.LoginController = Ember.Controller.extend({
   name: Ember.computed.alias('controllers.application.name'),
   email: Ember.computed.alias('controllers.application.email'),
 
-  init: function () {
-
-  },
-
   actions: {
     login: function () {
       options = { scope: 'profile' };
@@ -756,9 +817,11 @@ Fumc.AuthenticateRoute = Ember.Route.extend({
 
           var loginController = this.controllerFor('login'),
               attemptedTransition = loginController.get('attemptedTransition');
-          loginController.set('token', response.token);
-          loginController.set('name', response.name);
-          loginController.set('email', response.email);
+          loginController.setProperties({
+            name: response.name,
+            email: response.email,
+            token: response.token
+          });
 
           if (attemptedTransition) {
             attemptedTransition.retry();
@@ -786,7 +849,11 @@ Fumc.ApplicationView = Ember.View.extend({
 
 (function() {
 
-Fumc.BulletinsView = Ember.View.extend({
+Fumc.BulletinView = Ember.View.extend({
+
+  templateName: 'bulletin',
+  classNames: ['item', 'bulletin'],
+  classBindings: ['editing'],
 
   didInsertElement: function () {
     this.$('.ui.checkbox').checkbox();
@@ -802,17 +869,15 @@ Fumc.BulletinsView = Ember.View.extend({
 Fumc.DateField = Ember.TextField.extend({
   picker: null,
 
-  updateValue: function() {
+  updateValue: function () {
     var date = moment(this.get('date'));
-    if (date.isValid()) {
+    if (date.isValid() && !this.$().is(':focus')) {
       this.set('value', date.format('L'));
       this.get('picker').setDate(date.format('L'));
-    } else {
-      this.set('value', null);
     }
   }.observes('date'),
 
-  updateDate: function() {
+  updateDate: function () {
     var date = moment(new Date(this.get('value')));
     if (date.isValid()) {
       this.set('date', date.toDate());
@@ -821,7 +886,7 @@ Fumc.DateField = Ember.TextField.extend({
     }
   }.observes('value'),
 
-  didInsertElement: function() {
+  didInsertElement: function () {
     var picker = new Pikaday({
       field: this.$()[0],
       format: 'MM/DD/YYYY'
@@ -830,7 +895,7 @@ Fumc.DateField = Ember.TextField.extend({
     this.updateValue();
   },
 
-  willDestroyElement: function(){
+  willDestroyElement: function (){
     var picker = this.get('picker');
     if (picker) {
       picker.destroy();
