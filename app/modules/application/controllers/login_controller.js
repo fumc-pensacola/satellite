@@ -9,10 +9,6 @@ Fumc.LoginController = Ember.Controller.extend({
   name: Ember.computed.alias('controllers.application.name'),
   email: Ember.computed.alias('controllers.application.email'),
 
-  init: function () {
-
-  },
-
   actions: {
     login: function () {
       options = { scope: 'profile' };
@@ -31,9 +27,11 @@ Fumc.AuthenticateRoute = Ember.Route.extend({
 
           var loginController = this.controllerFor('login'),
               attemptedTransition = loginController.get('attemptedTransition');
-          loginController.set('token', response.token);
-          loginController.set('name', response.name);
-          loginController.set('email', response.email);
+          loginController.setProperties({
+            name: response.name,
+            email: response.email,
+            token: response.token
+          });
 
           if (attemptedTransition) {
             attemptedTransition.retry();

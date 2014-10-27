@@ -1,0 +1,11 @@
+<h1 class="ui header">Bulletins</h1>
+
+<button class="ui blue button" {{action 'newBulletin'}}>New Bulletin</button>
+
+<div class="ui selection link divided list">
+	{{#each bulletin in controller}}
+		{{view "bulletin"}}
+	{{/each}}
+</div>
+
+{{#basic-modal class="file-viewer" initialize="registerModal" title=showBulletinTitle}}{{/basic-modal}}

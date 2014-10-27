@@ -88,13 +88,16 @@ module.exports = function (server) {
 
 			var data = JSON.parse(body),
 					users = [
-						'amzn1.account.AFC2TKGPU7KRSE4SEKWMGEV56PSA' // Drew
+						'amzn1.account.AFC2TKGPU7KRSE4SEKWMGEV56PSA', // Drew
+						'amzn1.account.AGWSVRRT7XXKLFRXVK3VRD4ZFQFA'  // Jeb
 					];
 
 			if (data.aud !== 'amzn1.application-oa2-client.cfecafe9a3474592888a2823741d07d5') {
 				res.status(401).send('Invalid token');
 				return;
 			}
+
+			console.log(data.user_id);
 
 			if (!~users.indexOf(data.user_id)) {
 				res.status(401).send('User not whitelisted');
