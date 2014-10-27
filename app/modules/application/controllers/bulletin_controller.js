@@ -74,6 +74,12 @@ Fumc.BulletinController = Ember.ObjectController.extend({
     },
 
     fileSelected: function (file) {
+      console.log('fileSelected', file);
+      if (!file) {
+        this.set('fileUpload', null);
+        return;
+      }
+
       var date = new Date(file.name
         .replace(/[-–—_]/g, '/')
         .replace(/[^0-9\/]/g, '')
