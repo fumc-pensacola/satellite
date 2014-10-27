@@ -4,12 +4,14 @@ Fumc.BulletinController = Ember.ObjectController.extend({
 
   editing: false,
   fileUpload: null,
+  initialDate: null,
 
   s3: Ember.computed.alias('controllers.application.s3'),
   modal: Ember.computed.alias('controllers.bulletins.modal'),
   showBulletinUrl: Ember.computed.alias('controllers.bulletins.showBulletinUrl'),
 
   init: function () {
+    this.set('initialDate', this.get('date'));
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {
       this.set('editing', true);
     }
@@ -72,15 +74,14 @@ Fumc.BulletinController = Ember.ObjectController.extend({
     },
 
     fileSelected: function (file) {
-      var initialDate = this.get('date'),
-          date = new Date(file.name
-            .replace(/[-–—_]/g, '/')
-            .replace(/[^0-9\/]/g, '')
-            .replace(/^\//, '')
-            .replace(/\/$/, '')
-          );
-      if (initialDate && moment().startOf('week').add(1, 'week').isSame(initialDate, 'day')) { // Only do it if it hasn't been manually changed
+      var date = new Date(file.name
+        .replace(/[-–—_]/g, '/')
+        .replace(/[^0-9\/]/g, '')
+        .replace(/^\//, '')
+        .replace(/\/$/, '')
+      );
 
+      if (moment(this.get('initialDate')).isSame(this.get('date'), 'day')) { // Only do it if it hasn't been changed manually
         if (!isNaN(date.getDate()) && date.getFullYear() - new Date().getFullYear() <= 1) {
           this.set('date', date);
         }

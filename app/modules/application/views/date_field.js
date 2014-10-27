@@ -1,17 +1,15 @@
 Fumc.DateField = Ember.TextField.extend({
   picker: null,
 
-  updateValue: function() {
+  updateValue: function () {
     var date = moment(this.get('date'));
-    if (date.isValid()) {
+    if (date.isValid() && !this.$().is(':focus')) {
       this.set('value', date.format('L'));
       this.get('picker').setDate(date.format('L'));
-    } else {
-      this.set('value', null);
     }
   }.observes('date'),
 
-  updateDate: function() {
+  updateDate: function () {
     var date = moment(new Date(this.get('value')));
     if (date.isValid()) {
       this.set('date', date.toDate());
@@ -20,7 +18,7 @@ Fumc.DateField = Ember.TextField.extend({
     }
   }.observes('value'),
 
-  didInsertElement: function() {
+  didInsertElement: function () {
     var picker = new Pikaday({
       field: this.$()[0],
       format: 'MM/DD/YYYY'
@@ -29,7 +27,7 @@ Fumc.DateField = Ember.TextField.extend({
     this.updateValue();
   },
 
-  willDestroyElement: function(){
+  willDestroyElement: function (){
     var picker = this.get('picker');
     if (picker) {
       picker.destroy();
