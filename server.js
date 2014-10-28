@@ -44,19 +44,11 @@ module.exports = function (server) {
 	});
 
 	server.get('/api/:modelName', function (req, res) {
-		if (validTokenProvided(req, res)) {
-			inflectorController.findMany(req, res);
-		}else {
-			res.status(401).send('Invalid token');
-		}
+		inflectorController.findMany(req, res);
 	});
 
 	server.get('/api/:modelName/:id', function (req, res) {
-		if (validTokenProvided(req, res)) {
-			inflectorController.findOne(req, res);
-		} else {
-			res.status(401).send('Invalid token');
-		}
+		inflectorController.findOne(req, res);
 	});
 
 	server.put('/api/:modelName/:id', function (req, res) {

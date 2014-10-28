@@ -1,14 +1,10 @@
 Fumc.BulletinsController = Ember.ArrayController.extend({
 	itemController: 'bulletin',
-	sortProperties: ['date', 'service'],
+
 	sortAscending: false,
+	sortProperties: ['date', 'service'],
 
 	modal: null,
-	showBulletingUrl: null,
-
-	pdfChanged: function () {
-		this.get('modal').$('object.pdf').trigger('change');
-	}.observes('showBulletinUrl'),
 
 	actions: {
 

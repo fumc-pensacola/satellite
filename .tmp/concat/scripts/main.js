@@ -411,13 +411,18 @@ Fumc.FileUploadComponent = Ember.Component.extend({
   didInsertElement: function () {
     var component = this,
         input = component.get('element').querySelector('input[type=file]');
-    component.set('currentFile', this.get('oldFile'));
+
+    if (!this.get('currentFile')) {
+      component.set('currentFile', this.get('oldFile'));
+    }
+
     input.addEventListener('change', function () {
       var file = this.files[0];
-      console.log('file change event', file.name);
       component.set('currentFile', file.name);
+      console.log('just set currentFile', file.name);
       component.sendAction('change', file);
     }, false);
+
     this.set('input', input);
   },
 
@@ -650,18 +655,23 @@ Fumc.BulletinController = Ember.ObjectController.extend({
 
   s3: Ember.computed.alias('controllers.application.s3'),
   modal: Ember.computed.alias('controllers.bulletins.modal'),
-  showBulletinUrl: Ember.computed.alias('controllers.bulletins.showBulletinUrl'),
 
   init: function () {
+    console.log('bulletin controller init');
     this.set('initialDate', this.get('date'));
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {
       this.set('editing', true);
     }
+    this._super();
   },
 
   formattedDate: function () {
     return moment(this.get('date')).format('MMMM D, YYYY');
   }.property('date'),
+
+  logCurrentFile: function () {
+    console.log('controller currentFile set', this.get('currentFile'));
+  }.observes('currentFile'),
 
   actions: {
 
@@ -686,6 +696,7 @@ Fumc.BulletinController = Ember.ObjectController.extend({
 
       if (fileUpload) {
         if (fileUpload.name !== oldFile) {
+          console.lo
           Fumc.s3.deleteObject({ Key: oldFile }).send();
         }
         fileUpload.uploadFile().then(function (key) {
@@ -716,11 +727,12 @@ Fumc.BulletinController = Ember.ObjectController.extend({
     },
 
     fileSelected: function (file) {
-      console.log('fileSelected', file);
       if (!file) {
         this.set('fileUpload', null);
         return;
       }
+
+      this.set('currentFile', file.name);
 
       var date = new Date(file.name
         .replace(/[-–—_]/g, '/')
@@ -766,15 +778,11 @@ Fumc.BulletinController = Ember.ObjectController.extend({
 
 Fumc.BulletinsController = Ember.ArrayController.extend({
 	itemController: 'bulletin',
-	sortProperties: ['date', 'service'],
+
 	sortAscending: false,
+	sortProperties: ['date', 'service'],
 
 	modal: null,
-	showBulletingUrl: null,
-
-	pdfChanged: function () {
-		this.get('modal').$('object.pdf').trigger('change');
-	}.observes('showBulletinUrl'),
 
 	actions: {
 

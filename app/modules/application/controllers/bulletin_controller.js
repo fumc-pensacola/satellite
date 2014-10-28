@@ -8,18 +8,23 @@ Fumc.BulletinController = Ember.ObjectController.extend({
 
   s3: Ember.computed.alias('controllers.application.s3'),
   modal: Ember.computed.alias('controllers.bulletins.modal'),
-  showBulletinUrl: Ember.computed.alias('controllers.bulletins.showBulletinUrl'),
 
   init: function () {
+    console.log('bulletin controller init');
     this.set('initialDate', this.get('date'));
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {
       this.set('editing', true);
     }
+    this._super();
   },
 
   formattedDate: function () {
     return moment(this.get('date')).format('MMMM D, YYYY');
   }.property('date'),
+
+  logCurrentFile: function () {
+    console.log('controller currentFile set', this.get('currentFile'));
+  }.observes('currentFile'),
 
   actions: {
 
@@ -44,6 +49,7 @@ Fumc.BulletinController = Ember.ObjectController.extend({
 
       if (fileUpload) {
         if (fileUpload.name !== oldFile) {
+          console.lo
           Fumc.s3.deleteObject({ Key: oldFile }).send();
         }
         fileUpload.uploadFile().then(function (key) {
@@ -74,11 +80,12 @@ Fumc.BulletinController = Ember.ObjectController.extend({
     },
 
     fileSelected: function (file) {
-      console.log('fileSelected', file);
       if (!file) {
         this.set('fileUpload', null);
         return;
       }
+
+      this.set('currentFile', file.name);
 
       var date = new Date(file.name
         .replace(/[-–—_]/g, '/')

@@ -8,13 +8,18 @@ Fumc.FileUploadComponent = Ember.Component.extend({
   didInsertElement: function () {
     var component = this,
         input = component.get('element').querySelector('input[type=file]');
-    component.set('currentFile', this.get('oldFile'));
+
+    if (!this.get('currentFile')) {
+      component.set('currentFile', this.get('oldFile'));
+    }
+
     input.addEventListener('change', function () {
       var file = this.files[0];
-      console.log('file change event', file.name);
       component.set('currentFile', file.name);
+      console.log('just set currentFile', file.name);
       component.sendAction('change', file);
     }, false);
+
     this.set('input', input);
   },
 

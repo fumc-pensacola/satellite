@@ -32,9 +32,7 @@ module.exports = {
 				query.id = req.query.ids;
 			}
 			else if (req.query) {
-				for (var key in req.query) {
-					query[key] = orm.like('%' + req.query[key] + '%');
-				}
+				query = req.query;
 			}
 
 			Model.find(query, function (err, models) {
