@@ -25,21 +25,36 @@ module.exports = {
 	findMany: function (req, res) {
 		var modelName = inflector.singularize(req.params.modelName),
 			Model = req.models[modelName],
-			query = {};
+			query = {},
+			orderBy = [];
 
 		if (Model) {
-			if (req.query && req.query.ids) {
-				query.id = req.query.ids;
-			}
-			else if (req.query) {
+			if (req.query) {
+				if (req.query.ids) {
+					query.id = req.query.ids;
+				}
+
+				if (req.query.hasOwnProperty('orderBy')) {
+					orderBy = req.query.orderBy.split(',');
+					delete req.query.orderBy;
+					console.log(orderBy)
+				}
+
 				query = req.query;
 			}
 
-			Model.find(query, function (err, models) {
+			var q = Model.find(query);
+			for (var i = 0; i < orderBy.length; i++) {
+				var o = orderBy[i].split(':');
+				q = q.order(o[0], o[1] || 'A');
+			}
+
+			q.run(function (err, models) {
 				if (err) {
 					res.json(globalError(err.toString()));
+				} else {
+					res.json(models);
 				}
-				res.json(models);
 			});
 		}
 		else {
