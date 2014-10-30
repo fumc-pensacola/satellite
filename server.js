@@ -1,6 +1,7 @@
 var express = require('express'),
 	orm = require('orm'),
 	request = require('request'),
+	AWS = require('aws-sdk'),
 	inflectorController = require('./server/controllers/inflector'),
 	NODE_ENV = process.env.NODE_ENV,
 	currentToken;
@@ -11,6 +12,9 @@ module.exports = function (server) {
 	if (NODE_ENV === 'development') {
 		// dbUrl = process.env.LOCAL_PG_URL;
 	}
+
+	AWS.config.loadFromPath('./aws.json');
+	var s3 = new AWS.S3({ params: { Bucket: 'fumcappfiles' } });
 
 	server.use(orm.express(dbUrl, {
 		define: function (db, models, next) {
@@ -33,6 +37,18 @@ module.exports = function (server) {
 
 	server.get('/api/v1', function (req, res) {
 		res.send('API v1');
+	});
+
+	server.get('/api/file/:key', function (req, res) {
+		s3.getSignedUrl('getObject', { Key: req.params.key }, function (err, url) {
+			if (err) {
+				console.log(err);
+				res.status(500).send(err);
+			} else {
+				console.log(url);
+				res.redirect(303, url);
+			}
+		});
 	});
 
 	server.post('/api/:modelName', function (req, res) {
