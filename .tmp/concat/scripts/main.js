@@ -72,6 +72,12 @@ function program3(depth0,data) {
 
 function program5(depth0,data) {
   
+  
+  data.buffer.push("<i class=\"mail icon\"></i> Witnesses");
+  }
+
+function program7(depth0,data) {
+  
   var buffer = '', stack1;
   data.buffer.push(" <div class=\"right menu\"> <div class=\"item\"> <i class=\"user icon\"></i> Hello, ");
   stack1 = helpers._triageMustache.call(depth0, "name", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
@@ -82,18 +88,18 @@ function program5(depth0,data) {
   return buffer;
   }
 
-function program7(depth0,data) {
+function program9(depth0,data) {
   
   var buffer = '', stack1, helper, options;
   data.buffer.push(" <div class=\"right menu\"> ");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'class': ("item")
-  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "login", options) : helperMissing.call(depth0, "link-to", "login", options));
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "login", options) : helperMissing.call(depth0, "link-to", "login", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> ");
   return buffer;
   }
-function program8(depth0,data) {
+function program10(depth0,data) {
   
   
   data.buffer.push("Log in");
@@ -110,7 +116,12 @@ function program8(depth0,data) {
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "bulletins", options) : helperMissing.call(depth0, "link-to", "bulletins", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" ");
-  stack1 = helpers['if'].call(depth0, "loggedIn", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(7, program7, data),fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
+    'class': ("item")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "witnesses", options) : helperMissing.call(depth0, "link-to", "witnesses", options));
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "loggedIn", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> </div> </div> <div class=\"ui one column page grid\"> <div class=\"column\"> ");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
@@ -263,7 +274,9 @@ function program3(depth0,data) {
   data.buffer.push("<h1 class=\"ui header\">Bulletins</h1> <button class=\"ui blue button\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "newBulletin", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
   data.buffer.push(">New Bulletin</button> <div class=\"ui selection link divided list\"> ");
-  stack1 = helpers.each.call(depth0, "bulletin", "in", "controller", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  stack1 = helpers.each.call(depth0, "bulletin", "in", "arrangedContent", {hash:{
+    'itemController': ("bulletin")
+  },hashTypes:{'itemController': "STRING"},hashContexts:{'itemController': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> ");
   stack1 = (helper = helpers['basic-modal'] || (depth0 && depth0['basic-modal']),options={hash:{
@@ -330,7 +343,153 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
-Ember.TEMPLATES["showPDF"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+Ember.TEMPLATES["witness"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  
+  data.buffer.push(" <i class=\"unhide icon\"></i> ");
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" <button class=\"ui small black button\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "viewFile", {hash:{
+    'bubbles': (false)
+  },hashTypes:{'bubbles': "BOOLEAN"},hashContexts:{'bubbles': depth0},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">View</button> ");
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" <div class=\"ui red pointing above label\">");
+  stack1 = helpers._triageMustache.call(depth0, "errors.volume", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</div> ");
+  return buffer;
+  }
+
+function program7(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" <div class=\"ui red pointing above label\">");
+  stack1 = helpers._triageMustache.call(depth0, "errors.issue", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</div> ");
+  return buffer;
+  }
+
+function program9(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" <div class=\"ui red pointing above label\">");
+  stack1 = helpers._triageMustache.call(depth0, "errors.from", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</div> ");
+  return buffer;
+  }
+
+function program11(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" <div class=\"ui red pointing above label\">");
+  stack1 = helpers._triageMustache.call(depth0, "errors.to", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</div> ");
+  return buffer;
+  }
+
+  data.buffer.push(" <div class=\"ui grid\"> <div class=\"row\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleEditing", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push("> <div class=\"one wide column\"> ");
+  stack1 = helpers['if'].call(depth0, "witness.visible", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> <div class=\"eleven wide column\"> <div class=\"header\">");
+  stack1 = helpers._triageMustache.call(depth0, "witness.formattedDateRange", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</div> Volume ");
+  stack1 = helpers._triageMustache.call(depth0, "witness.volume", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(", Issue ");
+  stack1 = helpers._triageMustache.call(depth0, "witness.issue", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> <div class=\"four wide right column\"> ");
+  stack1 = helpers['if'].call(depth0, "witness.file", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" <button class=\"ui small red button\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "remove", {hash:{
+    'bubbles': (false)
+  },hashTypes:{'bubbles': "BOOLEAN"},hashContexts:{'bubbles': depth0},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Delete</button> </div> </div> <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":editing :row :slide witness.editing::hidden")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"sixteen wide column\"> <form class=\"ui fluid form\"> <div class=\"field\"> ");
+  data.buffer.push(escapeExpression((helper = helpers['file-upload'] || (depth0 && depth0['file-upload']),options={hash:{
+    'oldFile': ("witness.file"),
+    'change': ("fileSelected")
+  },hashTypes:{'oldFile': "ID",'change': "STRING"},hashContexts:{'oldFile': depth0,'change': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "file-upload", options))));
+  data.buffer.push(" </div> <div class=\"four fields\"> <div class=\"field\"> <label>Volume</label> <div class=\"ui left labeled input\"> ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'value': ("witness.volume")
+  },hashTypes:{'value': "ID"},hashContexts:{'value': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "errors.volume", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> </div> <div class=\"field\"> <label>Issue</label> <div class=\"ui left labeled input\"> ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'value': ("witness.issue")
+  },hashTypes:{'value': "ID"},hashContexts:{'value': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "errors.issue", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> </div> <div class=\"date field\"> <label>From Date</label> <div class=\"ui left labeled input\"> ");
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Fumc.DateField", {hash:{
+    'date': ("witness.from")
+  },hashTypes:{'date': "ID"},hashContexts:{'date': depth0},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "errors.from", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> </div> <div class=\"date field\"> <label>To Date</label> <div class=\"ui left labeled input\"> ");
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Fumc.DateField", {hash:{
+    'date': ("witness.to")
+  },hashTypes:{'date': "ID"},hashContexts:{'date': depth0},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "errors.to", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> </div> </div> <div class=\"field\"> <div class=\"ui checkbox\"> ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("checkbox"),
+    'checked': ("witness.visible")
+  },hashTypes:{'type': "STRING",'checked': "ID"},hashContexts:{'type': depth0,'checked': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push(" <label>Publish to app/website</label> </div> </div> <div class=\"ui buttons field\"> <button class=\"ui button\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "cancel", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Cancel</button> <div class=\"or\"></div> <button ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :blue :button witness.fileUpload.isUploading:disabled")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "save", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Save</button> </div> <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :blue :progress witness.fileUpload.showProgressBar::hidden witness.fileUpload.didUpload:successful")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"bar\" ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'style': ("witness.fileUpload.progressStyle")
+  },hashTypes:{'style': "STRING"},hashContexts:{'style': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("></div> </div> </form> </div> </div> </div> ");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["witnesses"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
@@ -338,17 +497,31 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '';
-  data.buffer.push(" <object ");
-  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
-    'data': ("showBulletinUrl")
-  },hashTypes:{'data': "STRING"},hashContexts:{'data': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push(">Your browser doesn&rsquo;t support embedded PDFs. Time to upgrade.</object> ");
+  data.buffer.push(" ");
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "witness", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(" ");
   return buffer;
   }
 
+function program3(depth0,data) {
+  
+  var buffer = '';
+  return buffer;
+  }
+
+  data.buffer.push("<h1 class=\"ui header\">Witnesses</h1> <button class=\"ui blue button\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "newWitness", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">New Witness</button> <div class=\"ui selection link divided list\"> ");
+  stack1 = helpers.each.call(depth0, "witness", "in", "arrangedContent", {hash:{
+    'itemController': ("witness")
+  },hashTypes:{'itemController': "STRING"},hashContexts:{'itemController': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> ");
   stack1 = (helper = helpers['basic-modal'] || (depth0 && depth0['basic-modal']),options={hash:{
-    'title': ("showBulletinTitle")
-  },hashTypes:{'title': "ID"},hashContexts:{'title': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "basic-modal", options));
+    'class': ("file-viewer"),
+    'initialize': ("registerModal"),
+    'title': ("showWitnessTitle")
+  },hashTypes:{'class': "STRING",'initialize': "STRING",'title': "ID"},hashContexts:{'class': depth0,'initialize': depth0,'title': depth0},inverse:self.noop,fn:self.program(3, program3, data),contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "basic-modal", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" ");
   return buffer;
@@ -550,6 +723,20 @@ Fumc.FileUploadModel = Ember.Object.extend({
 
 (function() {
 
+Fumc.Witness = DS.Model.extend({
+  from: DS.attr('date'),
+  to: DS.attr('date'),
+  volume: DS.attr('number'),
+  issue: DS.attr('number'),
+  visible: DS.attr('boolean'),
+  file: DS.attr('string')
+});
+
+
+})();
+
+(function() {
+
 Fumc.AuthenticatedRoute = Ember.Route.extend({
 
   beforeModel: function (transition) {
@@ -583,6 +770,17 @@ Fumc.BulletinsRoute = Fumc.AuthenticatedRoute.extend({
 	model: function () {
 		return this.store.find('bulletin');
 	}
+});
+
+
+})();
+
+(function() {
+
+Fumc.WitnessesRoute = Fumc.AuthenticatedRoute.extend({
+  model: function () {
+    return this.store.find('witness');
+  }
 });
 
 
@@ -657,7 +855,6 @@ Fumc.BulletinController = Ember.ObjectController.extend({
   modal: Ember.computed.alias('controllers.bulletins.modal'),
 
   init: function () {
-    console.log('bulletin controller init');
     this.set('initialDate', this.get('date'));
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {
       this.set('editing', true);
@@ -668,10 +865,6 @@ Fumc.BulletinController = Ember.ObjectController.extend({
   formattedDate: function () {
     return moment(this.get('date')).format('MMMM D, YYYY');
   }.property('date'),
-
-  logCurrentFile: function () {
-    console.log('controller currentFile set', this.get('currentFile'));
-  }.observes('currentFile'),
 
   actions: {
 
@@ -696,7 +889,6 @@ Fumc.BulletinController = Ember.ObjectController.extend({
 
       if (fileUpload) {
         if (fileUpload.name !== oldFile) {
-          console.lo
           Fumc.s3.deleteObject({ Key: oldFile }).send();
         }
         fileUpload.uploadFile().then(function (key) {
@@ -777,12 +969,13 @@ Fumc.BulletinController = Ember.ObjectController.extend({
 (function() {
 
 Fumc.BulletinsController = Ember.ArrayController.extend({
-	itemController: 'bulletin',
 
-	sortAscending: false,
-	sortProperties: ['date', 'service'],
+	//itemController: 'bulletin',
 
 	modal: null,
+
+	sortAscending: false,
+	sortProperties: ['id'],
 
 	actions: {
 
@@ -856,6 +1049,114 @@ Fumc.AuthenticateRoute = Ember.Route.extend({
 
 (function() {
 
+Fumc.WitnessController = Fumc.BulletinController.extend({
+
+  needs: ['application', 'witnesses'],
+
+  modal: Ember.computed.alias('controllers.witnesses.modal'),
+
+  formattedDateRange: function () {
+    return moment(this.get('from')).format('MMMM D') + " – " + moment(this.get('to')).format('MMMM D, YYYY');
+  }.property('from', 'to'),
+
+  updateVolume: function () {
+    this.set('volume', moment(this.get('from')).year() - 1820);
+  }.observes('from'),
+
+  updateTo: function () {
+    this.set('to', moment(this.get('from')).add(1, 'weeks').endOf('week').startOf('day'));
+  }.observes('from'),
+
+  actions: {
+
+    save: function () {
+
+      var fileUpload = this.get('fileUpload'),
+          model = this.get('model'),
+          oldFile = this.get('file'),
+          saved = function () {
+            setTimeout(function () { this.set('editing', false) }.bind(this), 600);
+          }.bind(this);
+
+      if (fileUpload && fileUpload.isUploading) {
+        return false;
+      }
+
+      this.set('from', new Date(this.get('from')));
+      this.set('to', new Date(this.get('to')));
+
+      if (fileUpload) {
+        if (fileUpload.name !== oldFile) {
+          Fumc.s3.deleteObject({ Key: oldFile }).send();
+        }
+        fileUpload.uploadFile().then(function (key) {
+          this.set('file', key);
+          model.save().then(saved);
+        }.bind(this));
+      } else {
+        model.save().then(saved);
+      }
+    },
+
+    fileSelected: function (file) {
+      if (!file) {
+        this.set('fileUpload', null);
+        return;
+      }
+
+      this.set('currentFile', file.name);
+
+      var date = new Date(file.name
+        .replace(/[-–—_]/g, '/')
+        .replace(/[^0-9\/]/g, '')
+        .replace(/^\//, '')
+        .replace(/\/$/, '')
+      );
+
+
+      if (!isNaN(date.getDate()) && date.getFullYear() - new Date().getFullYear() <= 1) {
+        this.set('from', date);
+      }
+
+      this.set('fileUpload', Fumc.FileUploadModel.create({
+        fileToUpload: file
+      }));
+    }
+
+  }
+
+});
+
+
+})();
+
+(function() {
+
+Fumc.WitnessesController = Fumc.BulletinsController.extend({
+
+  actions: {
+
+    newWitness: function () {
+      this.store.createRecord('witness', {
+        from: moment().add(1, 'weeks').startOf('week'),
+        to: moment().add(1, 'weeks').endOf('week').startOf('day'),
+        volume: moment().add(1, 'weeks').startOf('week').year() - 1820
+      });
+    },
+
+    registerModal: function (modal) {
+      this.set('modal', modal);
+    }
+
+  }
+
+});
+
+
+})();
+
+(function() {
+
 Fumc.ApplicationView = Ember.View.extend({
 
 });
@@ -918,6 +1219,18 @@ Fumc.DateField = Ember.TextField.extend({
     }
     this.set('picker', null);
   }
+});
+
+
+})();
+
+(function() {
+
+Fumc.WitnessView = Fumc.BulletinView.extend({
+
+  templateName: 'witness',
+  classNames: ['item', 'witness']
+
 });
 
 
@@ -1011,8 +1324,7 @@ Fumc.Router.map(function () {
 	this.route('login');
 	this.route('authenticate');
 	this.resource('bulletins');
-	this.route('about');
-	this.route('contact');
+	this.resource('witnesses');
 	this.route('error404', { path: '*:' });
 });
 

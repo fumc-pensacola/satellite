@@ -10,7 +10,6 @@ Fumc.BulletinController = Ember.ObjectController.extend({
   modal: Ember.computed.alias('controllers.bulletins.modal'),
 
   init: function () {
-    console.log('bulletin controller init');
     this.set('initialDate', this.get('date'));
     if (~this.get('currentState.stateName').indexOf('uncommitted')) {
       this.set('editing', true);
@@ -21,10 +20,6 @@ Fumc.BulletinController = Ember.ObjectController.extend({
   formattedDate: function () {
     return moment(this.get('date')).format('MMMM D, YYYY');
   }.property('date'),
-
-  logCurrentFile: function () {
-    console.log('controller currentFile set', this.get('currentFile'));
-  }.observes('currentFile'),
 
   actions: {
 
@@ -49,7 +44,6 @@ Fumc.BulletinController = Ember.ObjectController.extend({
 
       if (fileUpload) {
         if (fileUpload.name !== oldFile) {
-          console.lo
           Fumc.s3.deleteObject({ Key: oldFile }).send();
         }
         fileUpload.uploadFile().then(function (key) {

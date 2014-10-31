@@ -1,10 +1,11 @@
 Fumc.BulletinsController = Ember.ArrayController.extend({
-	itemController: 'bulletin',
 
-	sortAscending: false,
-	sortProperties: ['date', 'service'],
+	//itemController: 'bulletin',
 
 	modal: null,
+
+	sortAscending: false,
+	sortProperties: ['id'],
 
 	actions: {
 
