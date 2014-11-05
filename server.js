@@ -2,9 +2,13 @@ var express = require('express'),
 	orm = require('orm'),
 	request = require('request'),
 	AWS = require('aws-sdk'),
+	moment = require('moment'),
+	ical = require('ical-generator'),
 	inflectorController = require('./server/controllers/inflector'),
+	ACSController = require('./server/controllers/acs'),
 	NODE_ENV = process.env.NODE_ENV,
-	currentToken;
+	currentToken,
+	calendar;
 
 module.exports = function (server) {
 
@@ -15,6 +19,30 @@ module.exports = function (server) {
 
 	AWS.config.loadFromPath('./aws.json');
 	var s3 = new AWS.S3({ params: { Bucket: 'fumcappfiles' } });
+
+	var acsController = new ACSController();
+	acsController.setup();
+
+	server.get('/calendar', function (req, res) {
+		acsController.sharedInstance().then(function (acs) {
+			return acs.getMainCalendarEvents(moment().subtract(1, 'years'), moment().add(1, 'years'));
+		}).then(function (events) {
+			var calendar = ical();
+			calendar.setDomain('fumc.herokuapp.com');
+
+			for (var i = 0; i < events.length; i++) {
+				console.log(i, events[i]);
+				calendar.addEvent({
+					start: events[i].from,
+					end: events[i].to,
+					summary: events[i].name,
+					description: events[i].description
+				});
+			}
+
+			calendar.serve(res);
+		});
+	});
 
 	server.use(orm.express(dbUrl, {
 		define: function (db, models, next) {
