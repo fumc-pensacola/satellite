@@ -25,8 +25,10 @@ module.exports = function (server) {
 
 	server.get('/calendar', function (req, res) {
 		acsController.sharedInstance().then(function (acs) {
+			console.log('Getting events...');
 			return acs.getMainCalendarEvents(moment().subtract(1, 'years'), moment().add(1, 'years'));
 		}).then(function (events) {
+			console.log('Got events!');
 			var calendar = ical();
 			calendar.setDomain('fumc.herokuapp.com');
 
@@ -38,7 +40,7 @@ module.exports = function (server) {
 					description: events[i].description
 				});
 			}
-
+			console.log('Serving events...');
 			calendar.serve(res);
 		});
 	});

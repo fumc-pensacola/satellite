@@ -19,6 +19,7 @@ function ACS (ACSGeneralService, ACSEventService) {
         } else {
           self.tokenExpiry = moment().add(59, 'minutes');
           token = response.getLoginTokenResult;
+          console.log('Logged in!');
           resolve(self);
         }
       });

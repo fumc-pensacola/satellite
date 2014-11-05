@@ -43,6 +43,7 @@ module.exports = function () {
       Promise.all([connect(wsca), connect(wscea)]).then(function () {
         var ACSGeneralService = wsca.createModel('wsca', { }),
             ACSEventService = wscea.createModel('wscea', { });
+        console.log('Connected!');
         resolve(new ACS(ACSGeneralService, ACSEventService));
       });
 
