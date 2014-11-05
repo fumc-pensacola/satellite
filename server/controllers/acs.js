@@ -1,5 +1,6 @@
 var loopback = require('loopback'),
     ACS = require('../models/acs'),
+    Promise = require('es6-promise').Promise,
     instance = null;
 
 module.exports = function () {

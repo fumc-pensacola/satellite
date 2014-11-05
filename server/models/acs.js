@@ -1,4 +1,5 @@
-var moment = require('moment');
+var moment = require('moment'),
+    Promise = require('es6-promise').Promise;
 
 function ACS (ACSGeneralService, ACSEventService) {
 

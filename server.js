@@ -31,7 +31,6 @@ module.exports = function (server) {
 			calendar.setDomain('fumc.herokuapp.com');
 
 			for (var i = 0; i < events.length; i++) {
-				console.log(i, events[i]);
 				calendar.addEvent({
 					start: events[i].from,
 					end: events[i].to,

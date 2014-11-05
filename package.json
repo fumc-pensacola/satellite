@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": "0.11.x"
+    "node": "0.10.x"
   },
   "scripts": {
     "start": "grunt server"
@@ -16,6 +16,7 @@
   "author": "Author Name <email@email.com>",
   "dependencies": {
     "aws-sdk": "~2.0.21",
+    "es6-promise": "^2.0.0",
     "express": "~3.4.4",
     "ical-generator": "^0.1.9",
     "loopback": "~2.7.0",
