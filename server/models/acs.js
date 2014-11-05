@@ -13,8 +13,10 @@ function ACS (ACSGeneralService, ACSEventService) {
   this.login = function () {
     var self = this;
     return new Promise(function (resolve, reject) {
+      console.log('Logging in...');
       ACSGeneralService.getLoginToken({ secid: secId, siteid: siteId }, function (err, response) {
         if (err || !response.getLoginTokenResult) {
+          console.log('Error logging in.', err);
           reject(err || new Error('getLoginToken failed'));
         } else {
           self.tokenExpiry = moment().add(59, 'minutes');
