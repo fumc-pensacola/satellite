@@ -20,7 +20,7 @@
     "express": "~3.4.4",
     "ical-generator": "^0.1.9",
     "loopback": "~2.7.0",
-    "loopback-connector-soap": "~1.1.0",
+    "loopback-connector-soap": "1.0.1",
     "loopback-datasource-juggler": "~2.10.2",
     "moment": "~2.8.3",
     "mysql": "~2.0.1",
