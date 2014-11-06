@@ -32,25 +32,61 @@ function ACS (ACSGeneralService, ACSEventService) {
     return token && this.tokenExpiry > new Date();
   };
 
-  this.getMainCalendarEvents = function (from, to) {
+  this.getCalendars = function () {
     return new Promise(function (resolve, reject) {
-      var params = {
-        token: token,
-        startdate: moment(from).format('YYYY-MM-DD'),
-        stopdate: moment(to).format('YYYY-MM-DD'),
-        CalendarId: mainCalendarId
-      };
-
-      ACSEventService.getCalendarEvents(params, function (err, response) {
+      ACSEventService.getCalendars({ token: token, isPublished: true }, function (err, response) {
         if (err) {
           reject(err);
         } else {
-          resolve(response.getCalendarEventsResult.diffgram.NewDataSet.dbs.map(function (e) {
-            if (e.isPublished) {
-              return new ACS.CalendarEvent(e);
-            }
+          resolve(response.getCalendarsResult.diffgram.NewDataSet.dbs.map(function (c) {
+            return { id: c.CalendarID, name: c.CalendarName };
           }));
         }
+      })
+    });
+  };
+
+  this.getCalendarEvents = function (calendar, from, to) {
+
+    var self = this;
+    var calendarId = new Promise(function (resolve, reject) {
+      if (/([a-f0-9]+?-)+?/.test(calendar)) {
+        resolve(calendar);
+      } else {
+        self.getCalendars().then(function (calendars) {
+          for (var i = 0; i < calendars.length; i++) {
+            if (calendars[i].name.toLowerCase().replace(/[^a-z0-9]/g, '') === calendar.toLowerCase()) {
+              console.log(calendars[i].id);
+              resolve(calendars[i].id);
+              break;
+            }
+          }
+        });
+      }
+    });
+
+    return new Promise(function (resolve, reject) {
+
+      calendarId.then(function (id) {
+
+        var params = {
+          token: token,
+          startdate: moment(from).format('YYYY-MM-DD'),
+          stopdate: moment(to).format('YYYY-MM-DD'),
+          CalendarId: id
+        };
+
+        ACSEventService.getCalendarEvents(params, function (err, response) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(response.getCalendarEventsResult.diffgram.NewDataSet.dbs.map(function (e) {
+              if (e.isPublished) {
+                return new ACS.CalendarEvent(e);
+              }
+            }));
+          }
+        });
       });
     });
   };

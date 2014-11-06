@@ -20,31 +20,6 @@ module.exports = function (server) {
 	AWS.config.loadFromPath('./aws.json');
 	var s3 = new AWS.S3({ params: { Bucket: 'fumcappfiles' } });
 
-	var acsController = new ACSController();
-	acsController.setup();
-
-	server.get('/calendar', function (req, res) {
-		acsController.sharedInstance().then(function (acs) {
-			console.log('Getting events...');
-			return acs.getMainCalendarEvents(moment().subtract(1, 'years'), moment().add(1, 'years'));
-		}).then(function (events) {
-			console.log('Got events!');
-			var calendar = ical();
-			calendar.setDomain('fumc.herokuapp.com');
-
-			for (var i = 0; i < events.length; i++) {
-				calendar.addEvent({
-					start: events[i].from,
-					end: events[i].to,
-					summary: events[i].name,
-					description: events[i].description
-				});
-			}
-			console.log('Serving events...');
-			calendar.serve(res);
-		});
-	});
-
 	server.use(orm.express(dbUrl, {
 		define: function (db, models, next) {
 			// Load your models here
@@ -67,6 +42,31 @@ module.exports = function (server) {
 
 	server.get('/api/v1', function (req, res) {
 		res.send('API v1');
+	});
+
+	var acsController = new ACSController();
+	acsController.setup();
+
+	server.get('/api/calendars/:id', function (req, res) {
+		acsController.sharedInstance().then(function (acs) {
+			console.log('Getting events...');
+			return acs.getCalendarEvents(req.params.id, moment().subtract(1, 'years'), moment().add(1, 'years'));
+		}).then(function (events) {
+			console.log('Got events!');
+			var calendar = ical();
+			calendar.setDomain('fumc.herokuapp.com');
+
+			for (var i = 0; i < events.length; i++) {
+				calendar.addEvent({
+					start: events[i].from,
+					end: events[i].to,
+					summary: events[i].name,
+					description: events[i].description
+				});
+			}
+			console.log('Serving events...');
+			calendar.serve(res);
+		});
 	});
 
 	server.get('/api/file/:key', function (req, res) {
