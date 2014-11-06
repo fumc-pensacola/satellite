@@ -3,12 +3,19 @@ module.exports = function (grunt) {
 	// Load configuration from individual files in grunt dir
 	require('load-grunt-config')(grunt);
 
+	grunt.registerTask('deploy', [
+		'build',
+		'gitadd',
+		'gitcommit',
+		//'gitpush'
+	])
+
 	grunt.registerTask('compile', [
 		'clean',
 		'copy',
 		'emberTemplates',
-		
-		
+
+
 		'neuter'
 	]);
 
