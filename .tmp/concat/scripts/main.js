@@ -82,6 +82,12 @@ function program5(depth0,data) {
 
 function program7(depth0,data) {
   
+  
+  data.buffer.push("<i class=\"calendar icon\"></i> Calendars");
+  }
+
+function program9(depth0,data) {
+  
   var buffer = '', stack1;
   data.buffer.push(" <div class=\"right menu\"> <div class=\"item\"> <i class=\"user icon\"></i> Hello, ");
   stack1 = helpers._triageMustache.call(depth0, "name", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
@@ -92,18 +98,18 @@ function program7(depth0,data) {
   return buffer;
   }
 
-function program9(depth0,data) {
+function program11(depth0,data) {
   
   var buffer = '', stack1, helper, options;
   data.buffer.push(" <div class=\"right menu\"> ");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'class': ("item")
-  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "login", options) : helperMissing.call(depth0, "link-to", "login", options));
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "login", options) : helperMissing.call(depth0, "link-to", "login", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> ");
   return buffer;
   }
-function program10(depth0,data) {
+function program12(depth0,data) {
   
   
   data.buffer.push("Log in");
@@ -125,7 +131,12 @@ function program10(depth0,data) {
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "witnesses", options) : helperMissing.call(depth0, "link-to", "witnesses", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" ");
-  stack1 = helpers['if'].call(depth0, "loggedIn", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
+    'class': ("item")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "calendars", options) : helperMissing.call(depth0, "link-to", "calendars", options));
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "loggedIn", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(11, program11, data),fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> </div> </div> <div class=\"ui one column page grid\"> <div class=\"column\"> ");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
@@ -293,6 +304,28 @@ function program3(depth0,data) {
   },hashTypes:{'class': "STRING",'initialize': "STRING",'title': "ID"},hashContexts:{'class': depth0,'initialize': depth0,'title': depth0},inverse:self.noop,fn:self.program(3, program3, data),contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "basic-modal", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" ");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["calendars"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data
+/**/) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div class=\"narrow\"> <h1 class=\"ui header\">Calendars</h1> <p class=\"ui red segment\"><strong>Warning!</strong> This feature is in beta. Pay close attention around seasonal time changes and report any inconsistancies you find to <a href=\"mailto:andrewbranch@mail.com\">Drew</a>.</p> <p>ACS calendars can be converted to iCalendar format via this web app for use with Google Calendar, Apple&rsquo;s Calendar.app, iPhone calendars, and many others. To subscribe to them, use the URLs provided below. Only published events are included. There is an extraordinary number of events on the ACS calendar, so at any given time you can only see events one year back and one year ahead. This specification is subject to change in the future.</p> <div class=\"space-below\"> <h2 class=\"ui header\">The Easy Way</h2> <div class=\"space-below\"> <a href=\"webcal://fumc.herokuapp.com/api/calendars/all\" class=\"ui blue button\">Subscribe to Combined Calendar</a> </div> <div class=\"ui action input\"> ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'value': ("calendarName"),
+    'id': ("calendar-name"),
+    'placeholder': ("Type name of calendar...")
+  },hashTypes:{'value': "ID",'id': "STRING",'placeholder': "STRING"},hashContexts:{'value': depth0,'id': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push(" <a ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'href': ("calendarURL")
+  },hashTypes:{'href': "STRING"},hashContexts:{'href': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" class=\"ui blue button\">Subscribe to Specific Calendar</a> </div> </div> <div class=\"ui secondary segment\"> <h2 class=\"ui header\">Documentation</h2> <h4 class=\"ui header\">Named Calendars</h4> <p>Any individual calendar, even ones that are added in the future, can be accessed by name. To do so, remove any spaces and special characters from the calendar name, and append it to the URL <code>webcal://fumc.herokuapp.com/api/calendars/</code>. For example, the URL for the &ldquo;MCA &amp; Children's Ministry&rdquo; calendar would be</p> <div class=\"ui segment\"><code>webcal://fumc.herokuapp.com/api/calendars/MCAChildrensMinistry</code></div> <p>Capitalization of the calendar name is ignored.</p> <h4 class=\"ui header\">All Calendars Combined</h4> <p>You can alternatively subscribe to one calendar that combines published events from all calendars. Just replace the name of the calendar in the URL above with <code>all</code>.</p> </div> </div> ");
   return buffer;
   
 });
@@ -1011,6 +1044,19 @@ Fumc.BulletinsController = Ember.ArrayController.extend({
 
 (function() {
 
+Fumc.CalendarsController = Ember.Controller.extend({
+
+  calendarURL: function () {
+    return 'webcal://fumc.herokuapp.com/api/calendars/' + (this.get('calendarName') || '').replace(/[^A-Za-z0-9]/g, '');
+  }.property('calendarName')
+
+});
+
+
+})();
+
+(function() {
+
 Fumc.LoginController = Ember.Controller.extend({
 
   needs: ['application'],
@@ -1339,6 +1385,7 @@ Fumc.Router.map(function () {
 	this.route('authenticate');
 	this.resource('bulletins');
 	this.resource('witnesses');
+	this.route('calendars');
 	this.route('error404', { path: '*:' });
 });
 

@@ -186,6 +186,24 @@ body {
 	height: auto !important;
 }
 
+a {
+	color: #009FDA;
+	text-decoration: none;
+}
+
+code {
+	padding: 2px 4px;
+	font-size: 90%;
+	color: #c7254e;
+	background-color: #f9f2f4;
+	border-radius: 4px;
+}
+
+.narrow {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
 .hidden {
 	display: none !important;
 }
@@ -210,6 +228,10 @@ body {
 
 .space-below {
 	margin-bottom: 25px;
+}
+
+.space-above {
+	margin-top: 25px;
 }
 
 .bulletin .editing.row {
@@ -266,4 +288,8 @@ body {
 
 .ui.horizontal.label {
 	margin-top: 0 !important;
+}
+
+#calendar-name {
+	width: 300px;
 }
