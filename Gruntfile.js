@@ -7,8 +7,8 @@ module.exports = function (grunt) {
 		'build',
 		'gitadd',
 		'gitcommit',
-		//'gitpush'
-	])
+		'gitpush'
+	]);
 
 	grunt.registerTask('compile', [
 		'clean',
