@@ -3,7 +3,7 @@ var express = require('express'),
 	request = require('request'),
 	AWS = require('aws-sdk'),
 	moment = require('moment'),
-	ical = require('ical-generator'),
+	ical = require('icalendar'),
 	inflectorController = require('./server/controllers/inflector'),
 	ACSController = require('./server/controllers/acs'),
 	NODE_ENV = process.env.NODE_ENV,
@@ -53,19 +53,20 @@ module.exports = function (server) {
 			return acs.getCalendarEvents(req.params.id, moment().subtract(1, 'years'), moment().add(1, 'years'));
 		}).then(function (events) {
 			console.log('Got events!');
-			var calendar = ical();
-			calendar.setDomain('fumc.herokuapp.com');
+			var calendar = new ical.iCalendar();
+			console.log('created calendar');
 
 			for (var i = 0; i < events.length; i++) {
-				calendar.addEvent({
-					start: events[i].from,
-					end: events[i].to,
-					summary: events[i].name,
-					description: events[i].description
-				});
+				var e = new ical.VEvent(calendar, events[i].id + i);
+				e.setDate(events[i].from, events[i].to);
+				e.setSummary(events[i].name);
+				e.setDescription(events[i].description);
+				calendar.addComponent(e);
 			}
-			console.log('Serving events...');
-			calendar.serve(res);
+			console.log('serving calendar');
+			res.setHeader('Content-disposition', 'attachment; filename=' + req.params.id + '.ics');
+			res.setHeader('Content-type', 'text/calendar');
+			res.send(calendar.toString());
 		});
 	});
 

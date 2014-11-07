@@ -1,7 +1,7 @@
 {
   "name": "fumc",
   "version": "0.0.0",
-  "description": "",
+  "description": "Internal app for IT admins to control website and mobile app content",
   "main": "index.js",
   "engines": {
     "node": "0.11.13"
@@ -18,11 +18,12 @@
     "aws-sdk": "~2.0.21",
     "es6-promise": "^2.0.0",
     "express": "~3.4.4",
-    "ical-generator": "^0.1.9",
+    "icalendar": "^0.7.1",
     "loopback": "~2.7.0",
     "loopback-connector-soap": "^1.1.1",
     "loopback-datasource-juggler": "~2.10.2",
     "moment": "~2.8.3",
+    "moment-timezone": "^0.2.4",
     "mysql": "~2.0.1",
     "natural": "~0.1.24",
     "orm": "~2.1.3",

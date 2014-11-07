@@ -1,5 +1,13 @@
-var moment = require('moment'),
+var moment = require('moment-timezone'),
     Promise = require('es6-promise').Promise;
+
+function sanitize (str) {
+  return str.replace(/\r\n/g, ' ').replace(/\r/g, ' ').replace(/\n/g, ' ');
+};
+
+function fixTimeZone (date) {
+  return moment(date).add(1, 'hours').tz('America/Chicago').toDate();
+};
 
 function ACS (ACSGeneralService, ACSEventService) {
 
@@ -50,13 +58,14 @@ function ACS (ACSGeneralService, ACSEventService) {
 
     var self = this;
     var calendarId = new Promise(function (resolve, reject) {
-      if (/([a-f0-9]+?-)+?/.test(calendar)) {
+      if (calendar.toLowerCase() === 'all') {
+        resolve(null);
+      } else if (/([a-f0-9]+?-)+?/.test(calendar)) {
         resolve(calendar);
       } else {
         self.getCalendars().then(function (calendars) {
           for (var i = 0; i < calendars.length; i++) {
             if (calendars[i].name.toLowerCase().replace(/[^a-z0-9]/g, '') === calendar.toLowerCase()) {
-              console.log(calendars[i].id);
               resolve(calendars[i].id);
               break;
             }
@@ -70,18 +79,24 @@ function ACS (ACSGeneralService, ACSEventService) {
       calendarId.then(function (id) {
 
         var params = {
-          token: token,
-          startdate: moment(from).format('YYYY-MM-DD'),
-          stopdate: moment(to).format('YYYY-MM-DD'),
-          CalendarId: id
-        };
+              token: token,
+              startdate: moment(from).format('YYYY-MM-DD'),
+              stopdate: moment(to).format('YYYY-MM-DD'),
+              CalendarId: id
+            },
+            method = 'getCalendarEvents';
 
-        ACSEventService.getCalendarEvents(params, function (err, response) {
+        if (!id) {
+          delete params.CalendarId;
+          method = 'getEventsByDateRange';
+        }
+
+        ACSEventService[method](params, function (err, response) {
           if (err) {
             reject(err);
           } else {
-            resolve(response.getCalendarEventsResult.diffgram.NewDataSet.dbs.map(function (e) {
-              if (e.isPublished) {
+            resolve(response[method + 'Result'].diffgram.NewDataSet.dbs.map(function (e) {
+              if (e.isPublished !== false) {
                 return new ACS.CalendarEvent(e);
               }
             }));
@@ -94,12 +109,12 @@ function ACS (ACSGeneralService, ACSEventService) {
 };
 
 ACS.CalendarEvent = function (e) {
-  this.id = e.EventId;
+  this.id = e.EventId || e.eventId;
   this.calendar = e.CalendarName;
   this.name = e.EventName;
-  this.description = e.Description || null;
-  this.from = new Date(e.StartDate);
-  this.to = new Date(e.StopDate);
+  this.description = e.Description ? sanitize(e.Description) : null;
+  this.from = fixTimeZone(e.StartDate || e.startdate);
+  this.to = fixTimeZone(e.StopDate || e.stopdate);
 };
 
 module.exports = ACS;
