@@ -3,18 +3,52 @@ var moment = require('moment-timezone'),
 
 function sanitize (str) {
   return str.replace(/\r\n/g, ' ').replace(/\r/g, ' ').replace(/\n/g, ' ');
-};
+}
 
 function fixTimeZone (date) {
   return moment(date).add(1, 'hours').tz('America/Chicago').toDate();
-};
+}
+
+function matchCalendar (calendars, name) {
+  for (var i = 0; i < calendars.length; i++) {
+    if (calendars[i].name.toLowerCase().replace(/[^a-z0-9]/g, '') === name.toLowerCase()) {
+      return calendars[i];
+    }
+  }
+}
+
+function matchLocation (locations, id) {
+  for (var i = 0; i < locations.length; i++) {
+    if (locations[i].id === id) {
+      return locations[i];
+    }
+  }
+}
+
+function intersect (a, b) {
+  var ai = bi= 0;
+  var result = [];
+
+  while (ai < a.length && bi < b.length) {
+    if      (a[ai] < b[bi] ) { ai++; }
+    else if (a[ai] > b[bi] ) { bi++; }
+    else {
+      result.push(ai);
+      ai++;
+      bi++;
+    }
+  }
+  return result;
+}
 
 function ACS (ACSGeneralService, ACSEventService) {
 
   var secId = '_ane=U&RAP_u4aS-a5ebreJufU',
       siteId = 10978,
       mainCalendarId = '59a420c9-6854-43d4-89da-08e3ffa4e07f',
-      token = null;
+      token = null,
+      calendars = [],
+      locations = [];
 
   this.tokenExpiry = moment();
 
@@ -40,13 +74,28 @@ function ACS (ACSGeneralService, ACSEventService) {
     return token && this.tokenExpiry > new Date();
   };
 
+  this.getLocations = function () {
+    return new Promise(function (resolve, reject) {
+      ACSEventService.getResourcesByType({ token: token, typeID: 2 }, function (err, response) {
+        if (err) {
+          console.error('Could not get locations.', err);
+          reject(err);
+        } else {
+          resolve(locations = response.getResourcesByTypeResult.diffgram.NewDataSet.dbs.map(function (l) {
+            return new ACS.Location(l);
+          }));
+        }
+      });
+    });
+  };
+
   this.getCalendars = function () {
     return new Promise(function (resolve, reject) {
       ACSEventService.getCalendars({ token: token, isPublished: true }, function (err, response) {
         if (err) {
           reject(err);
         } else {
-          resolve(response.getCalendarsResult.diffgram.NewDataSet.dbs.map(function (c) {
+          resolve(calendars = response.getCalendarsResult.diffgram.NewDataSet.dbs.map(function (c) {
             return { id: c.CalendarID, name: c.CalendarName };
           }));
         }
@@ -63,14 +112,18 @@ function ACS (ACSGeneralService, ACSEventService) {
       } else if (/([a-f0-9]+?-)+?/.test(calendar)) {
         resolve(calendar);
       } else {
-        self.getCalendars().then(function (calendars) {
-          for (var i = 0; i < calendars.length; i++) {
-            if (calendars[i].name.toLowerCase().replace(/[^a-z0-9]/g, '') === calendar.toLowerCase()) {
-              resolve(calendars[i].id);
-              break;
+        var c;
+        if (c = matchCalendar(calendars, calendar)) {
+          resolve(c.id);
+        } else {
+          self.getCalendars().then(function (calendars) {
+            if (c = matchCalendar(calendars, calendar)) {
+              resolve(c.id);
+            } else {
+              reject(new Error('Could not find calendar with name: ' + calendar));
             }
-          }
-        });
+          });
+        }
       }
     });
 
@@ -93,13 +146,52 @@ function ACS (ACSGeneralService, ACSEventService) {
 
         ACSEventService[method](params, function (err, response) {
           if (err) {
+            console.error(method + ' failed.', err);
             reject(err);
           } else {
-            resolve(response[method + 'Result'].diffgram.NewDataSet.dbs.map(function (e) {
-              if (e.isPublished !== false) {
-                return new ACS.CalendarEvent(e);
+            var requestedLocationIds = [],
+                cachedLocationIds = locations.map(function (l) { return l.id; }),
+                needsLocationCacheUpdate = false,
+                events = response[method + 'Result'].diffgram.NewDataSet.dbs.map(function (e) {
+                  if (e.isPublished !== false) {
+                    var event = new ACS.CalendarEvent(e);
+                    event.locationId && requestedLocationIds.push(event.locationId);
+                    return event;
+                  }
+                });
+
+            for (var i = 0; i < requestedLocationIds.length; i++) {
+              if (!~cachedLocationIds.indexOf(requestedLocationIds[i])) {
+                needsLocationCacheUpdate = true;
+                break;
               }
-            }));
+            }
+
+            function processLocations (locations) {
+              for (i = 0; i < events.length; i++) {
+                var event = events[i], l;
+                if (!event.locationId) {
+                  event.location = null;
+                } else if (l = matchLocation(locations, event.locationId)) {
+                  event.location = l;
+                } else {
+                  event.location = null;
+                }
+              }
+            }
+
+            var getLocations = Promise.resolve();
+            if (needsLocationCacheUpdate) {
+              console.log('Requesting locations');
+              getLocations = self.getLocations().then(processLocations);
+            } else {
+              console.log('Using cached locations');
+              processLocations(locations);
+            }
+
+            getLocations.then(function () {
+              resolve(events);
+            });
           }
         });
       });
@@ -115,6 +207,13 @@ ACS.CalendarEvent = function (e) {
   this.description = e.Description ? sanitize(e.Description) : null;
   this.from = fixTimeZone(e.StartDate || e.startdate);
   this.to = fixTimeZone(e.StopDate || e.stopdate);
+  this.locationId = e.locationid || e.LocationID || null;
 };
+
+ACS.Location = function (l) {
+  this.id = l.resourceid;
+  this.name = l.resourcename;
+  this.description = l.description;
+}
 
 module.exports = ACS;

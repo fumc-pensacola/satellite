@@ -61,6 +61,7 @@ module.exports = function (server) {
 				e.setDate(events[i].from, events[i].to);
 				e.setSummary(events[i].name);
 				e.setDescription(events[i].description);
+				events[i].location && e.setLocation(events[i].location.name);
 				calendar.addComponent(e);
 			}
 			console.log('serving calendar');
