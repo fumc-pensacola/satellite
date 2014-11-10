@@ -50,11 +50,12 @@ module.exports = function (server) {
 	server.get('/api/calendars/:id', function (req, res) {
 		acsController.sharedInstance().then(function (acs) {
 			console.log('Getting events...');
-			return acs.getCalendarEvents(req.params.id, moment().subtract(1, 'years'), moment().add(1, 'years'));
+			var from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),
+					to = req.query.to ? new Date(req.query.to) : moment().add(1, 'years');
+			return acs.getCalendarEvents(req.params.id, from, to);
 		}).then(function (events) {
 			console.log('Got events!');
 			var calendar = new ical.iCalendar();
-			console.log('created calendar');
 
 			for (var i = 0; i < events.length; i++) {
 				var e = new ical.VEvent(calendar, events[i].id + i);
@@ -64,7 +65,7 @@ module.exports = function (server) {
 				events[i].location && e.setLocation(events[i].location.name);
 				calendar.addComponent(e);
 			}
-			console.log('serving calendar');
+			console.log('Serving calendar.');
 			res.setHeader('Content-disposition', 'attachment; filename=' + req.params.id + '.ics');
 			res.setHeader('Content-type', 'text/calendar');
 			res.send(calendar.toString());
