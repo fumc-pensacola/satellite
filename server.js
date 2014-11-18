@@ -4,6 +4,7 @@ var express = require('express'),
 	AWS = require('aws-sdk'),
 	moment = require('moment'),
 	ical = require('icalendar'),
+	sendgrid = require('sendgrid')(process.env.SENDGRID_USER, process.env.SENDGRID_API_KEY),
 	inflectorController = require('./server/controllers/inflector'),
 	ACSController = require('./server/controllers/acs'),
 	NODE_ENV = process.env.NODE_ENV,
@@ -26,6 +27,7 @@ module.exports = function (server) {
 			// models.todo = require('./server/models/todo')(db);
 			models.bulletin = require('./server/models/bulletin')(db);
 			models.witness = require('./server/models/witness')(db);
+			models.setting = require('./server/models/setting')(db);
 
 			db.settings.set('instance.returnAllErrors', true);
 			// db.drop();
@@ -69,6 +71,28 @@ module.exports = function (server) {
 			res.setHeader('Content-disposition', 'attachment; filename=' + req.params.id + '.ics');
 			res.setHeader('Content-type', 'text/calendar');
 			res.send(calendar.toString());
+		});
+	});
+
+	server.post('/api/emailer/send', function (req, res) {
+		req.models.setting.find().run(function(err, models) {
+			if (err) {
+				res.status(500).send(err.toString());
+			} else {
+				sendgrid.send({
+					to: models.filter(function (s) { return s.key === 'prayer_request_email'; })[0].value,
+					from: 'app@fumcpensacola.com',
+					subject: 'New prayer request submission',
+					text: 'A user of the FUMC app just submitted a prayer request:\r\n\r\n' + req.body.email
+				}, function (err, json) {
+					if (err) {
+						console.error(err);
+						res.status(500).json(err);
+					} else {
+						res.json(json);
+					}
+				});
+			}
 		});
 	});
 
