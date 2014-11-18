@@ -315,7 +315,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div class=\"narrow\"> <h1 class=\"ui header\">Calendars</h1> <p class=\"ui red segment\"><strong>Warning!</strong> This feature is in beta. Pay close attention around seasonal time changes and report any inconsistancies you find to <a href=\"mailto:andrewbranch@mail.com\">Drew</a>.</p> <p>ACS calendars can be converted to iCalendar format via this web app for use with Google Calendar, Apple&rsquo;s Calendar.app, iPhone calendars, and many others. To subscribe to them, use the URLs provided below. Only published events are included. There is an extraordinary number of events on the ACS calendar, so at any given time you can only see events one year back and one year ahead. This specification is subject to change in the future.</p> <div class=\"space-below\"> <h2 class=\"ui header\">The Easy Way</h2> <div class=\"space-below\"> <a href=\"webcal://fumc.herokuapp.com/api/calendars/all\" class=\"ui blue button\">Subscribe to Combined Calendar</a> </div> <div class=\"ui action input\"> ");
+  data.buffer.push("<div class=\"narrow\"> <h1 class=\"ui header\">Calendars</h1> <p class=\"ui red segment\"><strong>Warning!</strong> This feature is in beta. Pay close attention around seasonal time changes and report any inconsistancies you find to <a href=\"mailto:andrewbranch@mail.com\">Drew</a>.</p> <p>ACS calendars can be converted to iCalendar format via this web app for use with Google Calendar, Apple&rsquo;s Calendar.app, iPhone calendars, and many others. To subscribe to them, use the URLs provided below. Only published events are included. There is an extraordinary number of events on the ACS calendar, so at any given time you can only see events one year back and one year ahead. This specification is subject to change in the future.</p> <div class=\"space-below\"> <h2 class=\"ui header\">The Easy Way</h2> <div class=\"space-below\"> <a href=\"webcal://fumc.herokuapp.com/api/calendars/all.ics\" class=\"ui blue button\">Subscribe to Combined Calendar</a> </div> <div class=\"ui action input\"> ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'value': ("calendarName"),
     'id': ("calendar-name"),
@@ -325,7 +325,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'href': ("calendarURL")
   },hashTypes:{'href': "STRING"},hashContexts:{'href': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push(" class=\"ui blue button\">Subscribe to Specific Calendar</a> </div> </div> <div class=\"ui secondary segment\"> <h2 class=\"ui header\">Documentation</h2> <h4 class=\"ui header\">Named Calendars</h4> <p>Any individual calendar, even ones that are added in the future, can be accessed by name. To do so, remove any spaces and special characters from the calendar name, and append it to the URL <code>webcal://fumc.herokuapp.com/api/calendars/</code>. For example, the URL for the &ldquo;MCA &amp; Children's Ministry&rdquo; calendar would be</p> <div class=\"ui segment\"><code>webcal://fumc.herokuapp.com/api/calendars/MCAChildrensMinistry</code></div> <p>Capitalization of the calendar name is ignored.</p> <h4 class=\"ui header\">All Calendars Combined</h4> <p>You can alternatively subscribe to one calendar that combines published events from all calendars. Just replace the name of the calendar in the URL above with <code>all</code>.</p> </div> </div> ");
+  data.buffer.push(" class=\"ui blue button\">Subscribe to Specific Calendar</a> </div> </div> <div class=\"ui secondary segment\"> <h2 class=\"ui header\">Documentation</h2> <h4 class=\"ui header\">Named Calendars</h4> <p>Any individual calendar, even ones that are added in the future, can be accessed by name. To do so, remove any spaces and special characters from the calendar name, and insert it into the URL <code>webcal://fumc.herokuapp.com/api/calendars/CALENDAR_NAME.ics</code>. For example, the URL for the &ldquo;MCA &amp; Children's Ministry&rdquo; calendar would be</p> <div class=\"ui segment\"><code>webcal://fumc.herokuapp.com/api/calendars/MCAChildrensMinistry.ics</code></div> <p>Capitalization of the calendar name is ignored.</p> <h4 class=\"ui header\">All Calendars Combined</h4> <p>You can alternatively subscribe to one calendar that combines published events from all calendars. Just replace the name of the calendar in the URL above with <code>all</code>.</p> </div> </div> ");
   return buffer;
   
 });
@@ -1047,7 +1047,7 @@ Fumc.BulletinsController = Ember.ArrayController.extend({
 Fumc.CalendarsController = Ember.Controller.extend({
 
   calendarURL: function () {
-    return 'webcal://fumc.herokuapp.com/api/calendars/' + (this.get('calendarName') || '').replace(/[^A-Za-z0-9]/g, '');
+    return 'webcal://fumc.herokuapp.com/api/calendars/' + (this.get('calendarName') || '').replace(/[^A-Za-z0-9]/g, '') + '.ics';
   }.property('calendarName')
 
 });

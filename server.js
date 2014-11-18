@@ -49,7 +49,7 @@ module.exports = function (server) {
 	var acsController = new ACSController();
 	acsController.setup();
 
-	server.get('/api/calendars/:id', function (req, res) {
+	server.get('/api/calendars/:id.:format', function (req, res) {
 		acsController.sharedInstance().then(function (acs) {
 			console.log('Getting events...');
 			var from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),
@@ -57,20 +57,25 @@ module.exports = function (server) {
 			return acs.getCalendarEvents(req.params.id, from, to);
 		}).then(function (events) {
 			console.log('Got events!');
-			var calendar = new ical.iCalendar();
 
-			for (var i = 0; i < events.length; i++) {
-				var e = new ical.VEvent(calendar, events[i].id + i);
-				e.setDate(events[i].from, events[i].to);
-				e.setSummary(events[i].name);
-				e.setDescription(events[i].description);
-				events[i].location && e.setLocation(events[i].location.name);
-				calendar.addComponent(e);
+			if ((req.params.format || '').toLowerCase() === 'json') {
+				res.send(events.sort(function (a, b) {
+					return b.from - a.from;
+				}));
+			} else {
+				var calendar = new ical.iCalendar();
+				for (var i = 0; i < events.length; i++) {
+					var e = new ical.VEvent(calendar, events[i].id + i);
+					e.setDate(events[i].from, events[i].to);
+					e.setSummary(events[i].name);
+					e.setDescription(events[i].description);
+					events[i].location && e.setLocation(events[i].location.name);
+					calendar.addComponent(e);
+				}
+				res.setHeader('Content-disposition', 'attachment; filename=' + req.params.id + '.ics');
+				res.setHeader('Content-type', 'text/calendar');
+				res.send(calendar.toString());
 			}
-			console.log('Serving calendar.');
-			res.setHeader('Content-disposition', 'attachment; filename=' + req.params.id + '.ics');
-			res.setHeader('Content-type', 'text/calendar');
-			res.send(calendar.toString());
 		});
 	});
 

@@ -8,7 +8,7 @@
   <div class="space-below">
     <h2 class="ui header">The Easy Way</h2>
     <div class="space-below">
-      <a href="webcal://fumc.herokuapp.com/api/calendars/all" class="ui blue button">Subscribe to Combined Calendar</a>
+      <a href="webcal://fumc.herokuapp.com/api/calendars/all.ics" class="ui blue button">Subscribe to Combined Calendar</a>
     </div>
     <div class="ui action input">
       {{input value=calendarName id="calendar-name" placeholder="Type name of calendar..."}}
@@ -19,8 +19,8 @@
   <div class="ui secondary segment">
     <h2 class="ui header">Documentation</h2>
     <h4 class="ui header">Named Calendars</h4>
-    <p>Any individual calendar, even ones that are added in the future, can be accessed by name. To do so, remove any spaces and special characters from the calendar name, and append it to the URL <code>webcal://fumc.herokuapp.com/api/calendars/</code>. For example, the URL for the &ldquo;MCA &amp; Children's Ministry&rdquo; calendar would be</p>
-    <div class="ui segment"><code>webcal://fumc.herokuapp.com/api/calendars/MCAChildrensMinistry</code></div>
+    <p>Any individual calendar, even ones that are added in the future, can be accessed by name. To do so, remove any spaces and special characters from the calendar name, and insert it into the URL <code>webcal://fumc.herokuapp.com/api/calendars/CALENDAR_NAME.ics</code>. For example, the URL for the &ldquo;MCA &amp; Children's Ministry&rdquo; calendar would be</p>
+    <div class="ui segment"><code>webcal://fumc.herokuapp.com/api/calendars/MCAChildrensMinistry.ics</code></div>
     <p>Capitalization of the calendar name is ignored.</p>
 
     <h4 class="ui header">All Calendars Combined</h4>
