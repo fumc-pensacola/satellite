@@ -6,20 +6,43 @@ Fumc.FeatureController = Ember.ObjectController.extend({
   iphoneFiveFileUpload: null,
   initialDate: null,
   isKindOfDirty: false,
+  devices: ['iphoneFour', 'iphoneFive', 'iphoneSix', 'iphoneSixPlus'],
 
   s3: Ember.computed.alias('controllers.application.s3'),
   featuredController: Ember.computed.alias('controllers.featured'),
 
-  showingImage: Ember.computed.or('iphoneFiveFileUpload', 'iphoneFiveImage'),
-  isUploading: Ember.computed.or('iphoneFiveFileUpload.isUploading'),
+  iphoneFourShowingImage: Ember.computed.or('iphoneFourFileUpload', 'iphoneFourImage'),
+  iphoneFiveShowingImage: Ember.computed.or('iphoneFiveFileUpload', 'iphoneFiveImage'),
+  iphoneSixShowingImage: Ember.computed.or('iphoneSixFileUpload', 'iphoneSixImage'),
+  iphoneSixPlusShowingImage: Ember.computed.or('iphoneSixPlusFileUpload', 'iphoneSixPlusImage'),
+
+  isUploading: Ember.computed.or('iphoneFourFileUpload.isUploading', 'iphoneFiveFileUpload.isUploading', 'iphoneSixFileUpload.isUploading', 'iphoneSixPlusFileUpload.isUploading'),
   isControllerDirty: Ember.computed.or('isDirty', 'isKindOfDirty'),
-  setIphoneFiveImageURL: function (key) {
-    Fumc.s3.getSignedUrl('getObject', { Key: this.get('iphoneFiveImage') }, function (err, url) {
+
+  _setImageURL: function (device, key) {
+    Fumc.s3.getSignedUrl('getObject', { Key: this.get(device + 'Image') }, function (err, url) {
       if (!err) {
-        this.set('iphoneFiveImageURL', url);
+        this.set(device + 'ImageURL', url);
       }
     }.bind(this));
+  },
+
+  setIphoneFourImageURL: function (key) {
+    window.controller = this;
+    this._setImageURL('iphoneFour', key);
+  }.observes('iphoneFourImage').on('init'),
+
+  setIphoneFiveImageURL: function (key) {
+    this._setImageURL('iphoneFive', key);
   }.observes('iphoneFiveImage').on('init'),
+
+  setIphoneSixImageURL: function (key) {
+    this._setImageURL('iphoneSix', key);
+  }.observes('iphoneSixImage').on('init'),
+
+  setIphoneSixPlusImageURL: function (key) {
+    this._setImageURL('iphoneSixPlus', key);
+  }.observes('iphoneSixPlusImage').on('init'),
 
   toggledActive: function () {
     var self = this;
@@ -32,51 +55,83 @@ Fumc.FeatureController = Ember.ObjectController.extend({
     }
   }.observes('active'),
 
+  _fileSelected: function (device, file) {
+    if (!file) {
+      this.set(device + 'FileUpload', null);
+      return;
+    }
+
+    if (file.name !== this.get(device + 'Image')) {
+      this.set('isKindOfDirty', true);
+    }
+
+    this.set(device + 'CurrentFile', file.name);
+    this.set(device + 'FileUpload', Fumc.FileUploadModel.create({
+      fileToUpload: file
+    }));
+  },
+
   actions: {
 
+    iphoneFourFileSelected: function (file) {
+      this._fileSelected('iphoneFour', file);
+    },
+
     iphoneFiveFileSelected: function (file) {
-      if (!file) {
-        this.set('iphoneFiveFileUpload', null);
-        return;
-      }
+      this._fileSelected('iphoneFive', file);
+    },
 
-      if (file.name !== this.get('iphoneFiveImage')) {
-        this.set('isKindOfDirty', true);
-      }
+    iphoneSixFileSelected: function (file) {
+      this._fileSelected('iphoneSix', file);
+    },
 
-      this.set('iphoneFiveCurrentFile', file.name);
-      this.set('iphoneFiveFileUpload', Fumc.FileUploadModel.create({
-        fileToUpload: file
-      }));
+    iphoneSixPlusFileSelected: function (file) {
+      this._fileSelected('iphoneSixPlus', file);
     },
 
     save: function () {
 
-      var iphoneFiveFileUpload = this.get('iphoneFiveFileUpload'),
-          model = this.get('model'),
-          iphoneFiveOldFile = this.get('iphoneFiveImage'),
-          saved = function () {
-            this.set('isKindOfDirty', false);
-            setTimeout(function () { this.set('iphoneFiveFileUpload', null); }.bind(this), 500);
-          }.bind(this);
-
-      if (iphoneFiveFileUpload && iphoneFiveFileUpload.isUploading) {
+      if (this.get('isUploading')) {
         return false;
       }
 
-      if (iphoneFiveFileUpload) {
-        console.log(iphoneFiveFileUpload.name, iphoneFiveOldFile)
-        if (iphoneFiveFileUpload.name !== iphoneFiveOldFile) {
-          Fumc.s3.deleteObject({ Key: iphoneFiveOldFile }).send();
+      var self = this,
+          model = this.get('model'),
+          devices = this.get('devices'),
+          uploads = [];
+
+      for (var i = 0; i < devices.length; i++) {
+        var device = devices[i],
+            fileUpload = this.get(device + 'FileUpload'),
+            oldFile = this.get(device + 'Image');
+
+        console.log(fileUpload);
+        if (fileUpload) {
+          if (fileUpload.name !== oldFile) {
+            Fumc.s3.deleteObject({ Key: oldFile }).send();
+          }
+          uploads.push(new Ember.RSVP.Promise(function (resolve, reject) {
+            fileUpload.uploadFile().then(function (d) {
+              return function (key) {
+                console.log(d);
+                self.set(d + 'Image', key);
+                resolve();
+              };
+            }(device));
+          }));
         }
-        console.log(iphoneFiveFileUpload);
-        iphoneFiveFileUpload.uploadFile().then(function (key) {
-          this.set('iphoneFiveImage', key);
-          model.save().then(saved);
-        }.bind(this));
-      } else {
-        model.save().then(saved);
       }
+
+      Ember.RSVP.Promise.all(uploads).then(function () {
+        model.save().then(function () {
+          self.set('isKindOfDirty', false);
+          setTimeout(function () {
+            for (var j = 0; j < devices.length; j++) {
+              self.set(devices[j] + 'FileUpload', null);
+            }
+          }, 500);
+        });
+      });
     }
 
   }

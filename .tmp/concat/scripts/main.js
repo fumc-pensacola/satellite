@@ -385,7 +385,7 @@ function program1(depth0,data) {
   var buffer = '';
   data.buffer.push(" <img ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
-    'src': ("feature.iphoneFiveFileUpload.base64Image")
+    'src': ("feature.iphoneFourFileUpload.base64Image")
   },hashTypes:{'src': "STRING"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
   data.buffer.push("> ");
   return buffer;
@@ -395,7 +395,7 @@ function program3(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push(" ");
-  stack1 = helpers['if'].call(depth0, "feature.iphoneFiveImage", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "feature.iphoneFourImage", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" ");
   return buffer;
@@ -405,7 +405,7 @@ function program4(depth0,data) {
   var buffer = '';
   data.buffer.push(" <img ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
-    'src': ("feature.iphoneFiveImageURL")
+    'src': ("feature.iphoneFourImageURL")
   },hashTypes:{'src': "STRING"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
   data.buffer.push("> ");
   return buffer;
@@ -417,23 +417,145 @@ function program6(depth0,data) {
   data.buffer.push(" <!-- <div class=\"size-label\">Drop file here</div> --> ");
   }
 
-  data.buffer.push("<div> <button type=\"button\" ");
+function program8(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" <img ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("feature.iphoneFiveFileUpload.base64Image")
+  },hashTypes:{'src': "STRING"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> ");
+  return buffer;
+  }
+
+function program10(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "feature.iphoneFiveImage", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(6, program6, data),fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" ");
+  return buffer;
+  }
+function program11(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" <img ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("feature.iphoneFiveImageURL")
+  },hashTypes:{'src': "STRING"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> ");
+  return buffer;
+  }
+
+function program13(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" <img ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("feature.iphoneSixFileUpload.base64Image")
+  },hashTypes:{'src': "STRING"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> ");
+  return buffer;
+  }
+
+function program15(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "feature.iphoneSixImage", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(6, program6, data),fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" ");
+  return buffer;
+  }
+function program16(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" <img ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("feature.iphoneSixImageURL")
+  },hashTypes:{'src': "STRING"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> ");
+  return buffer;
+  }
+
+function program18(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" <img ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("feature.iphoneSixPlusFileUpload.base64Image")
+  },hashTypes:{'src': "STRING"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> ");
+  return buffer;
+  }
+
+function program20(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "feature.iphoneSixPlusImage", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(6, program6, data),fn:self.program(21, program21, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" ");
+  return buffer;
+  }
+function program21(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" <img ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("feature.iphoneSixPlusImageURL")
+  },hashTypes:{'src': "STRING"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"actions\"> <button type=\"button\" ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'class': (":ui :blue :button feature.isUploading:disabled feature.isControllerDirty::disabled")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "save", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push(">Save</button> </div> <div class=\"active-label\"> <div class=\"ui toggle checkbox\"> ");
+  data.buffer.push(">Save</button> <div class=\"ui slider checkbox\"> ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("checkbox"),
+    'checked': ("feature.actualSize")
+  },hashTypes:{'type': "STRING",'checked': "ID"},hashContexts:{'type': depth0,'checked': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push(" <label>Actual Size</label> </div> </div> <div class=\"active-label\"> <div class=\"ui toggle checkbox\"> ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("checkbox"),
     'checked': ("feature.active")
   },hashTypes:{'type': "STRING",'checked': "ID"},hashContexts:{'type': depth0,'checked': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push(" <label>Active</label> </div> </div> <div class=\"iphone5 size\"> <h3 class=\"ui header\">iPhone 5</h3> <h5 class=\"ui header\">640 &times; 910</h5> <div ");
+  data.buffer.push(" <label>Active</label> </div> </div> <div ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
-    'class': (":feature-frame feature.showingImage")
+    'class': (":devices feature.actualSize::little")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"iphone4 size\"> <h3 class=\"ui header\">iPhone 4</h3> <h5 class=\"ui header\">640 &times; 734</h5> <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":feature-frame feature.iphoneFourShowingImage:showing-image")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push("> <div class=\"feature-content\"> ");
-  stack1 = helpers['if'].call(depth0, "feature.iphoneFiveFileUpload", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "feature.iphoneFourFileUpload", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> </div> ");
+  data.buffer.push(escapeExpression((helper = helpers['file-upload'] || (depth0 && depth0['file-upload']),options={hash:{
+    'oldFile': ("feature.iphoneFourImage"),
+    'change': ("iphoneFourFileSelected")
+  },hashTypes:{'oldFile': "ID",'change': "STRING"},hashContexts:{'oldFile': depth0,'change': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "file-upload", options))));
+  data.buffer.push(" <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :blue :progress feature.iphoneFourFileUpload.showProgressBar::hidden feature.iphoneFourFileUpload.didUpload:successful")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"bar\" ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'style': ("feature.iphoneFourFileUpload.progressStyle")
+  },hashTypes:{'style': "STRING"},hashContexts:{'style': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("></div> </div> </div> <div class=\"iphone5 size\"> <h3 class=\"ui header\">iPhone 5</h3> <h5 class=\"ui header\">640 &times; 910</h5> <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":feature-frame feature.iphoneFiveShowingImage:showing-image")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"feature-content\"> ");
+  stack1 = helpers['if'].call(depth0, "feature.iphoneFiveFileUpload", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(10, program10, data),fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> </div> ");
   data.buffer.push(escapeExpression((helper = helpers['file-upload'] || (depth0 && depth0['file-upload']),options={hash:{
@@ -448,7 +570,47 @@ function program6(depth0,data) {
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'style': ("feature.iphoneFiveFileUpload.progressStyle")
   },hashTypes:{'style': "STRING"},hashContexts:{'style': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push("></div> </div> </div> ");
+  data.buffer.push("></div> </div> </div> <div class=\"iphone6 size\"> <h3 class=\"ui header\">iPhone 6</h3> <h5 class=\"ui header\">650 &times; 1108</h5> <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":feature-frame feature.iphoneSixShowingImage:showing-image")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"feature-content\"> ");
+  stack1 = helpers['if'].call(depth0, "feature.iphoneSixFileUpload", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(15, program15, data),fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> </div> ");
+  data.buffer.push(escapeExpression((helper = helpers['file-upload'] || (depth0 && depth0['file-upload']),options={hash:{
+    'oldFile': ("feature.iphoneSixImage"),
+    'change': ("iphoneSixFileSelected")
+  },hashTypes:{'oldFile': "ID",'change': "STRING"},hashContexts:{'oldFile': depth0,'change': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "file-upload", options))));
+  data.buffer.push(" <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :blue :progress feature.iphoneSixFileUpload.showProgressBar::hidden feature.iphoneSixFileUpload.didUpload:successful")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"bar\" ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'style': ("feature.iphoneSixFileUpload.progressStyle")
+  },hashTypes:{'style': "STRING"},hashContexts:{'style': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("></div> </div> </div> <div class=\"iphone6plus size\"> <h3 class=\"ui header\">iPhone 6 Plus</h3> <h5 class=\"ui header\">1242 &times; 1869</h5> <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":feature-frame feature.iphoneSixPlusShowingImage:showing-image")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"feature-content\"> ");
+  stack1 = helpers['if'].call(depth0, "feature.iphoneSixPlusFileUpload", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(20, program20, data),fn:self.program(18, program18, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> </div> ");
+  data.buffer.push(escapeExpression((helper = helpers['file-upload'] || (depth0 && depth0['file-upload']),options={hash:{
+    'oldFile': ("feature.iphoneSixPlusImage"),
+    'change': ("iphoneSixPlusFileSelected")
+  },hashTypes:{'oldFile': "ID",'change': "STRING"},hashContexts:{'oldFile': depth0,'change': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "file-upload", options))));
+  data.buffer.push(" <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :blue :progress feature.iphoneSixPlusFileUpload.showProgressBar::hidden feature.iphoneSixPlusFileUpload.didUpload:successful")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"bar\" ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'style': ("feature.iphoneSixPlusFileUpload.progressStyle")
+  },hashTypes:{'style': "STRING"},hashContexts:{'style': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("></div> </div> </div> </div> ");
   return buffer;
   
 });
@@ -1201,20 +1363,43 @@ Fumc.FeatureController = Ember.ObjectController.extend({
   iphoneFiveFileUpload: null,
   initialDate: null,
   isKindOfDirty: false,
+  devices: ['iphoneFour', 'iphoneFive', 'iphoneSix', 'iphoneSixPlus'],
 
   s3: Ember.computed.alias('controllers.application.s3'),
   featuredController: Ember.computed.alias('controllers.featured'),
 
-  showingImage: Ember.computed.or('iphoneFiveFileUpload', 'iphoneFiveImage'),
-  isUploading: Ember.computed.or('iphoneFiveFileUpload.isUploading'),
+  iphoneFourShowingImage: Ember.computed.or('iphoneFourFileUpload', 'iphoneFourImage'),
+  iphoneFiveShowingImage: Ember.computed.or('iphoneFiveFileUpload', 'iphoneFiveImage'),
+  iphoneSixShowingImage: Ember.computed.or('iphoneSixFileUpload', 'iphoneSixImage'),
+  iphoneSixPlusShowingImage: Ember.computed.or('iphoneSixPlusFileUpload', 'iphoneSixPlusImage'),
+
+  isUploading: Ember.computed.or('iphoneFourFileUpload.isUploading', 'iphoneFiveFileUpload.isUploading', 'iphoneSixFileUpload.isUploading', 'iphoneSixPlusFileUpload.isUploading'),
   isControllerDirty: Ember.computed.or('isDirty', 'isKindOfDirty'),
-  setIphoneFiveImageURL: function (key) {
-    Fumc.s3.getSignedUrl('getObject', { Key: this.get('iphoneFiveImage') }, function (err, url) {
+
+  _setImageURL: function (device, key) {
+    Fumc.s3.getSignedUrl('getObject', { Key: this.get(device + 'Image') }, function (err, url) {
       if (!err) {
-        this.set('iphoneFiveImageURL', url);
+        this.set(device + 'ImageURL', url);
       }
     }.bind(this));
+  },
+
+  setIphoneFourImageURL: function (key) {
+    window.controller = this;
+    this._setImageURL('iphoneFour', key);
+  }.observes('iphoneFourImage').on('init'),
+
+  setIphoneFiveImageURL: function (key) {
+    this._setImageURL('iphoneFive', key);
   }.observes('iphoneFiveImage').on('init'),
+
+  setIphoneSixImageURL: function (key) {
+    this._setImageURL('iphoneSix', key);
+  }.observes('iphoneSixImage').on('init'),
+
+  setIphoneSixPlusImageURL: function (key) {
+    this._setImageURL('iphoneSixPlus', key);
+  }.observes('iphoneSixPlusImage').on('init'),
 
   toggledActive: function () {
     var self = this;
@@ -1227,51 +1412,83 @@ Fumc.FeatureController = Ember.ObjectController.extend({
     }
   }.observes('active'),
 
+  _fileSelected: function (device, file) {
+    if (!file) {
+      this.set(device + 'FileUpload', null);
+      return;
+    }
+
+    if (file.name !== this.get(device + 'Image')) {
+      this.set('isKindOfDirty', true);
+    }
+
+    this.set(device + 'CurrentFile', file.name);
+    this.set(device + 'FileUpload', Fumc.FileUploadModel.create({
+      fileToUpload: file
+    }));
+  },
+
   actions: {
 
+    iphoneFourFileSelected: function (file) {
+      this._fileSelected('iphoneFour', file);
+    },
+
     iphoneFiveFileSelected: function (file) {
-      if (!file) {
-        this.set('iphoneFiveFileUpload', null);
-        return;
-      }
+      this._fileSelected('iphoneFive', file);
+    },
 
-      if (file.name !== this.get('iphoneFiveImage')) {
-        this.set('isKindOfDirty', true);
-      }
+    iphoneSixFileSelected: function (file) {
+      this._fileSelected('iphoneSix', file);
+    },
 
-      this.set('iphoneFiveCurrentFile', file.name);
-      this.set('iphoneFiveFileUpload', Fumc.FileUploadModel.create({
-        fileToUpload: file
-      }));
+    iphoneSixPlusFileSelected: function (file) {
+      this._fileSelected('iphoneSixPlus', file);
     },
 
     save: function () {
 
-      var iphoneFiveFileUpload = this.get('iphoneFiveFileUpload'),
-          model = this.get('model'),
-          iphoneFiveOldFile = this.get('iphoneFiveImage'),
-          saved = function () {
-            this.set('isKindOfDirty', false);
-            setTimeout(function () { this.set('iphoneFiveFileUpload', null); }.bind(this), 500);
-          }.bind(this);
-
-      if (iphoneFiveFileUpload && iphoneFiveFileUpload.isUploading) {
+      if (this.get('isUploading')) {
         return false;
       }
 
-      if (iphoneFiveFileUpload) {
-        console.log(iphoneFiveFileUpload.name, iphoneFiveOldFile)
-        if (iphoneFiveFileUpload.name !== iphoneFiveOldFile) {
-          Fumc.s3.deleteObject({ Key: iphoneFiveOldFile }).send();
+      var self = this,
+          model = this.get('model'),
+          devices = this.get('devices'),
+          uploads = [];
+
+      for (var i = 0; i < devices.length; i++) {
+        var device = devices[i],
+            fileUpload = this.get(device + 'FileUpload'),
+            oldFile = this.get(device + 'Image');
+
+        console.log(fileUpload);
+        if (fileUpload) {
+          if (fileUpload.name !== oldFile) {
+            Fumc.s3.deleteObject({ Key: oldFile }).send();
+          }
+          uploads.push(new Ember.RSVP.Promise(function (resolve, reject) {
+            fileUpload.uploadFile().then(function (d) {
+              return function (key) {
+                console.log(d);
+                self.set(d + 'Image', key);
+                resolve();
+              };
+            }(device));
+          }));
         }
-        console.log(iphoneFiveFileUpload);
-        iphoneFiveFileUpload.uploadFile().then(function (key) {
-          this.set('iphoneFiveImage', key);
-          model.save().then(saved);
-        }.bind(this));
-      } else {
-        model.save().then(saved);
       }
+
+      Ember.RSVP.Promise.all(uploads).then(function () {
+        model.save().then(function () {
+          self.set('isKindOfDirty', false);
+          setTimeout(function () {
+            for (var j = 0; j < devices.length; j++) {
+              self.set(devices[j] + 'FileUpload', null);
+            }
+          }, 500);
+        });
+      });
     }
 
   }

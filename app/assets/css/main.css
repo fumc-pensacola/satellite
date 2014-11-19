@@ -113,19 +113,52 @@ code {
 }
 
 .feature-frame {
-	width: 320px;
-	background-image: url('../images/feature-frame.png');
 	background-size: cover;
 	margin: 20px;
 	padding-top: 65px;
 	padding-bottom: 48px;
 }
 
+.iphone4.size .feature-frame {
+	width: 320px;
+	background-image: url('../images/feature-frame-4.png');
+}
+
+.iphone5.size .feature-frame {
+	width: 320px;
+	background-image: url('../images/feature-frame-5.png');
+}
+
+.iphone6.size .feature-frame {
+	width: 375px;
+	background-image: url('../images/feature-frame-6.png');
+}
+
+.iphone6plus.size .feature-frame {
+	width: 414px;
+	background-image: url('../images/feature-frame-6plus.png');
+}
+
 .feature-content {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	border: 2px dashed #aaa;
+}
+
+.iphone4.size .feature-content {
+	height: 367px;
+}
+
+.iphone5.size .feature-content {
 	height: 455px;
+}
+
+.iphone6.size .feature-content {
+	height: 554px;
+}
+
+.iphone6plus.size .feature-content {
+	height: 623px;
 }
 
 .feature-frame.showing-image {
@@ -139,6 +172,14 @@ code {
 .feature {
 	white-space: nowrap;
 	overflow-x: auto;
+}
+
+.feature .actions {
+	position: absolute;
+}
+
+.feature .actions > * {
+	margin-right: 20px;
 }
 
 .feature .active-label {
@@ -168,13 +209,65 @@ code {
 	display: inline-block;
 }
 
-.iphone5.size {
-	width: 360px;
+/*.feature h3.ui.header {
+	font-size: 1.33em;
 }
+.feature h5.ui.header {
+	font-size: 1em;
+}
+.feature .ui.small.button {
+	font-size: .875em;
+}
+.feature .ui.label {
+	font-size:.8125em;
+}*/
+
+.feature .devices {
+	display: inline-block;
+	/*font-size: 1rem;*/
+	-webkit-transition-property: all;
+	transition-property: all;
+	-webkit-transition-duration: .3s;
+	transition-duration: .3s;
+	-webkit-transition-timing-function: ease;
+  transition-timing-function: ease;
+	-webkit-transform: scale(1, 1);
+	transform: scale(1, 1);
+	-webkit-transform-origin: 0 0;
+	transform-origin: 0 0;
+}
+.feature .devices.little {
+	/*font-size: 2rem;*/
+	-webkit-transform: scale(0.5, 0.5);
+	transform: scale(0.5, 0.5);
+}
+
+/*.iphone4.size {
+	width: 360px;
+}*/
+
+.iphone4.size img {
+	width: 320px;
+	height: 368px;
+}
+
+/*.iphone5.size {
+	width: 360px;
+}*/
 
 .iphone5.size img {
 	width: 320px;
 	height: 455px;
+}
+
+.iphone6.size img {
+	width: 375px;
+	height: 554px;
+}
+
+.iphone6plus.size img {
+	width: 414px;
+	height: 623px;
 }
 
 .feature-frame .size-label {
