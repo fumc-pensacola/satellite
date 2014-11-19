@@ -83,10 +83,16 @@ function program5(depth0,data) {
 function program7(depth0,data) {
   
   
-  data.buffer.push("<i class=\"calendar icon\"></i> Calendars");
+  data.buffer.push("<i class=\"star icon\"></i> Featured Content");
   }
 
 function program9(depth0,data) {
+  
+  
+  data.buffer.push("<i class=\"calendar icon\"></i> Calendars");
+  }
+
+function program11(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push(" <div class=\"right menu\"> <div class=\"item\"> <i class=\"user icon\"></i> Hello, ");
@@ -98,18 +104,18 @@ function program9(depth0,data) {
   return buffer;
   }
 
-function program11(depth0,data) {
+function program13(depth0,data) {
   
   var buffer = '', stack1, helper, options;
   data.buffer.push(" <div class=\"right menu\"> ");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'class': ("item")
-  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "login", options) : helperMissing.call(depth0, "link-to", "login", options));
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "login", options) : helperMissing.call(depth0, "link-to", "login", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> ");
   return buffer;
   }
-function program12(depth0,data) {
+function program14(depth0,data) {
   
   
   data.buffer.push("Log in");
@@ -133,10 +139,15 @@ function program12(depth0,data) {
   data.buffer.push(" ");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'class': ("item")
-  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "calendars", options) : helperMissing.call(depth0, "link-to", "calendars", options));
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "featured", options) : helperMissing.call(depth0, "link-to", "featured", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" ");
-  stack1 = helpers['if'].call(depth0, "loggedIn", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(11, program11, data),fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
+    'class': ("item")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "calendars", options) : helperMissing.call(depth0, "link-to", "calendars", options));
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "loggedIn", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(13, program13, data),fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> </div> </div> <div class=\"ui one column page grid\"> <div class=\"column\"> ");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
@@ -200,7 +211,7 @@ function program7(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push(" <div class=\"ui grid\"> <div class=\"row\" ");
+  data.buffer.push("<div class=\"ui grid\"> <div class=\"row\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleEditing", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
   data.buffer.push("> <div class=\"one wide column\"> ");
   stack1 = helpers['if'].call(depth0, "bulletin.visible", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
@@ -359,6 +370,112 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '';
 
 
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["feature"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data
+/**/) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" <img ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("feature.iphoneFiveFileUpload.base64Image")
+  },hashTypes:{'src': "STRING"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> ");
+  return buffer;
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "feature.iphoneFiveImage", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" ");
+  return buffer;
+  }
+function program4(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" <img ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'src': ("feature.iphoneFiveImageURL")
+  },hashTypes:{'src': "STRING"},hashContexts:{'src': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> ");
+  return buffer;
+  }
+
+function program6(depth0,data) {
+  
+  
+  data.buffer.push(" <!-- <div class=\"size-label\">Drop file here</div> --> ");
+  }
+
+  data.buffer.push("<div> <button type=\"button\" ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :blue :button feature.isUploading:disabled feature.isControllerDirty::disabled")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "save", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Save</button> </div> <div class=\"active-label\"> <div class=\"ui toggle checkbox\"> ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("checkbox"),
+    'checked': ("feature.active")
+  },hashTypes:{'type': "STRING",'checked': "ID"},hashContexts:{'type': depth0,'checked': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push(" <label>Active</label> </div> </div> <div class=\"iphone5 size\"> <h3 class=\"ui header\">iPhone 5</h3> <h5 class=\"ui header\">640 &times; 910</h5> <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":feature-frame feature.showingImage")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"feature-content\"> ");
+  stack1 = helpers['if'].call(depth0, "feature.iphoneFiveFileUpload", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> </div> ");
+  data.buffer.push(escapeExpression((helper = helpers['file-upload'] || (depth0 && depth0['file-upload']),options={hash:{
+    'oldFile': ("feature.iphoneFiveImage"),
+    'change': ("iphoneFiveFileSelected")
+  },hashTypes:{'oldFile': "ID",'change': "STRING"},hashContexts:{'oldFile': depth0,'change': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "file-upload", options))));
+  data.buffer.push(" <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :blue :progress feature.iphoneFiveFileUpload.showProgressBar::hidden feature.iphoneFiveFileUpload.didUpload:successful")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"bar\" ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'style': ("feature.iphoneFiveFileUpload.progressStyle")
+  },hashTypes:{'style': "STRING"},hashContexts:{'style': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("></div> </div> </div> ");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["featured"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data
+/**/) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push(" ");
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "feature", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(" ");
+  return buffer;
+  }
+
+  data.buffer.push("<h1 class=\"ui header\">Featured Content</h1> <button class=\"ui blue button\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "newFeature", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">New Featured Content</button> <div class=\"ui divided list\"> ");
+  stack1 = helpers.each.call(depth0, "feature", "in", "arrangedContent", {hash:{
+    'itemController': ("feature")
+  },hashTypes:{'itemController': "STRING"},hashContexts:{'itemController': depth0},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" </div> ");
   return buffer;
   
 });
@@ -681,34 +798,31 @@ Fumc.Bulletin = DS.Model.extend({
 
 (function() {
 
+Fumc.Feature = DS.Model.extend({
+  active: DS.attr('boolean'),
+  iphoneFourImage: DS.attr('string'),
+  iphoneFiveImage: DS.attr('string'),
+  iphoneSixImage: DS.attr('string'),
+  iphoneSixPlusImage: DS.attr('string'),
+});
+
+
+})();
+
+(function() {
+
 Fumc.FileUploadModel = Ember.Object.extend({
 
-  // Name is used for the upload property
   name: '',
-
-  // {Property} Human readable size of the selected file
   size: "0 KB",
-
-  // {Property} Raw file size of the selected file
   rawSize: 0,
-
-  // {Property} Will be an HTML5 File
   fileToUpload: null,
-
-  // {Property} Will be a $.ajax jqXHR
   uploadJqXHR: null,
-
-  // {Property} Promise for when a file was uploaded
   uploadPromise: null,
-
-  // {Property} Upload progress 0-100
   uploadProgress: null,
-
-  // {Property} If a file is currently being uploaded
   isUploading: false,
-
-  // {Property} If the file was uploaded successfully
   didUpload: false,
+  base64Image: null,
 
   init: function() {
     this._super();
@@ -719,6 +833,17 @@ Fumc.FileUploadModel = Ember.Object.extend({
   readFile: function() {
     var self = this;
     var fileToUpload = this.get('fileToUpload');
+    var isImage = fileToUpload.type.indexOf('image') === 0;
+
+    if (isImage) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        self.set('base64Image', e.target.result);
+      };
+
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(fileToUpload);
+    }
 
     this.set('name', fileToUpload.name);
     this.set('rawSize', fileToUpload.size);
@@ -817,6 +942,17 @@ Fumc.BulletinsRoute = Fumc.AuthenticatedRoute.extend({
 	model: function () {
 		return this.store.find('bulletin');
 	}
+});
+
+
+})();
+
+(function() {
+
+Fumc.FeaturedRoute = Fumc.AuthenticatedRoute.extend({
+  model: function () {
+    return this.store.find('feature');
+  }
 });
 
 
@@ -1057,6 +1193,115 @@ Fumc.CalendarsController = Ember.Controller.extend({
 
 (function() {
 
+Fumc.FeatureController = Ember.ObjectController.extend({
+
+  needs: ['application', 'featured'],
+
+  editing: false,
+  iphoneFiveFileUpload: null,
+  initialDate: null,
+  isKindOfDirty: false,
+
+  s3: Ember.computed.alias('controllers.application.s3'),
+  featuredController: Ember.computed.alias('controllers.featured'),
+
+  showingImage: Ember.computed.or('iphoneFiveFileUpload', 'iphoneFiveImage'),
+  isUploading: Ember.computed.or('iphoneFiveFileUpload.isUploading'),
+  isControllerDirty: Ember.computed.or('isDirty', 'isKindOfDirty'),
+  setIphoneFiveImageURL: function (key) {
+    Fumc.s3.getSignedUrl('getObject', { Key: this.get('iphoneFiveImage') }, function (err, url) {
+      if (!err) {
+        this.set('iphoneFiveImageURL', url);
+      }
+    }.bind(this));
+  }.observes('iphoneFiveImage').on('init'),
+
+  toggledActive: function () {
+    var self = this;
+    if (this.get('active')) {
+      this.get('featuredController').forEach(function (f) {
+        if (f !== self.get('model')) {
+          f.set('active', false);
+        }
+      });
+    }
+  }.observes('active'),
+
+  actions: {
+
+    iphoneFiveFileSelected: function (file) {
+      if (!file) {
+        this.set('iphoneFiveFileUpload', null);
+        return;
+      }
+
+      if (file.name !== this.get('iphoneFiveImage')) {
+        this.set('isKindOfDirty', true);
+      }
+
+      this.set('iphoneFiveCurrentFile', file.name);
+      this.set('iphoneFiveFileUpload', Fumc.FileUploadModel.create({
+        fileToUpload: file
+      }));
+    },
+
+    save: function () {
+
+      var iphoneFiveFileUpload = this.get('iphoneFiveFileUpload'),
+          model = this.get('model'),
+          iphoneFiveOldFile = this.get('iphoneFiveImage'),
+          saved = function () {
+            this.set('isKindOfDirty', false);
+            setTimeout(function () { this.set('iphoneFiveFileUpload', null); }.bind(this), 500);
+          }.bind(this);
+
+      if (iphoneFiveFileUpload && iphoneFiveFileUpload.isUploading) {
+        return false;
+      }
+
+      if (iphoneFiveFileUpload) {
+        console.log(iphoneFiveFileUpload.name, iphoneFiveOldFile)
+        if (iphoneFiveFileUpload.name !== iphoneFiveOldFile) {
+          Fumc.s3.deleteObject({ Key: iphoneFiveOldFile }).send();
+        }
+        console.log(iphoneFiveFileUpload);
+        iphoneFiveFileUpload.uploadFile().then(function (key) {
+          this.set('iphoneFiveImage', key);
+          model.save().then(saved);
+        }.bind(this));
+      } else {
+        model.save().then(saved);
+      }
+    }
+
+  }
+
+});
+
+
+})();
+
+(function() {
+
+Fumc.FeaturedController = Ember.ArrayController.extend({
+
+  sortAscending: false,
+  sortProperties: ['id'],
+
+  actions: {
+
+    newFeature: function () {
+      var feature = this.store.createRecord('feature');
+    }
+
+  }
+});
+
+
+})();
+
+(function() {
+
 Fumc.LoginController = Ember.Controller.extend({
 
   needs: ['application'],
@@ -1286,6 +1531,23 @@ Fumc.DateField = Ember.TextField.extend({
 
 (function() {
 
+Fumc.FeatureView = Ember.View.extend({
+
+  templateName: 'feature',
+  classNames: ['item', 'feature'],
+  classBindings: ['editing'],
+
+  didInsertElement: function () {
+    this.$('.ui.checkbox').checkbox();
+  }
+
+});
+
+
+})();
+
+(function() {
+
 Fumc.WitnessView = Fumc.BulletinView.extend({
 
   templateName: 'witness',
@@ -1385,6 +1647,7 @@ Fumc.Router.map(function () {
 	this.route('authenticate');
 	this.resource('bulletins');
 	this.resource('witnesses');
+	this.resource('featured');
 	this.route('calendars');
 	this.route('error404', { path: '*:' });
 });
