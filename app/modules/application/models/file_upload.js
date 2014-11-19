@@ -1,31 +1,15 @@
 Fumc.FileUploadModel = Ember.Object.extend({
 
-  // Name is used for the upload property
   name: '',
-
-  // {Property} Human readable size of the selected file
   size: "0 KB",
-
-  // {Property} Raw file size of the selected file
   rawSize: 0,
-
-  // {Property} Will be an HTML5 File
   fileToUpload: null,
-
-  // {Property} Will be a $.ajax jqXHR
   uploadJqXHR: null,
-
-  // {Property} Promise for when a file was uploaded
   uploadPromise: null,
-
-  // {Property} Upload progress 0-100
   uploadProgress: null,
-
-  // {Property} If a file is currently being uploaded
   isUploading: false,
-
-  // {Property} If the file was uploaded successfully
   didUpload: false,
+  base64Image: null,
 
   init: function() {
     this._super();
@@ -36,6 +20,17 @@ Fumc.FileUploadModel = Ember.Object.extend({
   readFile: function() {
     var self = this;
     var fileToUpload = this.get('fileToUpload');
+    var isImage = fileToUpload.type.indexOf('image') === 0;
+
+    if (isImage) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        self.set('base64Image', e.target.result);
+      };
+
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(fileToUpload);
+    }
 
     this.set('name', fileToUpload.name);
     this.set('rawSize', fileToUpload.size);

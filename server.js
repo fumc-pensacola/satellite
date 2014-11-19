@@ -28,6 +28,7 @@ module.exports = function (server) {
 			models.bulletin = require('./server/models/bulletin')(db);
 			models.witness = require('./server/models/witness')(db);
 			models.setting = require('./server/models/setting')(db);
+			models.feature = require('./server/models/feature')(db);
 
 			db.settings.set('instance.returnAllErrors', true);
 			// db.drop();

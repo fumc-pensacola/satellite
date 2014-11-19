@@ -111,3 +111,79 @@ code {
 #calendar-name {
 	width: 300px;
 }
+
+.feature-frame {
+	width: 320px;
+	background-image: url('../images/feature-frame.png');
+	background-size: cover;
+	margin: 20px;
+	padding-top: 65px;
+	padding-bottom: 48px;
+}
+
+.feature-content {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border: 2px dashed #aaa;
+	height: 455px;
+}
+
+.feature-frame.showing-image {
+	padding-top: 64px;
+}
+
+.feature-frame.showing-image .feature-content {
+	border-width: 0;
+}
+
+.feature {
+	white-space: nowrap;
+	overflow-x: auto;
+}
+
+.feature .active-label {
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 300px;
+	text-transform: uppercase;
+}
+
+.feature .active-label label {
+	-webkit-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+	font-weight: bold;
+}
+
+.feature h3.ui.header {
+	margin-bottom: 5px;
+}
+
+.feature h5.ui.header {
+	color: #999;
+	margin-top: 0;
+}
+
+.feature .size {
+	text-align: center;
+	display: inline-block;
+}
+
+.iphone5.size {
+	width: 360px;
+}
+
+.iphone5.size img {
+	width: 320px;
+	height: 455px;
+}
+
+.feature-frame .size-label {
+	text-align: center;
+	padding-top: 180px;
+	color: #aaa;
+}
+
+.feature .progress {
+	margin-top: 20px;
+	text-align: left;
+}
