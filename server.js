@@ -116,7 +116,9 @@ module.exports = function (server) {
 					expiry: Math.floor(new Date(notification.expirationDate).getTime() / 1000),
 					badge: '+1',
 					info: JSON.stringify({
-						url: notification.url
+						id: notification.id,
+						url: notification.url,
+						sendDate: notification.sendDate
 					})
 				}
 			}, function (error, response, body) {
