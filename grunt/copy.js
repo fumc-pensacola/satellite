@@ -5,7 +5,7 @@ module.exports = {
 			expand: true,
 			cwd: 'bower_components/semantic-ui/dist/themes/default/assets',
 			src: ['fonts/**', 'images/**'],
-			dest: 'tmp/assets/'
+			dest: 'tmp/assets/css/themes/default/assets'
 		}]
 	},
 
@@ -36,7 +36,7 @@ module.exports = {
 		files: [{
 			expand: true,
 			cwd: 'tmp/',
-			src: ['index.html', 'assets/fonts/**', 'assets/images/**'],
+			src: ['index.html', 'assets/css/themes/default/assets/**'],
 			dest: 'dist/'
 		}]
 	},
