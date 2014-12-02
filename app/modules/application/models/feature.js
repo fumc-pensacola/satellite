@@ -3,5 +3,5 @@ Fumc.Feature = DS.Model.extend({
   iphoneFourImage: DS.attr('string'),
   iphoneFiveImage: DS.attr('string'),
   iphoneSixImage: DS.attr('string'),
-  iphoneSixPlusImage: DS.attr('string'),
+  iphoneSixPlusImage: DS.attr('string')
 });

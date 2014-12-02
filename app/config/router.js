@@ -4,6 +4,7 @@ Fumc.Router.map(function () {
 	this.resource('bulletins');
 	this.resource('witnesses');
 	this.resource('featured');
+	this.resource('notifications');
 	this.route('calendars');
 	this.route('error404', { path: '*:' });
 });

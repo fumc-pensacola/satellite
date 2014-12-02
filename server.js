@@ -29,6 +29,9 @@ module.exports = function (server) {
 			models.witness = require('./server/models/witness')(db);
 			models.setting = require('./server/models/setting')(db);
 			models.feature = require('./server/models/feature')(db);
+			models.notification = require('./server/models/notification')(db);
+
+			models.notification.hasOne('feature', models.feature);
 
 			db.settings.set('instance.returnAllErrors', true);
 			// db.drop();
@@ -98,6 +101,43 @@ module.exports = function (server) {
 						res.json(json);
 					}
 				});
+			}
+		});
+	});
+
+	server.post('/api/notify/everyone', function (req, res) {
+		if (validTokenProvided(req, res)) {
+			var notification = req.body.notification;
+			request.post({
+				url: 'https://api.zeropush.com/broadcast',
+				form: {
+					auth_token: process.env.ZEROPUSH_DEV_TOKEN,
+					alert: notification.message,
+					expiry: Math.floor(new Date(notification.expirationDate).getTime() / 1000),
+					badge: '+1',
+					content_available: true
+				}
+			}, function (error, response, body) {
+				if (error) {
+					res.status(500).json(error);
+				} else {
+					res.json(body);
+				}
+			});
+		} else {
+			res.status(401).send('Invalid token');
+		}
+	});
+
+	server.get('/api/url/test', function (req, res) {
+		request({
+			url: req.query.url,
+			method: 'HEAD'
+		}, function (error, response, body) {
+			if (error) {
+				res.json({ found: false });
+			} else {
+				res.json({ found: true });
 			}
 		});
 	});

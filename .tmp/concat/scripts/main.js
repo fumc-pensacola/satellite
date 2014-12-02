@@ -89,10 +89,16 @@ function program7(depth0,data) {
 function program9(depth0,data) {
   
   
-  data.buffer.push("<i class=\"calendar icon\"></i> Calendars");
+  data.buffer.push("<i class=\"feed icon\"></i> Notify");
   }
 
 function program11(depth0,data) {
+  
+  
+  data.buffer.push("<i class=\"calendar icon\"></i> Calendars");
+  }
+
+function program13(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push(" <div class=\"right menu\"> <div class=\"item\"> <i class=\"user icon\"></i> Hello, ");
@@ -104,18 +110,18 @@ function program11(depth0,data) {
   return buffer;
   }
 
-function program13(depth0,data) {
+function program15(depth0,data) {
   
   var buffer = '', stack1, helper, options;
   data.buffer.push(" <div class=\"right menu\"> ");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'class': ("item")
-  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "login", options) : helperMissing.call(depth0, "link-to", "login", options));
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "login", options) : helperMissing.call(depth0, "link-to", "login", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> ");
   return buffer;
   }
-function program14(depth0,data) {
+function program16(depth0,data) {
   
   
   data.buffer.push("Log in");
@@ -144,10 +150,15 @@ function program14(depth0,data) {
   data.buffer.push(" ");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
     'class': ("item")
-  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "calendars", options) : helperMissing.call(depth0, "link-to", "calendars", options));
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "notifications", options) : helperMissing.call(depth0, "link-to", "notifications", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" ");
-  stack1 = helpers['if'].call(depth0, "loggedIn", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(13, program13, data),fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
+    'class': ("item")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "calendars", options) : helperMissing.call(depth0, "link-to", "calendars", options));
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" ");
+  stack1 = helpers['if'].call(depth0, "loggedIn", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(15, program15, data),fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" </div> </div> </div> <div class=\"ui one column page grid\"> <div class=\"column\"> ");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
@@ -164,7 +175,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 
 
-  data.buffer.push("<div class=\"ui active inline loader\"></div> Authenticating ");
+  data.buffer.push("<div class=\"ui basic modal\"> <div class=\"content\"> <div class=\"ui active loader\"></div> </div> </div> ");
   
 });
 
@@ -258,7 +269,7 @@ function program7(depth0,data) {
     'type': ("checkbox"),
     'checked': ("bulletin.visible")
   },hashTypes:{'type': "STRING",'checked': "ID"},hashContexts:{'type': depth0,'checked': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push(" <label>Publish to app/website</label> </div> </div> <div class=\"ui buttons field\"> <button class=\"ui button\" ");
+  data.buffer.push(" <label>Publish to app/website</label> </div> </div> <div class=\"ui buttons field\"> <button type=\"button\" class=\"ui button\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "cancel", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
   data.buffer.push(">Cancel</button> <div class=\"or\"></div> <button ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
@@ -660,9 +671,50 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<a href=\"#\" id=\"LoginWithAmazon\" ");
+  data.buffer.push("<a href=\"#\" class=\"ui blue button\" id=\"LoginWithAmazon\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "login", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push("> <img alt=\"Login with Amazon\" src=\"http://g-ecx.images-amazon.com/images/G/01/lwa/btnLWA_drkgry_152x64._CB372226054_.png\"> </a> ");
+  data.buffer.push(">Log in with Amazon</a> ");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["notifications"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data
+/**/) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
+
+
+  data.buffer.push("<div class=\"narrow\"> <h1 class=\"ui header\">Send Push Notification</h1> <form class=\"ui form segment\"> <div class=\"field\"> <label>Expiration Date</label> ");
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Fumc.DateField", {hash:{
+    'date': ("expirationDate")
+  },hashTypes:{'date': "ID"},hashContexts:{'date': depth0},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push(" </div> <div class=\"field\"> <label>Message</label> ");
+  data.buffer.push(escapeExpression((helper = helpers.textarea || (depth0 && depth0.textarea),options={hash:{
+    'value': ("message")
+  },hashTypes:{'value': "ID"},hashContexts:{'value': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
+  data.buffer.push(" </div> <div class=\"field\"> <label>Associated URL</label> <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :input urlIsValid::error")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> ");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("url")
+  },hashTypes:{'type': "STRING",'value': "ID"},hashContexts:{'type': depth0,'value': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push(" </div> </div> <div> <button type=\"button\" ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :blue :button isValid::disabled")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "test", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Test</button> <button type=\"button\" ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :red :button isValid::disabled")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "send", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">Send</button> </div> </form> </div> ");
   return buffer;
   
 });
@@ -965,7 +1017,7 @@ Fumc.Feature = DS.Model.extend({
   iphoneFourImage: DS.attr('string'),
   iphoneFiveImage: DS.attr('string'),
   iphoneSixImage: DS.attr('string'),
-  iphoneSixPlusImage: DS.attr('string'),
+  iphoneSixPlusImage: DS.attr('string')
 });
 
 
@@ -1057,6 +1109,18 @@ Fumc.FileUploadModel = Ember.Object.extend({
 
 (function() {
 
+Fumc.Notification = DS.Model.extend({
+  sendDate: DS.attr('date'),
+  expirationDate: DS.attr('date'),
+  message: DS.attr('string'),
+  url: DS.attr('string')
+});
+
+
+})();
+
+(function() {
+
 Fumc.Witness = DS.Model.extend({
   from: DS.attr('date'),
   to: DS.attr('date'),
@@ -1114,6 +1178,19 @@ Fumc.BulletinsRoute = Fumc.AuthenticatedRoute.extend({
 Fumc.FeaturedRoute = Fumc.AuthenticatedRoute.extend({
   model: function () {
     return this.store.find('feature');
+  }
+});
+
+
+})();
+
+(function() {
+
+Fumc.NotificationsRoute = Fumc.AuthenticatedRoute.extend({
+  model: function () {
+    return this.store.createRecord('notification', {
+      expirationDate: moment().add(1, 'weeks')
+    });
   }
 });
 
@@ -1571,6 +1648,79 @@ Fumc.AuthenticateRoute = Ember.Route.extend({
 
 (function() {
 
+Fumc.NotificationsController = Ember.ObjectController.extend({
+
+  init: function () {
+    window.controller = this;
+  },
+
+  expirationDateIsValid: function () {
+    var exp = this.get('expirationDate');
+    return exp && moment(exp).isValid() && exp > Date.now();
+  }.property('expirationDate'),
+
+  messageIsValid: function () {
+    return (this.get('message') || '').trim().length;
+  }.property('message'),
+
+  urlIsValid: true,
+
+  testURL: function () {
+    Ember.run.debounce(this, function () {
+      var url = this.get('url'),
+          self = this;
+      if (!url) {
+        this.set('urlIsValid', true);
+        return;
+      }
+
+      $.get('/api/url/test', {
+        url: url
+      }).done(function (response) {
+        self.set('urlIsValid', response.found);
+      });
+    }, 500);
+  }.observes('url'),
+
+  isValid: Ember.computed.and('expirationDateIsValid', 'messageIsValid', 'urlIsValid'),
+
+  actions: {
+    test: function () {
+
+    },
+
+    send: function () {
+      if (this.get('isValid') && confirm('This will be sent immediately to every person who has downloaded the app and accepted push notifications, and cannot be undone.')) {
+        this.set('sendDate', new Date());
+        var model = this.get('model');
+        $.ajax({
+          url: '/api/notify/everyone',
+          type: 'POST',
+          data: { notification: this.get('model').toJSON({ includeId: true }) },
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader('token', Cookies.get('token'));
+          }
+        }).done(function () {
+          model.save().then(function () {
+            alert('Notification sent.');
+          }, function (reason) {
+            console.log(JSON.stringify(reason));
+            alert('Notification sent but failed to save to the web server.');
+          });
+        }).fail(function () {
+          alert('Notification failed to send.');
+        });
+      }
+    }
+  }
+
+});
+
+
+})();
+
+(function() {
+
 Fumc.WitnessController = Fumc.BulletinController.extend({
 
   needs: ['application', 'witnesses'],
@@ -1681,6 +1831,21 @@ Fumc.WitnessesController = Fumc.BulletinsController.extend({
 
 Fumc.ApplicationView = Ember.View.extend({
 
+});
+
+
+})();
+
+(function() {
+
+Fumc.AuthenticateView = Ember.View.extend({
+  templateName: 'authenticate',
+  didInsertElement: function () {
+    $('.ui.basic.modal').modal('setting', 'closable', false).modal('show');
+  },
+  willDestroyElement: function () {
+    $('.ui.basic.modal').modal('hide');
+  }
 });
 
 
@@ -1865,6 +2030,7 @@ Fumc.Router.map(function () {
 	this.resource('bulletins');
 	this.resource('witnesses');
 	this.resource('featured');
+	this.resource('notifications');
 	this.route('calendars');
 	this.route('error404', { path: '*:' });
 });

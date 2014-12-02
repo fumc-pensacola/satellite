@@ -3,7 +3,7 @@ module.exports = {
 	semantic: {
 		files: [{
 			expand: true,
-			cwd: 'bower_components/semantic-ui/build/packaged/',
+			cwd: 'bower_components/semantic-ui/dist/themes/default/assets',
 			src: ['fonts/**', 'images/**'],
 			dest: 'tmp/assets/'
 		}]

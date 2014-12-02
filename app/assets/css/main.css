@@ -1,7 +1,12 @@
 body {
 	font-family: 'myriad-pro', 'helvetica neue', helvetica, arial, sans-serif;
 	margin: 0;
+	padding-top: 20px;
 	height: auto !important;
+}
+
+.ui.header, .ui.button {
+	font-family: 'myriad-pro', 'helvetica neue', helvetica, arial, sans-serif;
 }
 
 a {
@@ -279,4 +284,10 @@ code {
 .feature .progress {
 	margin-top: 20px;
 	text-align: left;
+}
+
+.ui.input.error input:focus {
+	background-color: snow;
+	border-color: #E7BEBE;
+	color: #D95C5C;
 }
