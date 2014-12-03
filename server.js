@@ -170,6 +170,7 @@ module.exports = function (server) {
 
 	server.post('/api/:modelName', function (req, res) {
 		if (validTokenProvided(req, res)) {
+			console.log(req.body);
 			inflectorController.post(req, res);
 		} else {
 			res.status(401).send('Invalid token');

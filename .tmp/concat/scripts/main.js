@@ -928,6 +928,16 @@ Ember.Application.initializer({
 		// Basic idea of an initializer
 		// Do things like setup injections here
 		Ember.FEATURES['ember-routing-drop-deprecated-action-style'] = true;
+
+		Fumc.DateWithTimezoneTransform = DS.Transform.extend({
+			serialize: function (value) {
+				return value ? moment(value).format() : null;
+			},
+			deserialize: function (value) {
+				return value ? new Date(value) : null;
+			}
+		});
+		
 	}
 });
 
@@ -998,7 +1008,7 @@ Fumc.FileUploadComponent = Ember.Component.extend({
 (function() {
 
 Fumc.Bulletin = DS.Model.extend({
-  date: DS.attr('date'),
+  date: DS.attr('date-with-timezone'),
   service: DS.attr('string'),
   visible: DS.attr('boolean'),
   file: DS.attr('string')
@@ -1114,8 +1124,8 @@ Fumc.FileUploadModel = Ember.Object.extend({
 (function() {
 
 Fumc.Notification = DS.Model.extend({
-  sendDate: DS.attr('date'),
-  expirationDate: DS.attr('date'),
+  sendDate: DS.attr('date-with-timezone'),
+  expirationDate: DS.attr('date-with-timezone'),
   message: DS.attr('string'),
   url: DS.attr('string')
 });
@@ -1126,8 +1136,8 @@ Fumc.Notification = DS.Model.extend({
 (function() {
 
 Fumc.Witness = DS.Model.extend({
-  from: DS.attr('date'),
-  to: DS.attr('date'),
+  from: DS.attr('date-with-timezone'),
+  to: DS.attr('date-with-timezone'),
   volume: DS.attr('number'),
   issue: DS.attr('number'),
   visible: DS.attr('boolean'),
@@ -1704,23 +1714,26 @@ Fumc.NotificationsController = Ember.ObjectController.extend({
       if (this.get('isValid') && confirm('This will be sent immediately to every person who has downloaded the app and accepted push notifications, and cannot be undone.')) {
         this.set('sendDate', new Date());
         var model = this.get('model');
-        $.ajax({
-          url: '/api/notify/everyone',
-          type: 'POST',
-          data: { notification: this.get('model').toJSON({ includeId: true }) },
-          beforeSend: function (xhr) {
-            xhr.setRequestHeader('token', Cookies.get('token'));
-          }
-        }).done(function () {
-          model.save().then(function () {
+        model.save().then(function () {
+          $.ajax({
+            url: '/api/notify/everyone',
+            type: 'POST',
+            data: { notification: model.toJSON({ includeId: true }) },
+            beforeSend: function (xhr) {
+              xhr.setRequestHeader('token', Cookies.get('token'));
+            }
+          }).done(function () {
             alert('Notification sent.');
-          }, function (reason) {
-            console.log(JSON.stringify(reason));
-            alert('Notification sent but failed to save to the web server.');
+          }).fail(function () {
+            alert('Notification failed to send. Deleting from server.');
+            model.destroyRecord();
+          }).always(function () {
+            self.send('refresh');
           });
+        }, function (reason) {
+          alert('Notification failed to send. Will not attempt to save to server.');
+          console.error(reason);
           self.send('refresh');
-        }).fail(function () {
-          alert('Notification failed to send.');
         });
       }
     }

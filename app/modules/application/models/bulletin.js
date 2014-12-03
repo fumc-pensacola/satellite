@@ -1,5 +1,5 @@
 Fumc.Bulletin = DS.Model.extend({
-  date: DS.attr('date'),
+  date: DS.attr('date-with-timezone'),
   service: DS.attr('string'),
   visible: DS.attr('boolean'),
   file: DS.attr('string')

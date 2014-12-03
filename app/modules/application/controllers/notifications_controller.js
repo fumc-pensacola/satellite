@@ -45,23 +45,26 @@ Fumc.NotificationsController = Ember.ObjectController.extend({
       if (this.get('isValid') && confirm('This will be sent immediately to every person who has downloaded the app and accepted push notifications, and cannot be undone.')) {
         this.set('sendDate', new Date());
         var model = this.get('model');
-        $.ajax({
-          url: '/api/notify/everyone',
-          type: 'POST',
-          data: { notification: this.get('model').toJSON({ includeId: true }) },
-          beforeSend: function (xhr) {
-            xhr.setRequestHeader('token', Cookies.get('token'));
-          }
-        }).done(function () {
-          model.save().then(function () {
+        model.save().then(function () {
+          $.ajax({
+            url: '/api/notify/everyone',
+            type: 'POST',
+            data: { notification: model.toJSON({ includeId: true }) },
+            beforeSend: function (xhr) {
+              xhr.setRequestHeader('token', Cookies.get('token'));
+            }
+          }).done(function () {
             alert('Notification sent.');
-          }, function (reason) {
-            console.log(JSON.stringify(reason));
-            alert('Notification sent but failed to save to the web server.');
+          }).fail(function () {
+            alert('Notification failed to send. Deleting from server.');
+            model.destroyRecord();
+          }).always(function () {
+            self.send('refresh');
           });
+        }, function (reason) {
+          alert('Notification failed to send. Will not attempt to save to server.');
+          console.error(reason);
           self.send('refresh');
-        }).fail(function () {
-          alert('Notification failed to send.');
         });
       }
     }
