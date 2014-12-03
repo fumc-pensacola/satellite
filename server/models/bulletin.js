@@ -3,7 +3,7 @@ var orm = require('orm');
 module.exports = function (db) {
   return db.define('bulletin', {
     id: { type: 'serial', key: true },
-    date: { type: 'date' },
+    date: { type: 'date', time: true },
     service: { type: 'text' },
     visible: { type: 'boolean' },
     file: { type: 'text' }

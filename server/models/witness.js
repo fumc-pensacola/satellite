@@ -3,8 +3,8 @@ var orm = require('orm');
 module.exports = function (db) {
   return db.define('witness', {
     id: { type: 'serial', key: true },
-    from: { type: 'date' },
-    to: { type: 'date' },
+    from: { type: 'date', time: true },
+    to: { type: 'date', time: true },
     volume: { type: 'number' },
     issue: { type: 'number' },
     visible: { type: 'boolean' },
