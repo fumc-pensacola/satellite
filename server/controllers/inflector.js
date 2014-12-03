@@ -5,9 +5,10 @@ var orm = require('orm'),
 module.exports = {
 	post: function (req, res) {
 		var modelName = inflector.singularize(req.params.modelName),
-			Model = req.models[modelName];
+				Model = req.models[modelName];
 
 		if (Model) {
+			console.log(req.body);
 			Model.create([req.body], function (err, models) {
 				if (err) {
 					res.json(modelError(err), 422);

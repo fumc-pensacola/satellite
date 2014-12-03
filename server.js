@@ -108,7 +108,7 @@ module.exports = function (server) {
 	server.post('/api/notify/everyone', function (req, res) {
 		if (validTokenProvided(req, res)) {
 			var notification = req.body.notification;
-			request.post({
+			console.log(request.post({
 				url: 'https://api.zeropush.com/broadcast',
 				form: {
 					auth_token: process.env.ZEROPUSH_DEV_TOKEN,
@@ -127,7 +127,7 @@ module.exports = function (server) {
 				} else {
 					res.json(body);
 				}
-			});
+			}).body.toString('utf-8'));
 		} else {
 			res.status(401).send('Invalid token');
 		}
