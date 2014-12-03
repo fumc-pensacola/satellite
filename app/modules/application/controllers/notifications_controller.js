@@ -40,6 +40,8 @@ Fumc.NotificationsController = Ember.ObjectController.extend({
     },
 
     send: function () {
+      var self = this;
+      this.set('loading', true);
       if (this.get('isValid') && confirm('This will be sent immediately to every person who has downloaded the app and accepted push notifications, and cannot be undone.')) {
         this.set('sendDate', new Date());
         var model = this.get('model');
@@ -57,6 +59,7 @@ Fumc.NotificationsController = Ember.ObjectController.extend({
             console.log(JSON.stringify(reason));
             alert('Notification sent but failed to save to the web server.');
           });
+          self.send('refresh');
         }).fail(function () {
           alert('Notification failed to send.');
         });

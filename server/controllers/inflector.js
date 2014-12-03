@@ -37,7 +37,6 @@ module.exports = {
 				if (req.query.hasOwnProperty('orderBy')) {
 					orderBy = req.query.orderBy.split(',');
 					delete req.query.orderBy;
-					console.log(orderBy)
 				}
 
 				query = req.query;

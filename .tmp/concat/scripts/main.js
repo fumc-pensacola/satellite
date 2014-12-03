@@ -685,7 +685,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
 
 
-  data.buffer.push("<div class=\"narrow\"> <h1 class=\"ui header\">Send Push Notification</h1> <form class=\"ui form segment\"> <div class=\"field\"> <label>Expiration Date</label> ");
+  data.buffer.push("<div class=\"narrow\"> <h1 class=\"ui header\">Send Push Notification</h1> <form ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":ui :form :segment loading")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("> <div class=\"field\"> <label>Expiration Date</label> ");
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "Fumc.DateField", {hash:{
     'date': ("expirationDate")
   },hashTypes:{'date': "ID"},hashContexts:{'date': depth0},contexts:[depth0],types:["ID"],data:data})));
@@ -1191,6 +1195,11 @@ Fumc.NotificationsRoute = Fumc.AuthenticatedRoute.extend({
     return this.store.createRecord('notification', {
       expirationDate: moment().add(1, 'weeks')
     });
+  },
+  actions: {
+    refresh: function () {
+      this.refresh();
+    }
   }
 });
 
@@ -1690,6 +1699,8 @@ Fumc.NotificationsController = Ember.ObjectController.extend({
     },
 
     send: function () {
+      var self = this;
+      this.set('loading', true);
       if (this.get('isValid') && confirm('This will be sent immediately to every person who has downloaded the app and accepted push notifications, and cannot be undone.')) {
         this.set('sendDate', new Date());
         var model = this.get('model');
@@ -1707,6 +1718,7 @@ Fumc.NotificationsController = Ember.ObjectController.extend({
             console.log(JSON.stringify(reason));
             alert('Notification sent but failed to save to the web server.');
           });
+          self.send('refresh');
         }).fail(function () {
           alert('Notification failed to send.');
         });

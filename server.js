@@ -146,13 +146,23 @@ module.exports = function (server) {
 		});
 	});
 
+	server.get('/api/notifications/current', function (req, res) {
+		req.models.notification.find().where('"expirationDate" >= current_date').order('sendDate', 'Z').run(function(err, models) {
+			if (err) {
+				console.error(err);
+				res.status(500).send(err);
+			} else {
+				res.json(models);
+			}
+		});
+	});
+
 	server.get('/api/file/:key', function (req, res) {
 		s3.getSignedUrl('getObject', { Key: req.params.key }, function (err, url) {
 			if (err) {
-				console.log(err);
+				console.error(err);
 				res.status(500).send(err);
 			} else {
-				console.log(url);
 				res.redirect(303, url);
 			}
 		});
