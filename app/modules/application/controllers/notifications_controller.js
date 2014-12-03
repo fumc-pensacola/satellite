@@ -62,7 +62,7 @@ Fumc.NotificationsController = Ember.ObjectController.extend({
             self.send('refresh');
           });
         }, function (reason) {
-          alert('Notification failed to send. Will not attempt to save to server.');
+          alert('Notification failed to save to server. Will not send.');
           console.error(reason);
           self.send('refresh');
         });

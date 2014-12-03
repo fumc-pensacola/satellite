@@ -118,7 +118,7 @@ module.exports = function (server) {
 					info: JSON.stringify({
 						id: notification.id,
 						url: notification.url,
-						sendDate: notification.sendDate
+						sendDate: moment.tz(notification.sendDate, 'US/Central')
 					})
 				}
 			}, function (error, response, body) {
