@@ -5,6 +5,7 @@ Fumc.ApplicationAdapter = DS.FixtureAdapter.extend();
 require('./initializers/*');
 require('./helpers/*');
 require('./mixins/*');
+require('./transforms/*');
 
 require('./components/*');
 require('./modules/*/models/*');
