@@ -41,14 +41,37 @@ function intersect (a, b) {
   return result;
 }
 
+function fixDBS (dbs) {
+  if (dbs instanceof Array) {
+    return dbs;
+  }
+  return [dbs];
+}
+
 function ACS (ACSGeneralService, ACSEventService) {
 
   var secId = '_ane=U&RAP_u4aS-a5ebreJufU',
       siteId = 10978,
       mainCalendarId = '59a420c9-6854-43d4-89da-08e3ffa4e07f',
+      excludeFromPublicTagId = '34e52691-93a1-4f08-9d74-a3f700da04b9',
       token = null,
       calendars = [],
       locations = [];
+
+  var getExcludedEventIds = function () {
+    return new Promise(function (resolve, reject) {
+      ACSEventService.getTagsbyTagID({ token: token, tagid: excludeFromPublicTagId }, function (err, response) {
+        if (err || !response.getTagsbyTagIDResult) {
+          console.error('Error getting excluded event IDs');
+          reject(err || new Error('getExcludedEventIds failed'));
+        } else {
+          resolve(fixDBS(response.getTagsbyTagIDResult.diffgram.NewDataSet.dbs).map(function (j) {
+            return j.EventId;
+          }));
+        }
+      });
+    });
+  };
 
   this.tokenExpiry = moment();
 
@@ -58,7 +81,7 @@ function ACS (ACSGeneralService, ACSEventService) {
       console.log('Logging in...');
       ACSGeneralService.getLoginToken({ secid: secId, siteid: siteId }, function (err, response) {
         if (err || !response.getLoginTokenResult) {
-          console.log('Error logging in.', err);
+          console.error('Error logging in.', err);
           reject(err || new Error('getLoginToken failed'));
         } else {
           self.tokenExpiry = moment().add(59, 'minutes');
@@ -81,7 +104,7 @@ function ACS (ACSGeneralService, ACSEventService) {
           console.error('Could not get locations.', err);
           reject(err);
         } else {
-          resolve(locations = response.getResourcesByTypeResult.diffgram.NewDataSet.dbs.map(function (l) {
+          resolve(locations = fixDBS(response.getResourcesByTypeResult.diffgram.NewDataSet.dbs).map(function (l) {
             return new ACS.Location(l);
           }));
         }
@@ -95,7 +118,7 @@ function ACS (ACSGeneralService, ACSEventService) {
         if (err) {
           reject(err);
         } else {
-          resolve(calendars = response.getCalendarsResult.diffgram.NewDataSet.dbs.map(function (c) {
+          resolve(calendars = fixDBS(response.getCalendarsResult.diffgram.NewDataSet.dbs).map(function (c) {
             return { id: c.CalendarID, name: c.CalendarName };
           }));
         }
@@ -104,9 +127,10 @@ function ACS (ACSGeneralService, ACSEventService) {
   };
 
   this.getCalendarEvents = function (calendar, from, to) {
-
-    var self = this;
-    var calendarId = new Promise(function (resolve, reject) {
+    var self = this,
+    locationsRequest = self.getLocations(),
+    excludedEventIdsRequest = getExcludedEventIds(),
+    calendarId = new Promise(function (resolve, reject) {
       if (calendar.toLowerCase() === 'all') {
         resolve(null);
       } else if (/([a-f0-9]+?-)+?/.test(calendar)) {
@@ -128,16 +152,15 @@ function ACS (ACSGeneralService, ACSEventService) {
     });
 
     return new Promise(function (resolve, reject) {
-
       calendarId.then(function (id) {
 
         var params = {
-              token: token,
-              startdate: moment(from).format('YYYY-MM-DD'),
-              stopdate: moment(to).format('YYYY-MM-DD'),
-              CalendarId: id
-            },
-            method = 'getCalendarEvents';
+          token: token,
+          startdate: moment(from).format('YYYY-MM-DD'),
+          stopdate: moment(to).format('YYYY-MM-DD'),
+          CalendarId: id
+        },
+        method = 'getCalendarEvents';
 
         if (!id) {
           delete params.CalendarId;
@@ -150,15 +173,15 @@ function ACS (ACSGeneralService, ACSEventService) {
             reject(err);
           } else {
             var requestedLocationIds = [],
-                cachedLocationIds = locations.map(function (l) { return l.id; }),
-                needsLocationCacheUpdate = false,
-                events = response[method + 'Result'].diffgram.NewDataSet.dbs.map(function (e) {
-                  if (e.isPublished !== false) {
-                    var event = new ACS.CalendarEvent(e);
-                    event.locationId && requestedLocationIds.push(event.locationId);
-                    return event;
-                  }
-                });
+            cachedLocationIds = locations.map(function (l) { return l.id; }),
+            needsLocationCacheUpdate = false,
+            events = response[method + 'Result'].diffgram.NewDataSet.dbs.map(function (e) {
+              if (e.isPublished !== false) {
+                var event = new ACS.CalendarEvent(e);
+                event.locationId && requestedLocationIds.push(event.locationId);
+                return event;
+              }
+            });
 
             for (var i = 0; i < requestedLocationIds.length; i++) {
               if (!~cachedLocationIds.indexOf(requestedLocationIds[i])) {
@@ -180,24 +203,27 @@ function ACS (ACSGeneralService, ACSEventService) {
               }
             }
 
-            var getLocations = Promise.resolve();
             if (needsLocationCacheUpdate) {
               console.log('Requesting locations');
-              getLocations = self.getLocations().then(processLocations);
+              locationsRequest.then(processLocations);
             } else {
               console.log('Using cached locations');
               processLocations(locations);
+              locationsRequest = Promise.resolve();
             }
 
-            getLocations.then(function () {
-              resolve(events);
+            Promise.all([locationsRequest, excludedEventIdsRequest]).then(function (values) {
+              var excludedEventIds = values[1];
+              var result = events.filter(function (e) {
+                return !~excludedEventIds.indexOf(e.id);
+              });
+              resolve(result);
             });
           }
         });
       });
     });
   };
-
 };
 
 ACS.CalendarEvent = function (e) {
