@@ -53,11 +53,31 @@ module.exports = function (server) {
 	var acsController = new ACSController();
 	acsController.setup();
 
+	server.get('/api/calendars/list', function (req, res) {
+		acsController.sharedInstance().then(function (acs) {
+			acs.getCalendars().then(function (calendars) {
+				res.json(calendars.sort(function (a, b) {
+					if (a.name > b.name) {
+						return 1;
+					}
+					if (a.name < b.name) {
+						return -1;
+					}
+					return 0;
+				}));
+			}, function (reason) {
+				res.status(500).json(reason);
+			});
+		}, function (reason) {
+			res.status(500).json(reason);
+		});
+	});
+
 	server.get('/api/calendars/:id.:format', function (req, res) {
 		acsController.sharedInstance().then(function (acs) {
 			console.log('Getting events...');
 			var from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),
-					to = req.query.to ? new Date(req.query.to) : moment().add(1, 'years');
+			to = req.query.to ? new Date(req.query.to) : moment().add(1, 'years');
 			return acs.getCalendarEvents(req.params.id, from, to);
 		}).then(function (events) {
 			console.log('Got events!');
@@ -80,6 +100,8 @@ module.exports = function (server) {
 				res.setHeader('Content-type', 'text/calendar');
 				res.send(calendar.toString());
 			}
+		}, function (reason) {
+			res.status(500).json(reason);
 		});
 	});
 
@@ -247,4 +269,5 @@ module.exports = function (server) {
 
 		});
 	});
+
 };

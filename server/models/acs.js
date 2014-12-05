@@ -56,7 +56,10 @@ function ACS (ACSGeneralService, ACSEventService) {
       excludeFromPublicTagId = '34e52691-93a1-4f08-9d74-a3f700da04b9',
       token = null,
       calendars = [],
-      locations = [];
+      locations = [],
+      colors = {
+        'facf9c2c-b6b2-4fd0-8814-19f7099d0d0d': '#00ff00'
+      };
 
   var getExcludedEventIds = function () {
     return new Promise(function (resolve, reject) {
@@ -119,7 +122,7 @@ function ACS (ACSGeneralService, ACSEventService) {
           reject(err);
         } else {
           resolve(calendars = fixDBS(response.getCalendarsResult.diffgram.NewDataSet.dbs).map(function (c) {
-            return { id: c.CalendarID, name: c.CalendarName };
+            return { id: c.CalendarID, name: c.CalendarName, colorString: colors[c.CalendarID] };
           }));
         }
       })
@@ -146,6 +149,8 @@ function ACS (ACSGeneralService, ACSEventService) {
             } else {
               reject(new Error('Could not find calendar with name: ' + calendar));
             }
+          }, function () {
+            reject(new Error('Failed to update calendar list'));
           });
         }
       }
@@ -218,6 +223,8 @@ function ACS (ACSGeneralService, ACSEventService) {
                 return !~excludedEventIds.indexOf(e.id);
               });
               resolve(result);
+            }, function () {
+              reject();
             });
           }
         });
