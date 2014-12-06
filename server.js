@@ -84,7 +84,7 @@ module.exports = function (server) {
 
 			if ((req.params.format || '').toLowerCase() === 'json') {
 				res.send(events.sort(function (a, b) {
-					return b.from - a.from;
+					return a.from - b.from;
 				}));
 			} else {
 				var calendar = new ical.iCalendar();
