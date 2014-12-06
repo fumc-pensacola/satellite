@@ -46,7 +46,7 @@ function fixDataSet (newDataSet) {
     return { dbs: [] };
   }
   if (newDataSet.dbs instanceof Array) {
-    return { dbs: dbs };
+    return { dbs: newDataSet.dbs };
   }
   return { dbs: [newDataSet.dbs] };
 }
