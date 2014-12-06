@@ -236,6 +236,7 @@ function ACS (ACSGeneralService, ACSEventService) {
 ACS.CalendarEvent = function (e) {
   this.id = e.EventId || e.eventId;
   this.calendar = e.CalendarName;
+  this.calendarId = e.CalendarId;
   this.name = e.EventName;
   this.description = e.Description ? sanitize(e.Description) : null;
   this.from = fixTimeZone(e.StartDate || e.startdate);
