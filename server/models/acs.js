@@ -44,6 +44,8 @@ function intersect (a, b) {
 function fixDBS (dbs) {
   if (dbs instanceof Array) {
     return dbs;
+  } else if (!dbs) {
+    return [];
   }
   return [dbs];
 }
