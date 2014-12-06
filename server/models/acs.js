@@ -41,13 +41,14 @@ function intersect (a, b) {
   return result;
 }
 
-function fixDBS (dbs) {
-  if (dbs instanceof Array) {
-    return dbs;
-  } else if (!dbs) {
-    return [];
+function fixDataSet (newDataSet) {
+  if (!newDataSet || !newDataSet.dbs) {
+    return { dbs: [] };
   }
-  return [dbs];
+  if (newDataSet.dbs instanceof Array) {
+    return { dbs: dbs };
+  }
+  return { dbs: [newDataSet.dbs] };
 }
 
 function ACS (ACSGeneralService, ACSEventService) {
@@ -70,7 +71,7 @@ function ACS (ACSGeneralService, ACSEventService) {
           console.error('Error getting excluded event IDs');
           reject(err || new Error('getExcludedEventIds failed'));
         } else {
-          resolve(fixDBS(response.getTagsbyTagIDResult.diffgram.NewDataSet.dbs).map(function (j) {
+          resolve(fixDataSet(response.getTagsbyTagIDResult.diffgram.NewDataSet).dbs.map(function (j) {
             return j.EventId;
           }));
         }
@@ -109,7 +110,7 @@ function ACS (ACSGeneralService, ACSEventService) {
           console.error('Could not get locations.', err);
           reject(err);
         } else {
-          resolve(locations = fixDBS(response.getResourcesByTypeResult.diffgram.NewDataSet.dbs).map(function (l) {
+          resolve(locations = fixDataSet(response.getResourcesByTypeResult.diffgram.NewDataSet).dbs.map(function (l) {
             return new ACS.Location(l);
           }));
         }
@@ -123,7 +124,7 @@ function ACS (ACSGeneralService, ACSEventService) {
         if (err) {
           reject(err);
         } else {
-          resolve(calendars = fixDBS(response.getCalendarsResult.diffgram.NewDataSet.dbs).map(function (c) {
+          resolve(calendars = fixDataSet(response.getCalendarsResult.diffgram.NewDataSet).dbs.map(function (c) {
             return { id: c.CalendarID, name: c.CalendarName, colorString: colors[c.CalendarID] };
           }));
         }
@@ -182,7 +183,7 @@ function ACS (ACSGeneralService, ACSEventService) {
             var requestedLocationIds = [],
             cachedLocationIds = locations.map(function (l) { return l.id; }),
             needsLocationCacheUpdate = false,
-            events = fixDBS(response[method + 'Result'].diffgram.NewDataSet.dbs).map(function (e) {
+            events = fixDataSet(response[method + 'Result'].diffgram.NewDataSet).dbs.map(function (e) {
               if (e.isPublished !== false) {
                 var event = new ACS.CalendarEvent(e);
                 event.locationId && requestedLocationIds.push(event.locationId);
