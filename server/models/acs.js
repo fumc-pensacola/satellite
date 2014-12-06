@@ -182,7 +182,7 @@ function ACS (ACSGeneralService, ACSEventService) {
             var requestedLocationIds = [],
             cachedLocationIds = locations.map(function (l) { return l.id; }),
             needsLocationCacheUpdate = false,
-            events = response[method + 'Result'].diffgram.NewDataSet.dbs.map(function (e) {
+            events = fixDBS(response[method + 'Result'].diffgram.NewDataSet.dbs).map(function (e) {
               if (e.isPublished !== false) {
                 var event = new ACS.CalendarEvent(e);
                 event.locationId && requestedLocationIds.push(event.locationId);
