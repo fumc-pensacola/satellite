@@ -127,11 +127,12 @@ module.exports = function (server) {
 		});
 	});
 
-	server.post('/api/notify/everyone', function (req, res) {
+	server.post('/api/notify/:channel', function (req, res) {
 		if (validTokenProvided(req, res)) {
-			var notification = req.body.notification;
-			console.log(request.post({
-				url: 'https://api.zeropush.com/broadcast',
+			var notification = req.body.notification,
+					channel = req.params.channel.replace('everyone', '');
+			request.post({
+				url: 'https://api.zeropush.com/broadcast/' + channel,
 				form: {
 					auth_token: process.env.ZEROPUSH_DEV_TOKEN,
 					alert: notification.message,
@@ -149,7 +150,7 @@ module.exports = function (server) {
 				} else {
 					res.json(body);
 				}
-			}).body.toString('utf-8'));
+			});
 		} else {
 			res.status(401).send('Invalid token');
 		}
@@ -169,7 +170,12 @@ module.exports = function (server) {
 	});
 
 	server.get('/api/notifications/current', function (req, res) {
-		req.models.notification.find().where('"expirationDate" >= current_date').order('sendDate', 'Z').run(function(err, models) {
+		if (req.query.test === true || (typeof req.query.test === 'string' && req.query.test.toLowerCase() === "true")) {
+			delete req.query.test;
+		} else {
+			req.query.test = false;
+		}
+		req.models.notification.find(req.query).where('"expirationDate" >= current_date').order('sendDate', 'Z').run(function(err, models) {
 			if (err) {
 				console.error(err);
 				res.status(500).send(err);

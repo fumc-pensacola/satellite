@@ -8,7 +8,6 @@ module.exports = {
 				Model = req.models[modelName];
 
 		if (Model) {
-			console.log(req.body);
 			Model.create([req.body], function (err, models) {
 				if (err) {
 					res.json(modelError(err), 422);

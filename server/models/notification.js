@@ -6,7 +6,8 @@ module.exports = function (db) {
     sendDate: { type: 'date', time: true },
     expirationDate: { type: 'date', time: true },
     message: { type: 'text' },
-    url: { type: 'text' }
+    url: { type: 'text' },
+    test: { type: 'boolean', required: true }
   }, {
     autoFetch: true,
     validations: {
