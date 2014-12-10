@@ -1,3 +1,5 @@
+require('newrelic');
+
 var NODE_ENV = process.env.NODE_ENV,
 	express = require('express'),
 	server = express();
