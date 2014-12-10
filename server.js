@@ -170,8 +170,8 @@ module.exports = function (server) {
 	});
 
 	server.get('/api/notifications/current', function (req, res) {
-		if (req.query.test === true || (typeof req.query.test === 'string' && req.query.test.toLowerCase() === "true")) {
-			delete req.query.test;
+		if (req.query.tester === true || (typeof req.query.tester === 'string' && req.query.tester.toLowerCase() === "true")) {
+			delete req.query.tester;
 		} else {
 			req.query.test = false;
 		}
