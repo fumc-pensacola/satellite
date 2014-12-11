@@ -10,6 +10,13 @@ module.exports = function (grunt) {
 		'gitpush'
 	]);
 
+	grunt.registerTask('deploy:dev', [
+		'build',
+		'gitadd',
+		'gitcommit',
+		'gitpush:dev'
+	]);
+
 	grunt.registerTask('compile', [
 		'clean',
 		'copy',
