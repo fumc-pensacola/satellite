@@ -152,7 +152,6 @@ function ACS (ACSGeneralService, ACSEventService) {
   this.getCalendarEvents = function (calendar, from, to) {
     var self = this,
     locationsRequest = self.getLocations(),
-    excludedEventIdsRequest = getExcludedEventIds(),
     calendarId = new Promise(function (resolve, reject) {
       if (calendar.toLowerCase() === 'all') {
         resolve(null);
@@ -237,12 +236,8 @@ function ACS (ACSGeneralService, ACSEventService) {
               locationsRequest = Promise.resolve();
             }
 
-            Promise.all([locationsRequest, excludedEventIdsRequest]).then(function (values) {
-              var excludedEventIds = values[1];
-              var result = events.filter(function (e) {
-                return !~excludedEventIds.indexOf(e.id);
-              });
-              resolve(result);
+            locationsRequest.then(function () {
+              resolve(events);
             }, function () {
               reject();
             });
