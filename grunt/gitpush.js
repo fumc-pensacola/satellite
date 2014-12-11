@@ -9,7 +9,7 @@ module.exports = {
   dev: {
     options: {
       remote: 'dev',
-      branch: 'development'
+      branch: 'master'
     }
   }
 };
