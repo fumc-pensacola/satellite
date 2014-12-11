@@ -4,5 +4,12 @@ module.exports = {
       remote: 'heroku',
       branch: 'master'
     }
+  },
+
+  dev: {
+    options: {
+      remote: 'dev',
+      branch: 'master'
+    }
   }
 };

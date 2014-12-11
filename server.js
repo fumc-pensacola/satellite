@@ -77,16 +77,26 @@ module.exports = function (server) {
 		acsController.sharedInstance().then(function (acs) {
 			console.log('Getting events...');
 			var from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),
-			to = req.query.to ? new Date(req.query.to) : moment().add(1, 'years');
-			return acs.getCalendarEvents(req.params.id, from, to);
-		}).then(function (events) {
+					to = req.query.to ? new Date(req.query.to) : moment().add(1, 'years'),
+					ids = req.params.id.split(','),
+					min = req.query.min || 0;
+			return acs.getCalendarEvents(ids, from, to, min);
+		}).then(function (eventsByCalendar) {
 			console.log('Got events!');
 
+			var keys = Object.keys(eventsByCalendar);
 			if ((req.params.format || '').toLowerCase() === 'json') {
-				res.send(events.sort(function (a, b) {
-					return a.from - b.from;
-				}));
+				keys.forEach(function (key) {
+					eventsByCalendar[key].sort(function (a, b) {
+						return a.from - b.from;
+					});
+				});
+				res.send(eventsByCalendar);
 			} else {
+				var events = [];
+				for (var key in keys) {
+					events.concat(eventsByCalendar[key]);
+				}
 				var calendar = new ical.iCalendar();
 				for (var i = 0; i < events.length; i++) {
 					var e = new ical.VEvent(calendar, events[i].id + i);
