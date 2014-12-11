@@ -1,5 +1,5 @@
 var moment = require('moment-timezone'),
-    Promise = require('es6-promise').Promise;
+    Promise = require('bluebird').Promise;
 
 function sanitize (str) {
   return str.replace(/\r\n/g, ' ').replace(/\r/g, ' ').replace(/\n/g, ' ');
@@ -149,104 +149,132 @@ function ACS (ACSGeneralService, ACSEventService) {
     });
   };
 
-  this.getCalendarEvents = function (calendar, from, to) {
+  this.getCalendarEvents = function (requestedCalendars, from, to) {
     var self = this,
     locationsRequest = self.getLocations(),
-    calendarId = new Promise(function (resolve, reject) {
-      if (calendar.toLowerCase() === 'all') {
-        resolve(null);
-      } else if (/([a-f0-9]+?-)+?/.test(calendar)) {
-        resolve(calendar);
-      } else {
-        var c;
-        if (c = matchCalendar(calendars, calendar)) {
-          resolve(c.id);
+    calendarIds = requestedCalendars.map(function (calendar) {
+      return new Promise(function (resolve, reject) {
+        if (calendar.toLowerCase() === 'all') {
+          resolve(null);
+        } else if (/([a-f0-9]+?-)+?/.test(calendar)) {
+          resolve(calendar);
         } else {
-          self.getCalendars().then(function (calendars) {
-            if (c = matchCalendar(calendars, calendar)) {
-              resolve(c.id);
-            } else {
-              reject(new Error('Could not find calendar with name: ' + calendar));
-            }
-          }, function () {
-            reject(new Error('Failed to update calendar list'));
-          });
+          var c;
+          if (c = matchCalendar(calendars, calendar)) {
+            resolve(c.id);
+          } else {
+            self.getCalendars().then(function (calendars) {
+              if (c = matchCalendar(calendars, calendar)) {
+                resolve(c.id);
+              } else {
+                reject(new Error('Could not find calendar with name: ' + calendar));
+              }
+            }, function () {
+              reject(new Error('Failed to update calendar list'));
+            });
+          }
         }
-      }
+      });
     });
 
     return new Promise(function (resolve, reject) {
-      calendarId.then(function (id) {
 
-        var params = {
-          token: token,
-          startdate: moment(from).format('YYYY-MM-DD'),
-          stopdate: moment(to).format('YYYY-MM-DD'),
-          CalendarId: id
-        },
-        method = 'getCalendarEvents';
+      var apiCalls = [];
 
-        if (!id) {
-          delete params.CalendarId;
-          method = 'getEventsByDateRange';
-        }
+      for (var i = 0; i < calendarIds.length; i++) {
+        apiCalls.push(new Promise(function (res, rej) {
+          calendarIds[i].then(function (id) {
 
-        ACSEventService[method](params, function (err, response) {
-          if (err) {
-            console.error(method + ' failed.', err);
-            reject(err);
-          } else {
-            var requestedLocationIds = [],
-            cachedLocationIds = locations.map(function (l) { return l.id; }),
-            needsLocationCacheUpdate = false,
-            events = fixDataSet(response[method + 'Result'].diffgram.NewDataSet).dbs.map(function (e) {
-              if (e.isPublished !== false) {
-                var event = new ACS.CalendarEvent(e);
-                event.locationId && requestedLocationIds.push(event.locationId);
-                return event;
-              }
-            });
+            var params = {
+              token: token,
+              startdate: moment(from).format('YYYY-MM-DD'),
+              stopdate: moment(to).format('YYYY-MM-DD'),
+              CalendarId: id
+            },
+            method = 'getCalendarEvents';
 
-            for (var i = 0; i < requestedLocationIds.length; i++) {
-              if (!~cachedLocationIds.indexOf(requestedLocationIds[i])) {
-                needsLocationCacheUpdate = true;
-                break;
-              }
+            if (!id) {
+              delete params.CalendarId;
+              method = 'getEventsByDateRange';
             }
 
-            function processLocations (locations) {
-              for (i = 0; i < events.length; i++) {
-                var event = events[i], l;
-                if (!event.locationId) {
-                  event.location = null;
-                } else if (l = matchLocation(locations, event.locationId)) {
-                  event.location = l;
-                } else {
-                  event.location = null;
+            ACSEventService[method](params, function (err, response) {
+              if (err) {
+                console.error(method + ' failed.', err);
+                rej(err);
+              } else {
+                var requestedLocationIds = [],
+                cachedLocationIds = locations.map(function (l) { return l.id; }),
+                needsLocationCacheUpdate = false,
+                events = fixDataSet(response[method + 'Result'].diffgram.NewDataSet).dbs.map(function (e) {
+                  if (e.isPublished !== false) {
+                    var event = new ACS.CalendarEvent(e);
+                    event.locationId && requestedLocationIds.push(event.locationId);
+                    return event;
+                  }
+                });
+
+                for (var i = 0; i < requestedLocationIds.length; i++) {
+                  if (!~cachedLocationIds.indexOf(requestedLocationIds[i])) {
+                    needsLocationCacheUpdate = true;
+                    break;
+                  }
                 }
+
+                var processLocations = function (locations) {
+                  for (i = 0; i < events.length; i++) {
+                    var event = events[i], l;
+                    if (!event.locationId) {
+                      event.location = null;
+                    } else if (l = matchLocation(locations, event.locationId)) {
+                      event.location = l;
+                    } else {
+                      event.location = null;
+                    }
+                  }
+                };
+
+                if (needsLocationCacheUpdate) {
+                  console.log('Requesting locations');
+                  locationsRequest.then(processLocations);
+                } else {
+                  console.log('Using cached locations');
+                  processLocations(locations);
+                  locationsRequest = Promise.resolve();
+                }
+
+                locationsRequest.then(function () {
+                  res({
+                    id: id,
+                    events: events
+                  });
+                }, function () {
+                  rej();
+                });
               }
-            }
-
-            if (needsLocationCacheUpdate) {
-              console.log('Requesting locations');
-              locationsRequest.then(processLocations);
-            } else {
-              console.log('Using cached locations');
-              processLocations(locations);
-              locationsRequest = Promise.resolve();
-            }
-
-            locationsRequest.then(function () {
-              resolve(events);
-            }, function () {
-              reject();
             });
+          }, function (reason) {
+            rej(reason);
+          });
+        }));
+      }
+
+      Promise.settle(apiCalls).then(function (eventsByCalendar) {
+        var results = { };
+        eventsByCalendar.forEach(function (p) {
+          if (p.isFulfilled()) {
+            results[p.value().id] = p.value().events;
+          } else {
+            console.error(p.reason());
           }
         });
+        resolve(results);
+      }, function () {
+        reject();
       });
     });
   };
-};
+}
 
 ACS.CalendarEvent = function (e) {
   this.id = e.EventId || e.eventId;
@@ -263,6 +291,6 @@ ACS.Location = function (l) {
   this.id = l.resourceid;
   this.name = l.resourcename;
   this.description = l.description;
-}
+};
 
 module.exports = ACS;
