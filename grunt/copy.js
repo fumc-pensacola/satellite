@@ -36,7 +36,7 @@ module.exports = {
 		files: [{
 			expand: true,
 			cwd: 'tmp/',
-			src: ['index.html', 'assets/css/themes/default/assets/**'],
+			src: ['index.html', 'assets/css/themes/default/assets/**', 'assets/images/**'],
 			dest: 'dist/'
 		}]
 	},
