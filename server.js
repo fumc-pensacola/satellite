@@ -8,6 +8,7 @@ var express = require('express'),
 	inflectorController = require('./server/controllers/inflector'),
 	ACSController = require('./server/controllers/acs'),
 	NODE_ENV = process.env.NODE_ENV,
+	ZEROPUSH_TOKEN = process.env[NODE_ENV === 'production' ? 'ZEROPUSH_PROD_TOKEN' : 'ZEROPUSH_DEV_TOKEN'],
 	currentToken,
 	calendar;
 
@@ -74,6 +75,7 @@ module.exports = function (server) {
 	});
 
 	server.get('/api/calendars/:id.:format', function (req, res) {
+		console.log(Date.now());
 		acsController.sharedInstance().then(function (acs) {
 			console.log('Getting events...');
 			var from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),
@@ -92,6 +94,7 @@ module.exports = function (server) {
 					});
 				});
 				res.send(eventsByCalendar);
+				console.log(Date.now());
 			} else {
 				var events = [];
 				for (var key in keys) {
@@ -144,7 +147,7 @@ module.exports = function (server) {
 			request.post({
 				url: 'https://api.zeropush.com/broadcast/' + channel,
 				form: {
-					auth_token: process.env.ZEROPUSH_DEV_TOKEN,
+					auth_token: ZEROPUSH_TOKEN,
 					alert: notification.message,
 					expiry: Math.floor(new Date(notification.expirationDate).getTime() / 1000),
 					badge: '+1',
