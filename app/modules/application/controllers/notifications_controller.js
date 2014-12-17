@@ -14,24 +14,6 @@ Fumc.NotificationsController = Ember.ObjectController.extend({
   }.property('message'),
 
   urlIsValid: true,
-
-  testURL: function () {
-    Ember.run.debounce(this, function () {
-      var url = this.get('url'),
-          self = this;
-      if (!url) {
-        this.set('urlIsValid', true);
-        return;
-      }
-
-      $.get('/api/url/test', {
-        url: url
-      }).done(function (response) {
-        self.set('urlIsValid', response.found);
-      });
-    }, 500);
-  }.observes('url'),
-
   isValid: Ember.computed.and('expirationDateIsValid', 'messageIsValid', 'urlIsValid'),
 
   actions: {

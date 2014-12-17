@@ -1,8 +1,13 @@
 <div class="actions">
-  <button type="button" {{bind-attr class=":ui :blue :button feature.isUploading:disabled feature.isControllerDirty::disabled"}} {{action "save"}}>Save</button>
+  <button type="button" {{bind-attr class=":ui :blue :button feature.urlIsValid::disabled feature.isUploading:disabled feature.isControllerDirty::disabled"}} {{action "save"}}>Save</button>
   <div class="ui slider checkbox">
     {{input type="checkbox" checked=feature.actualSize}}
     <label>Actual Size</label>
+  </div>
+  <div class="ui fluid url form">
+    <div class="field">
+      {{validated-url value=feature.url isValid=feature.urlIsValid placeholder="URL to open on tap (optional)"}}
+    </div>
   </div>
 </div>
 

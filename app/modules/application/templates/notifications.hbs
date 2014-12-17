@@ -12,9 +12,7 @@
     </div>
     <div class="field">
       <label>Associated URL</label>
-      <div {{bind-attr class=":ui :input urlIsValid::error"}}>
-        {{input type="text" value=url}}
-      </div>
+      {{validated-url value=url isValid=urlIsValid}}
     </div>
     <div>
       <button type="button" {{bind-attr class=":ui :blue :button isValid::disabled"}} {{action "test"}}>Test</button>
