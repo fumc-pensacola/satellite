@@ -79,7 +79,10 @@ function ACS (ACSGeneralService, ACSEventService) {
         '3451d38a-618c-4b39-9ec3-a3f900a0f837': '#6b0f7b',
         'd78cb214-d010-4a26-8fea-a3f9009d63a9': '#ba2420',
         'b2ad88a9-2dcb-45f2-ac62-a3f900a4ddb4': '#fafafa'
-      };
+      },
+    images = {
+      '9c7f8b4e-d0c6-451d-8aba-a3f9009d0cd3': 'Tween_Ministries.jpg'
+    };
 
   var getExcludedEventIds = function () {
     return new Promise(function (resolve, reject) {
@@ -142,7 +145,7 @@ function ACS (ACSGeneralService, ACSEventService) {
           reject(err);
         } else {
           resolve(calendars = fixDataSet(response.getCalendarsResult.diffgram.NewDataSet).dbs.map(function (c) {
-            return { id: c.CalendarID, name: c.CalendarName, colorString: colors[c.CalendarID] };
+            return { id: c.CalendarID, name: c.CalendarName, colorString: colors[c.CalendarID], defaultImageKey: images[c.CalendarID] };
           }));
         }
       })
