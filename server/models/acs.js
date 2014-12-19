@@ -60,29 +60,7 @@ function ACS (ACSGeneralService, ACSEventService) {
       token = null,
       calendars = [],
       locations = [],
-      colors = {
-        'f088210f-648c-4236-a216-a3f900a07fd9': '#ad4c4c',
-        '43c1cc21-573b-483b-a6a2-a3f80136df06': '#1cc2f2',
-        '36b2b1ce-892d-4e23-82dc-a3f900a33e6d': '#553c17',
-        '59a420c9-6854-43d4-89da-08e3ffa4e07f': '#841521',
-        'd10a6692-e75d-4181-bf65-9fcc00dd10b3': '#2ae2b4',
-        'c3a1e83f-67ea-46c1-9c3e-a3f900a5de0c': '#6995a3',
-        '3afcb791-03d7-41bc-9f15-a3f900a53fe0': '#a8a8a8',
-        '7a201d09-4dd6-49e6-ab49-a3f900a0c285': '#6c974e',
-        '79aab762-f53a-480a-a35f-a3f9009edd65': '#dbccb0',
-        '584948b7-f9da-4df9-a221-a3f9009c216a': '#de6e1c',
-        'dbe63e9a-0afa-4d87-aa4e-a3f9009159ed': '#3b3b3b',
-        'a187cf16-420c-47c8-8092-a3f900a6da2f': '#b4d0a1',
-        'b0269954-8b75-4466-9dd3-a3f900a15359': '#002157',
-        '20b18836-cc1b-4370-b24a-a3f900b7ab57': '#2d590f',
-        '9c7f8b4e-d0c6-451d-8aba-a3f9009d0cd3': '#fff200',
-        '3451d38a-618c-4b39-9ec3-a3f900a0f837': '#6b0f7b',
-        'd78cb214-d010-4a26-8fea-a3f9009d63a9': '#ba2420',
-        'b2ad88a9-2dcb-45f2-ac62-a3f900a4ddb4': '#fafafa'
-      },
-    images = {
-      '9c7f8b4e-d0c6-451d-8aba-a3f9009d0cd3': 'Tween_Ministries.jpg'
-    };
+      dbCalendars = [];
 
   var getExcludedEventIds = function () {
     return new Promise(function (resolve, reject) {
@@ -138,17 +116,21 @@ function ACS (ACSGeneralService, ACSEventService) {
     });
   };
 
-  this.getCalendars = function () {
+  this.getCalendars = function (databaseCalendars) {
+    if (databaseCalendars) {
+      dbCalendars = databaseCalendars;
+    }
     return new Promise(function (resolve, reject) {
       ACSEventService.getCalendars({ token: token, isPublished: true }, function (err, response) {
         if (err) {
           reject(err);
         } else {
           resolve(calendars = fixDataSet(response.getCalendarsResult.diffgram.NewDataSet).dbs.map(function (c) {
-            return { id: c.CalendarID, name: c.CalendarName, colorString: colors[c.CalendarID], defaultImageKey: images[c.CalendarID] };
+            var dbCalendar = dbCalendars.filter(function (cal) { return cal.id === c.CalendarID; })[0] || { };
+            return { id: c.CalendarID, name: c.CalendarName, colorString: dbCalendar.color, defaultImageKey: dbCalendar.image };
           }));
         }
-      })
+      });
     });
   };
 

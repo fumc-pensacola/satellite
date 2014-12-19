@@ -15,9 +15,6 @@ var express = require('express'),
 module.exports = function (server) {
 
 	var dbUrl = process.env.DATABASE_URL + '?ssl=true';
-	if (NODE_ENV === 'development') {
-		// dbUrl = process.env.LOCAL_PG_URL;
-	}
 
 	AWS.config.loadFromPath('./aws.json');
 	var s3 = new AWS.S3({ params: { Bucket: 'fumcappfiles' } });
@@ -31,6 +28,7 @@ module.exports = function (server) {
 			models.setting = require('./server/models/setting')(db);
 			models.feature = require('./server/models/feature')(db);
 			models.notification = require('./server/models/notification')(db);
+			models.calendar = require('./server/models/calendar')(db);
 
 			models.notification.hasOne('feature', models.feature);
 
@@ -55,8 +53,18 @@ module.exports = function (server) {
 	acsController.setup();
 
 	server.get('/api/calendars/list', function (req, res) {
-		acsController.sharedInstance().then(function (acs) {
-			acs.getCalendars().then(function (calendars) {
+		var getDBCalendars = new Promise(function (resolve, reject) {
+			req.models.calendar.find().run(function (err, models) {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(models);
+				}
+			});
+		});
+
+		Promise.all([acsController.sharedInstance(), getDBCalendars]).then(function (values) {
+			values[0].getCalendars(values[1]).then(function (calendars) {
 				res.json(calendars.sort(function (a, b) {
 					if (a.name > b.name) {
 						return 1;
@@ -75,7 +83,6 @@ module.exports = function (server) {
 	});
 
 	server.get('/api/calendars/:id.:format', function (req, res) {
-		console.log(Date.now());
 		acsController.sharedInstance().then(function (acs) {
 			console.log('Getting events...');
 			var from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),
@@ -94,7 +101,6 @@ module.exports = function (server) {
 					});
 				});
 				res.send(eventsByCalendar);
-				console.log(Date.now());
 			} else {
 				var events = [];
 				for (var key in keys) {
@@ -211,7 +217,6 @@ module.exports = function (server) {
 
 	server.post('/api/:modelName', function (req, res) {
 		if (validTokenProvided(req, res)) {
-			console.log(req.body);
 			inflectorController.post(req, res);
 		} else {
 			res.status(401).send('Invalid token');
@@ -248,7 +253,7 @@ module.exports = function (server) {
 			qs: { 'access_token': req.body.access_token }
 		}, function (err, response, body) {
 			if (err) {
-				console.log(err);
+				console.error(err);
 				res.status(500).send('Error reaching Amazon authenticator');
 				return;
 			}
