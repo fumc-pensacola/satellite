@@ -7,6 +7,6 @@ module.exports = function (db) {
     color: { type: 'text' },
     image: { type: 'text' }
   }, {
-    autoFetch: true,
+    cache: false
   });
 };
