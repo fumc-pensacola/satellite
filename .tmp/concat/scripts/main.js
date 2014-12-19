@@ -45,6 +45,23 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
+Ember.TEMPLATES["components/validated-url"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data
+/**/) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("text"),
+    'value': ("value"),
+    'placeholder': ("placeholder")
+  },hashTypes:{'type': "STRING",'value': "ID",'placeholder': "ID"},hashContexts:{'type': depth0,'value': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push(" ");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["about"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data
 /**/) {
 this.compilerInfo = [4,'>= 1.0.0'];
@@ -523,7 +540,7 @@ function program21(depth0,data) {
 
   data.buffer.push("<div class=\"actions\"> <button type=\"button\" ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
-    'class': (":ui :blue :button feature.isUploading:disabled feature.isControllerDirty::disabled")
+    'class': (":ui :blue :button feature.urlIsValid::disabled feature.isUploading:disabled feature.isControllerDirty::disabled")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "save", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
@@ -532,7 +549,13 @@ function program21(depth0,data) {
     'type': ("checkbox"),
     'checked': ("feature.actualSize")
   },hashTypes:{'type': "STRING",'checked': "ID"},hashContexts:{'type': depth0,'checked': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push(" <label>Actual Size</label> </div> </div> <div class=\"active-label\"> <div class=\"ui toggle checkbox\"> ");
+  data.buffer.push(" <label>Actual Size</label> </div> <div class=\"ui fluid url form\"> <div class=\"field\"> ");
+  data.buffer.push(escapeExpression((helper = helpers['validated-url'] || (depth0 && depth0['validated-url']),options={hash:{
+    'value': ("feature.url"),
+    'isValid': ("feature.urlIsValid"),
+    'placeholder': ("URL to open on tap (optional)")
+  },hashTypes:{'value': "ID",'isValid': "ID",'placeholder': "STRING"},hashContexts:{'value': depth0,'isValid': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "validated-url", options))));
+  data.buffer.push(" </div> </div> </div> <div class=\"active-label\"> <div class=\"ui toggle checkbox\"> ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("checkbox"),
     'checked': ("feature.active")
@@ -697,16 +720,12 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   data.buffer.push(escapeExpression((helper = helpers.textarea || (depth0 && depth0.textarea),options={hash:{
     'value': ("message")
   },hashTypes:{'value': "ID"},hashContexts:{'value': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
-  data.buffer.push(" </div> <div class=\"field\"> <label>Associated URL</label> <div ");
-  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
-    'class': (":ui :input urlIsValid::error")
-  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push("> ");
-  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
-    'type': ("text"),
-    'value': ("url")
-  },hashTypes:{'type': "STRING",'value': "ID"},hashContexts:{'type': depth0,'value': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push(" </div> </div> <div> <button type=\"button\" ");
+  data.buffer.push(" </div> <div class=\"field\"> <label>Associated URL</label> ");
+  data.buffer.push(escapeExpression((helper = helpers['validated-url'] || (depth0 && depth0['validated-url']),options={hash:{
+    'value': ("url"),
+    'isValid': ("urlIsValid")
+  },hashTypes:{'value': "ID",'isValid': "ID"},hashContexts:{'value': depth0,'isValid': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "validated-url", options))));
+  data.buffer.push(" </div> <div> <button type=\"button\" ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'class': (":ui :blue :button isValid::disabled")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
@@ -1012,6 +1031,41 @@ Fumc.FileUploadComponent = Ember.Component.extend({
 
 (function() {
 
+Fumc.ValidatedUrlComponent = Ember.Component.extend({
+
+  classNames: ['ui', 'input'],
+  classNameBindings: ['isValid::error'],
+
+  isValid: true,
+
+  testURL: function () {
+    var self = this;
+    Ember.run.debounce(this, function () {
+      var url = self.get('value');
+      if (!url) {
+        self.set('isValid', true);
+        return;
+      }
+
+      $.get('/api/url/test', {
+        url: url
+      }).done(function (response) {
+        self.set('isValid', response.found);
+      });
+    }, 500);
+  }.observes('value'),
+
+  didInsertElement: function () {
+    console.log(this.get('isValid'));
+  }
+
+});
+
+
+})();
+
+(function() {
+
 Fumc.Bulletin = DS.Model.extend({
   date: DS.attr('date-with-timezone'),
   service: DS.attr('string'),
@@ -1033,6 +1087,7 @@ Fumc.Bulletin = DS.Model.extend({
 
 Fumc.Feature = DS.Model.extend({
   active: DS.attr('boolean'),
+  url: DS.attr('string'),
   iphoneFourImage: DS.attr('string'),
   iphoneFiveImage: DS.attr('string'),
   iphoneSixImage: DS.attr('string'),
@@ -1478,6 +1533,8 @@ Fumc.FeatureController = Ember.ObjectController.extend({
   isUploading: Ember.computed.or('iphoneFourFileUpload.isUploading', 'iphoneFiveFileUpload.isUploading', 'iphoneSixFileUpload.isUploading', 'iphoneSixPlusFileUpload.isUploading'),
   isControllerDirty: Ember.computed.or('isDirty', 'isKindOfDirty'),
 
+  urlIsValid: true,
+
   _setImageURL: function (device, key) {
     Fumc.s3.getSignedUrl('getObject', { Key: this.get(device + 'Image') }, function (err, url) {
       if (!err) {
@@ -1550,7 +1607,7 @@ Fumc.FeatureController = Ember.ObjectController.extend({
 
     save: function () {
 
-      if (this.get('isUploading')) {
+      if (this.get('isUploading') || !this.get('urlIsValid')) {
         return false;
       }
 
@@ -1689,24 +1746,6 @@ Fumc.NotificationsController = Ember.ObjectController.extend({
   }.property('message'),
 
   urlIsValid: true,
-
-  testURL: function () {
-    Ember.run.debounce(this, function () {
-      var url = this.get('url'),
-          self = this;
-      if (!url) {
-        this.set('urlIsValid', true);
-        return;
-      }
-
-      $.get('/api/url/test', {
-        url: url
-      }).done(function (response) {
-        self.set('urlIsValid', response.found);
-      });
-    }, 500);
-  }.observes('url'),
-
   isValid: Ember.computed.and('expirationDateIsValid', 'messageIsValid', 'urlIsValid'),
 
   actions: {

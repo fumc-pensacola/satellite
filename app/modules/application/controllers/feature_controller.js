@@ -19,6 +19,8 @@ Fumc.FeatureController = Ember.ObjectController.extend({
   isUploading: Ember.computed.or('iphoneFourFileUpload.isUploading', 'iphoneFiveFileUpload.isUploading', 'iphoneSixFileUpload.isUploading', 'iphoneSixPlusFileUpload.isUploading'),
   isControllerDirty: Ember.computed.or('isDirty', 'isKindOfDirty'),
 
+  urlIsValid: true,
+
   _setImageURL: function (device, key) {
     Fumc.s3.getSignedUrl('getObject', { Key: this.get(device + 'Image') }, function (err, url) {
       if (!err) {
@@ -91,7 +93,7 @@ Fumc.FeatureController = Ember.ObjectController.extend({
 
     save: function () {
 
-      if (this.get('isUploading')) {
+      if (this.get('isUploading') || !this.get('urlIsValid')) {
         return false;
       }
 
