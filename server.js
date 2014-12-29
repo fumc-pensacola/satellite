@@ -49,6 +49,8 @@ module.exports = function (server) {
 		res.send('API v1');
 	});
 
+	require('./server/controllers/vanco')('/api/vanco', server);
+
 	var acsController = new ACSController();
 	acsController.setup();
 
