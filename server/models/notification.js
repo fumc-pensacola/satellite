@@ -10,6 +10,7 @@ module.exports = function (db) {
     test: { type: 'boolean', required: true }
   }, {
     autoFetch: true,
+    cache: false,
     validations: {
       sendDate: orm.enforce.required('sendDate is required'),
       expirationDate: orm.enforce.required('expirationDate is required'),

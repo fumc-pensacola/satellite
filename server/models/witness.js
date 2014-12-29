@@ -11,6 +11,7 @@ module.exports = function (db) {
     file: { type: 'text' }
   }, {
     autoFetch: true,
+    cache: false,
     validations: {
       from: orm.enforce.required('From date is required'),
       to: orm.enforce.required('To date is required'),
