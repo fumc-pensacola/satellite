@@ -10,6 +10,7 @@ module.exports = function (db) {
     iphoneSixImage: { type: 'text' },    //  750 x 1108
     iphoneSixPlusImage: { type: 'text' } // 1242 x 1869
   }, {
-    autoFetch: true
+    autoFetch: true,
+    cache: false
   });
 };

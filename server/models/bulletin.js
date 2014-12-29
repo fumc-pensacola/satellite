@@ -9,6 +9,7 @@ module.exports = function (db) {
     file: { type: 'text' }
   }, {
     autoFetch: true,
+    cache: false,
     validations: {
       // date: orm.enforce.required('Date is required'),
       // service: [orm.enforce.required('Service is required'), orm.enforce.notEmptyString('Service is required')]
