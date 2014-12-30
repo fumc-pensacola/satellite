@@ -245,10 +245,10 @@ function ACS (ACSGeneralService, ACSEventService) {
       }
 
       Promise.settle(apiCalls).then(function (eventsByCalendar) {
-        var results = { };
+        var results = { }, i = 0;
         eventsByCalendar.forEach(function (p) {
           if (p.isFulfilled()) {
-            results[p.value().id] = p.value().events;
+            results[p.value().id || ('no-id-' + i++)] = p.value().events;
           } else {
             console.error(p.reason());
           }

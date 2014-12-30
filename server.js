@@ -105,9 +105,9 @@ module.exports = function (server) {
 				res.send(eventsByCalendar);
 			} else {
 				var events = [];
-				for (var key in keys) {
+				keys.forEach(function (key) {
 					events = events.concat(eventsByCalendar[key]);
-				}
+				});
 				var calendar = new ical.iCalendar();
 				for (var i = 0; i < events.length; i++) {
 					var e = new ical.VEvent(calendar, events[i].id + i);
