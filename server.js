@@ -49,6 +49,8 @@ module.exports = function (server) {
 		res.send('API v1');
 	});
 
+	require('./server/controllers/vanco')('/api/vanco', server);
+
 	var acsController = new ACSController();
 	acsController.setup();
 
@@ -104,7 +106,7 @@ module.exports = function (server) {
 			} else {
 				var events = [];
 				for (var key in keys) {
-					events.concat(eventsByCalendar[key]);
+					events = events.concat(eventsByCalendar[key]);
 				}
 				var calendar = new ical.iCalendar();
 				for (var i = 0; i < events.length; i++) {
