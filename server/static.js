@@ -1,5 +1,4 @@
-var express = require('express'),
-		AWS = require('aws-sdk')
+var express = require('express');
 
 module.exports = function(app) {
 	app.use('/', express.static(__dirname + '/dist'));
