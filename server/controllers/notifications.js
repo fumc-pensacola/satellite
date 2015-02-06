@@ -1,4 +1,5 @@
-var ZEROPUSH_TOKEN = process.env[process.env.NODE_ENV === 'production' ? 'ZEROPUSH_PROD_TOKEN' : 'ZEROPUSH_DEV_TOKEN'],
+var moment = require('moment-timezone'),
+    ZEROPUSH_TOKEN = process.env[process.env.NODE_ENV === 'production' ? 'ZEROPUSH_PROD_TOKEN' : 'ZEROPUSH_DEV_TOKEN'],
     Authentication = require('../authentication');
 
 module.exports = function (server) {

@@ -1,5 +1,6 @@
 var loopback = require('loopback'),
     Promise = require('bluebird').Promise,
+    moment = require('moment-timezone'),
     instance = null;
 
 function sanitize (str) {
@@ -324,7 +325,7 @@ module.exports = function () {
         resolve(new ACS(ACSGeneralService, ACSEventService));
       });
 
-    })
+    });
   };
 
   this.sharedInstance = function () {

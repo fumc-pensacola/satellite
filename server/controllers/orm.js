@@ -1,29 +1,7 @@
-var orm = require('orm'),
-    inflectorController = require('./controllers/inflector'),
-    dbUrl = process.env.DATABASE_URL + '?ssl=true',
+var inflectorController = require('./inflector'),
     Authentication = require('../authentication');
 
 module.exports = function (server) {
-
-  server.use(orm.express(dbUrl, {
-    define: function (db, models, next) {
-
-      models.bulletin = require('./models/bulletin')(db);
-      models.witness = require('./models/witness')(db);
-      models.setting = require('./models/setting')(db);
-      models.feature = require('./models/feature')(db);
-      models.notification = require('./models/notification')(db);
-      models.calendar = require('./models/calendar')(db);
-
-      models.notification.hasOne('feature', models.feature);
-
-      db.settings.set('instance.returnAllErrors', true);
-      // db.drop();
-      db.sync();
-
-      next();
-    }
-  }));
 
   server.get('/api/:modelName', function (req, res) {
     inflectorController.findMany(req, res);

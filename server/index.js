@@ -1,15 +1,15 @@
-require('./newrelic');
+require('newrelic');
 
-var NODE_ENV = process.env.NODE_ENV,
-  express = require('express'),
-  server = express();
+var express = require('express'),
+    app = express();
 
-require('./static')(server);
-require('./api')(server);
+require('./config')(app);
+require('./static')(app);
+require('./api')(app);
 
-if (NODE_ENV === 'production') {
-  server.listen(process.env.PORT || 8001);
-} else {
-  // Export server in dev to work with grunt-express
-  module.exports = server;
-}
+var server = app.listen(process.env.PORT || 8001, function () {
+  var host = server.address().address,
+      port = server.address().port;
+
+  console.log('Server listening at http://%s:%s', host, port);
+});
