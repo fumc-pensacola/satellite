@@ -1,4 +1,8 @@
-export default Fumc.BulletinsController.extend({
+/* global moment */
+
+import BulletinsController from './bulletins';
+
+export default BulletinsController.extend({
 
   actions: {
 

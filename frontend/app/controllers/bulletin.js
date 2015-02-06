@@ -1,4 +1,7 @@
+/* global moment */
+
 import Ember from 'ember';
+import FileUpload from '../models/file-upload';
 
 export default Ember.ObjectController.extend({
 
@@ -35,7 +38,7 @@ export default Ember.ObjectController.extend({
           model = this.get('model'),
           oldFile = this.get('file'),
           saved = function () {
-            setTimeout(function () { this.set('editing', false) }.bind(this), 600);
+            setTimeout(function () { this.set('editing', false); }.bind(this), 600);
           }.bind(this);
 
       if (fileUpload && fileUpload.isUploading) {
@@ -104,7 +107,7 @@ export default Ember.ObjectController.extend({
         }
       }
 
-      this.set('fileUpload', Fumc.FileUploadModel.create({
+      this.set('fileUpload', FileUpload.create({
         fileToUpload: file
       }));
     },
@@ -118,4 +121,4 @@ export default Ember.ObjectController.extend({
       }.bind(this));
     }
   }
-})
+});

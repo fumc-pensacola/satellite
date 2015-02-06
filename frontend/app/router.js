@@ -1,4 +1,11 @@
-Fumc.Router.map(function () {
+import Ember from 'ember';
+import config from './config/environment';
+
+var Router = Ember.Router.extend({
+	location: config.locationType
+});
+
+Router.map(function () {
 	this.route('login');
 	this.route('authenticate');
 	this.resource('bulletins');
@@ -8,3 +15,5 @@ Fumc.Router.map(function () {
 	this.route('calendars');
 	this.route('error404', { path: '*:' });
 });
+
+export default Router;
