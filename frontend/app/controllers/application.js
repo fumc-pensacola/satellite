@@ -1,6 +1,7 @@
-/* global Cookies */
+/* global Cookies, amazon */
 
 import Ember from 'ember';
+import AWS from '../utils/aws';
 
 export default Ember.Controller.extend({
 
@@ -24,17 +25,7 @@ export default Ember.Controller.extend({
   }.observes('token'),
 
   setupAWS: function () {
-    AWS.config.credentials = new AWS.WebIdentityCredentials({
-      RoleArn: 'arn:aws:iam::885099591831:role/content-managers',
-      ProviderId: 'www.amazon.com',
-      WebIdentityToken: this.get('token')
-    });
-
-    Fumc.s3 = new AWS.S3({
-      params: {
-        Bucket: 'fumcappfiles'
-      }
-    });
+    AWS.init(this.get('token'));
   },
 
   actions: {

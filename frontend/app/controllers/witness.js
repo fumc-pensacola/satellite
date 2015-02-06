@@ -3,6 +3,7 @@
 import Ember from 'ember';
 import BulletinController from './bulletin';
 import FileUpload from '../models/file-upload';
+import AWS from '../utils/aws';
 
 export default BulletinController.extend({
 
@@ -42,7 +43,7 @@ export default BulletinController.extend({
 
       if (fileUpload) {
         if (fileUpload.name !== oldFile) {
-          Fumc.s3.deleteObject({ Key: oldFile }).send();
+          AWS.s3.deleteObject({ Key: oldFile }).send();
         }
         fileUpload.uploadFile().then(function (key) {
           this.set('file', key);

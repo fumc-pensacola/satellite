@@ -1,4 +1,6 @@
 import Ember from 'ember';
+import AWS from '../utils/aws';
+import FileUpload from '../models/file-upload';
 
 export default Ember.ObjectController.extend({
 
@@ -10,7 +12,6 @@ export default Ember.ObjectController.extend({
   isKindOfDirty: false,
   devices: ['iphoneFour', 'iphoneFive', 'iphoneSix', 'iphoneSixPlus'],
 
-  s3: Ember.computed.alias('controllers.application.s3'),
   featuredController: Ember.computed.alias('controllers.featured'),
 
   iphoneFourShowingImage: Ember.computed.or('iphoneFourFileUpload', 'iphoneFourImage'),
@@ -24,7 +25,7 @@ export default Ember.ObjectController.extend({
   urlIsValid: true,
 
   _setImageURL: function (device, key) {
-    Fumc.s3.getSignedUrl('getObject', { Key: this.get(device + 'Image') }, function (err, url) {
+    AWS.s3.getSignedUrl('getObject', { Key: this.get(device + 'Image') }, function (err, url) {
       if (!err) {
         this.set(device + 'ImageURL', url);
       }
@@ -70,7 +71,7 @@ export default Ember.ObjectController.extend({
     }
 
     this.set(device + 'CurrentFile', file.name);
-    this.set(device + 'FileUpload', Fumc.FileUploadModel.create({
+    this.set(device + 'FileUpload', FileUpload.create({
       fileToUpload: file
     }));
   },
@@ -112,7 +113,7 @@ export default Ember.ObjectController.extend({
         console.log(fileUpload);
         if (fileUpload) {
           if (fileUpload.name !== oldFile) {
-            Fumc.s3.deleteObject({ Key: oldFile }).send();
+            AWS.s3.deleteObject({ Key: oldFile }).send();
           }
           uploads.push(new Ember.RSVP.Promise(function (resolve, reject) {
             fileUpload.uploadFile().then(function (d) {

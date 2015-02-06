@@ -1,6 +1,8 @@
 /* global require, module */
 
-var EmberApp = require('ember-cli/lib/broccoli/ember-app');
+var EmberApp = require('ember-cli/lib/broccoli/ember-app'),
+    pickFiles = require('broccoli-static-compiler'),
+    mergeTrees = require('broccoli-merge-trees');
 
 var app = new EmberApp();
 
@@ -17,4 +19,17 @@ var app = new EmberApp();
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
 
-module.exports = app.toTree();
+app.import('bower_components/aws-sdk/dist/aws-sdk.min.js');
+app.import('bower_components/cookies-js/dist/cookies.min.js');
+app.import('bower_components/moment/min/moment.min.js');
+app.import('bower_components/pikaday/pikaday.js');
+app.import('bower_components/semantic-ui/dist/semantic.min.js');
+app.import('bower_components/semantic-ui/dist/semantic.min.css');
+
+var fontTree = pickFiles('bower_components/semantic-ui/dist/themes/default/assets/fonts', {
+  srcDir: '/',
+  files: ['*'],
+  destDir: '/assets/themes/default/assets/fonts'
+});
+
+module.exports = mergeTrees([app.toTree(), fontTree]);

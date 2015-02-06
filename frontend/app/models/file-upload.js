@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import AWS from '../utils/aws';
 
 export default Ember.Object.extend({
 
@@ -50,7 +51,7 @@ export default Ember.Object.extend({
 
     this.set('isUploading', true);
 
-    Fumc.s3.putObject({
+    AWS.s3.putObject({
       Key: this.get('name'),
       ContentType: fileToUpload.type,
       Body: fileToUpload
