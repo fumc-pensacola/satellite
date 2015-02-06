@@ -1,4 +1,8 @@
-Fumc.DateField = Ember.TextField.extend({
+/* global moment, Pikaday */
+
+import Ember from 'ember';
+
+export default Ember.TextField.extend({
   picker: null,
 
   updateValue: function () {

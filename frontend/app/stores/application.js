@@ -1,4 +1,9 @@
-Fumc.ApplicationAdapter = DS.RESTAdapter.extend({
+/* global Cookies */
+
+import Ember from 'ember';
+import DS from 'ember-data';
+
+export default DS.RESTAdapter.extend({
 
 	namespace: 'api',
 
@@ -21,7 +26,7 @@ Fumc.ApplicationAdapter = DS.RESTAdapter.extend({
 	}
 });
 
-Fumc.ApplicationSerializer = DS.RESTSerializer.extend({
+export default DS.RESTSerializer.extend({
 	extractSingle: function(store, type, payload, id, requestType) {
 		var finalPayload = {};
 		finalPayload[type.typeKey] = payload;

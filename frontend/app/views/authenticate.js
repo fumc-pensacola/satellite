@@ -1,9 +1,11 @@
-Fumc.AuthenticateView = Ember.View.extend({
+import Ember from 'ember';
+
+export default Ember.View.extend({
   templateName: 'authenticate',
   didInsertElement: function () {
-    $('.ui.basic.modal').modal('setting', 'closable', false).modal('show');
+    this.$('.ui.basic.modal').modal('setting', 'closable', false).modal('show');
   },
   willDestroyElement: function () {
-    $('.ui.basic.modal').modal('hide');
+    this.$('.ui.basic.modal').modal('hide');
   }
 });

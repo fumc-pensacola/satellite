@@ -1,4 +1,8 @@
-Fumc.NotificationsController = Ember.ObjectController.extend({
+/* global $, moment, Cookies */
+
+import Ember from 'ember';
+
+export default Ember.ObjectController.extend({
 
   init: function () {
     window.controller = this;
@@ -45,7 +49,7 @@ Fumc.NotificationsController = Ember.ObjectController.extend({
           }).fail(function () {
             alert('Notification failed to send. Deleting from server.');
             model.destroyRecord();
-          })
+          });
         }, function (reason) {
           alert('Notification failed to save to server. Will not send.');
           console.error(reason);

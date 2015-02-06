@@ -1,4 +1,8 @@
-Fumc.ApplicationController = Ember.Controller.extend({
+/* global Cookies */
+
+import Ember from 'ember';
+
+export default Ember.Controller.extend({
 
   token: Cookies.get('token') === 'null' ? null : Cookies.get('token'),
   name: Cookies.get('name') === 'null' ? null : Cookies.get('name'),

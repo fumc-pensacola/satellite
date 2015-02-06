@@ -1,4 +1,6 @@
-Fumc.Feature = DS.Model.extend({
+import DS from 'ember-data';
+
+export default DS.Model.extend({
   active: DS.attr('boolean'),
   url: DS.attr('string'),
   iphoneFourImage: DS.attr('string'),

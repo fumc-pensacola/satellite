@@ -1,4 +1,8 @@
-Fumc.BulletinsController = Ember.ArrayController.extend({
+/* global moment */
+
+import Ember from 'ember';
+
+export default Ember.ArrayController.extend({
 
 	//itemController: 'bulletin',
 
@@ -10,7 +14,7 @@ Fumc.BulletinsController = Ember.ArrayController.extend({
 	actions: {
 
 		newBulletin: function () {
-			var bulletin = this.store.createRecord('bulletin', {
+			this.store.createRecord('bulletin', {
 				date: moment().startOf('week').add(1, 'week')
 			});
 		},

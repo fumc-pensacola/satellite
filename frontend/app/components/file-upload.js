@@ -1,4 +1,6 @@
-Fumc.FileUploadComponent = Ember.Component.extend({
+import Ember from 'ember';
+
+export default Ember.Component.extend({
 
   oldFile: null,
   currentFile: null,

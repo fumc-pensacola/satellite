@@ -1,4 +1,6 @@
-Fumc.FeatureView = Ember.View.extend({
+import Ember from 'ember';
+
+export default Ember.View.extend({
 
   templateName: 'feature',
   classNames: ['item', 'feature'],

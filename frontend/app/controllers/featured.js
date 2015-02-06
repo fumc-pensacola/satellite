@@ -1,4 +1,6 @@
-Fumc.FeaturedController = Ember.ArrayController.extend({
+import Ember from 'ember';
+
+export default Ember.ArrayController.extend({
 
   sortAscending: false,
   sortProperties: ['id'],
@@ -6,7 +8,7 @@ Fumc.FeaturedController = Ember.ArrayController.extend({
   actions: {
 
     newFeature: function () {
-      var feature = this.store.createRecord('feature');
+      this.store.createRecord('feature');
     }
 
   }

@@ -1,4 +1,8 @@
-Fumc.ValidatedUrlComponent = Ember.Component.extend({
+/* global $ */
+
+import Ember from 'ember';
+
+export default Ember.Component.extend({
 
   classNames: ['ui', 'input'],
   classNameBindings: ['isValid::error'],

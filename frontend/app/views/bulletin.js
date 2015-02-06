@@ -1,4 +1,6 @@
-Fumc.BulletinView = Ember.View.extend({
+import Ember from 'ember';
+
+export default Ember.View.extend({
 
   templateName: 'bulletin',
   classNames: ['item', 'bulletin'],

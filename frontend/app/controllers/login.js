@@ -1,4 +1,8 @@
-Fumc.LoginController = Ember.Controller.extend({
+/* global amazon */
+
+import Ember from 'ember';
+
+export default Ember.Controller.extend({
 
   needs: ['application'],
   queryParams: ['access_token'],
@@ -11,14 +15,14 @@ Fumc.LoginController = Ember.Controller.extend({
 
   actions: {
     login: function () {
-      options = { scope: 'profile' };
+      var options = { scope: 'profile' };
       amazon.Login.authorize(options, '/#/authenticate');
     }
   }
 
 });
 
-Fumc.AuthenticateRoute = Ember.Route.extend({
+export default Ember.Route.extend({
   beforeModel: function (transition) {
     var token = transition.queryParams.access_token;
     if (token) {
@@ -43,4 +47,4 @@ Fumc.AuthenticateRoute = Ember.Route.extend({
       }.bind(this));
     }
   }
-})
+});

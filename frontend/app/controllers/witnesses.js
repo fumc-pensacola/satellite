@@ -1,4 +1,4 @@
-Fumc.WitnessesController = Fumc.BulletinsController.extend({
+export default Fumc.BulletinsController.extend({
 
   actions: {
 

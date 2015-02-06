@@ -1,4 +1,10 @@
-Fumc.WitnessController = Fumc.BulletinController.extend({
+/* global moment */
+
+import Ember from 'ember';
+import BulletinController from './bulletin';
+import FileUpload from '../models/file-upload';
+
+export default BulletinController.extend({
 
   needs: ['application', 'witnesses'],
 
@@ -24,7 +30,7 @@ Fumc.WitnessController = Fumc.BulletinController.extend({
           model = this.get('model'),
           oldFile = this.get('file'),
           saved = function () {
-            setTimeout(function () { this.set('editing', false) }.bind(this), 600);
+            setTimeout(function () { this.set('editing', false); }.bind(this), 600);
           }.bind(this);
 
       if (fileUpload && fileUpload.isUploading) {
@@ -67,7 +73,7 @@ Fumc.WitnessController = Fumc.BulletinController.extend({
         this.set('from', date);
       }
 
-      this.set('fileUpload', Fumc.FileUploadModel.create({
+      this.set('fileUpload', FileUpload.create({
         fileToUpload: file
       }));
     }

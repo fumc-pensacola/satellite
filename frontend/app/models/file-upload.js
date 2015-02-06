@@ -1,4 +1,6 @@
-Fumc.FileUploadModel = Ember.Object.extend({
+import Ember from 'ember';
+
+export default Ember.Object.extend({
 
   name: '',
   size: "0 KB",
