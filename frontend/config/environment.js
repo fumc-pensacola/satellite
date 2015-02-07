@@ -6,6 +6,21 @@ module.exports = function(environment) {
     environment: environment,
     baseURL: '/',
     locationType: 'auto',
+
+    contentSecurityPolicy: {
+      'default-src': "'none'",
+      'frame-src': "https://api-cdn.amazon.com",
+      'script-src': "'self' 'unsafe-inline' https://api-cdn.amazon.com use.typekit.net",
+      'font-src': "'self' data: use.typekit.net https://fonts.gstatic.com",
+      'connect-src': "'self'",
+      'img-src': "'self' p.typekit.net about:",
+      'style-src': "'self' 'unsafe-inline' https://fonts.googleapis.com use.typekit.net",
+      'media-src': "'self'",
+      'object-src': "'self'"
+    },
+
+    contentSecurityPolicyHeader: 'Content-Security-Policy',
+
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
