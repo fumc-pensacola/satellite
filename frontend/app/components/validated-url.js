@@ -1,6 +1,5 @@
-/* global $ */
-
 import Ember from 'ember';
+import config from '../config/environment';
 
 export default Ember.Component.extend({
 
@@ -18,7 +17,7 @@ export default Ember.Component.extend({
         return;
       }
 
-      $.get('/api/url/test', {
+      Ember.$.get(config.APP.proxy + '/api/url/test', {
         url: url
       }).done(function (response) {
         self.set('isValid', response.found);

@@ -1,5 +1,6 @@
 var request = require('request'),
-    Authentication = require('../authentication');
+    Authentication = require('../authentication'),
+    AMAZON_CLIENT_ID = process.env.AMAZON_CLIENT_ID;
 
 module.exports = function (server) {
 
@@ -21,7 +22,7 @@ module.exports = function (server) {
             'amzn1.account.AGNCNKDH6G3BYYXF7JP4WJHEFJDQ'  // Kyle
           ];
 
-      if (data.aud !== 'amzn1.application-oa2-client.cfecafe9a3474592888a2823741d07d5') {
+      if (data.aud !== AMAZON_CLIENT_ID) {
         res.status(401).send('Invalid token');
         return;
       }
@@ -34,7 +35,7 @@ module.exports = function (server) {
       }
 
       Authentication.setAuthToken(req.body.access_token);
-      
+
       request({
         url: 'https://api.amazon.com/user/profile',
         headers: { 'Authorization': 'bearer ' + req.body.access_token }

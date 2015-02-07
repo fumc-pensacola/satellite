@@ -1,6 +1,7 @@
-/* global $, moment, Cookies */
+/* global moment, Cookies */
 
 import Ember from 'ember';
+import config from '../config/environment';
 
 export default Ember.ObjectController.extend({
 
@@ -33,8 +34,8 @@ export default Ember.ObjectController.extend({
         this.set('test', test);
         var model = this.get('model');
         model.save().then(function () {
-          $.ajax({
-            url: test === true ? '/api/notify/testers' : '/api/notify/everyone',
+          Ember.$.ajax({
+            url: config.APP.proxy + (test === true ? '/api/notify/testers' : '/api/notify/everyone'),
             type: 'POST',
             data: { notification: model.toJSON({ includeId: true }) },
             beforeSend: function (xhr) {

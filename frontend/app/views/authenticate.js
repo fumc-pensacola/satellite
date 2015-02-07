@@ -1,11 +1,15 @@
 import Ember from 'ember';
+var modal;
 
 export default Ember.View.extend({
   templateName: 'authenticate',
   didInsertElement: function () {
-    this.$('.ui.basic.modal').modal('setting', 'closable', false).modal('show');
+    modal = this.$('.ui.basic.modal');
+    modal.modal('setting', 'closable', false).modal('show');
   },
   willDestroyElement: function () {
-    this.$('.ui.basic.modal').modal('hide');
+    if (modal) {
+      modal.modal('hide');
+    }
   }
 });

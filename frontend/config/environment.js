@@ -1,6 +1,6 @@
 /* jshint node: true */
 
-module.exports = function(environment) {
+module.exports = function (environment) {
   var ENV = {
     modulePrefix: 'fumc',
     environment: environment,
@@ -31,6 +31,7 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+      proxy: ''
     }
   };
 
@@ -40,6 +41,8 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+    ENV.APP.proxy = 'http://localhost:8080';
+    ENV.contentSecurityPolicy['connect-src'] += (' ' + ENV.APP.proxy);
   }
 
   if (environment === 'test') {
