@@ -1,5 +1,9 @@
 /* global AWS */
-var s3;
+var s3 = new AWS.S3({
+  params: {
+    Bucket: 'fumcappfiles'
+  }
+});
 
 export default {
   setup: function (token) {
@@ -9,11 +13,8 @@ export default {
       WebIdentityToken: token
     });
 
-    s3 = new AWS.S3({
-      params: {
-        Bucket: 'fumcappfiles'
-      }
-    });
+    s3.config.credentials = AWS.config.credentials;
+
   },
 
   s3: s3

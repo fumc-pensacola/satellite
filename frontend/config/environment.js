@@ -12,11 +12,11 @@ module.exports = function (environment) {
       'frame-src': "https://api-cdn.amazon.com",
       'script-src': "'self' 'unsafe-inline' https://api-cdn.amazon.com use.typekit.net",
       'font-src': "'self' data: use.typekit.net https://fonts.gstatic.com",
-      'connect-src': "'self'",
+      'connect-src': "'self' https://sts.amazonaws.com",
       'img-src': "'self' p.typekit.net about:",
       'style-src': "'self' 'unsafe-inline' https://fonts.googleapis.com use.typekit.net",
       'media-src': "'self'",
-      'object-src': "'self'"
+      'object-src': "'self' https://fumcappfiles.s3.amazonaws.com"
     },
 
     contentSecurityPolicyHeader: 'Content-Security-Policy',
