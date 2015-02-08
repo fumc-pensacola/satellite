@@ -1,0 +1,22 @@
+<div class="narrow">
+  <h1 class="ui header">Send Push Notification</h1>
+
+  <form {{bind-attr class=":ui :form :segment loading"}}>
+    <div class="field">
+      <label>Expiration Date</label>
+      {{view "date-field" date=expirationDate}}
+    </div>
+    <div class="field">
+      <label>Message</label>
+      {{textarea value=message}}
+    </div>
+    <div class="field">
+      <label>Associated URL</label>
+      {{validated-url value=url isValid=urlIsValid}}
+    </div>
+    <div>
+      <button type="button" {{bind-attr class=":ui :blue :button isValid::disabled"}} {{action "test"}}>Test</button>
+      <button type="button" {{bind-attr class=":ui :red :button isValid::disabled"}} {{action "send"}}>Send</button>
+    </div>
+  </form>
+</div>
