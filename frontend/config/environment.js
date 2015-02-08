@@ -13,9 +13,9 @@ module.exports = function (environment) {
       'script-src': "'self' 'unsafe-inline' https://api-cdn.amazon.com use.typekit.net",
       'font-src': "'self' data: use.typekit.net https://fonts.gstatic.com",
       'connect-src': "'self' https://sts.amazonaws.com",
-      'img-src': "'self' p.typekit.net about:",
+      'img-src': "'self' p.typekit.net about: https://fumcappfiles.s3.amazonaws.com",
       'style-src': "'self' 'unsafe-inline' https://fonts.googleapis.com use.typekit.net",
-      'media-src': "'self'",
+      'media-src': "'self' https://fumcappfiles.s3.amazonaws.com",
       'object-src': "'self' https://fumcappfiles.s3.amazonaws.com"
     },
 
