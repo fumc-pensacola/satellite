@@ -110,7 +110,6 @@ export default Ember.ObjectController.extend({
             fileUpload = this.get(device + 'FileUpload'),
             oldFile = this.get(device + 'Image');
 
-        console.log(fileUpload);
         if (fileUpload) {
           if (fileUpload.name !== oldFile) {
             AWS.s3.deleteObject({ Key: oldFile }).send();
@@ -118,7 +117,6 @@ export default Ember.ObjectController.extend({
           uploads.push(new Ember.RSVP.Promise(function (resolve, reject) {
             fileUpload.uploadFile().then(function (d) {
               return function (key) {
-                console.log(d);
                 self.set(d + 'Image', key);
                 resolve();
               };

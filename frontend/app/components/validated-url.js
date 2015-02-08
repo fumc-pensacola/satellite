@@ -23,10 +23,6 @@ export default Ember.Component.extend({
         self.set('isValid', response.found);
       });
     }, 500);
-  }.observes('value'),
-
-  didInsertElement: function () {
-    console.log(this.get('isValid'));
-  }
+  }.observes('value')
 
 });

@@ -25,7 +25,7 @@ export default Ember.Controller.extend({
   }.observes('token'),
 
   setupAWS: function () {
-    AWS.init(this.get('token'));
+    AWS.setup(this.get('token'));
   },
 
   actions: {

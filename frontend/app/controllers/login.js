@@ -7,7 +7,6 @@ export default Ember.Controller.extend({
   needs: ['application'],
   queryParams: ['access_token'],
   access_token: null,
-  attemptedTransition: null,
 
   token: Ember.computed.alias('controllers.application.token'),
   name: Ember.computed.alias('controllers.application.name'),

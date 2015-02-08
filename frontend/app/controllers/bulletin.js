@@ -116,8 +116,12 @@ export default Ember.ObjectController.extend({
       var modal = this.get('modal');
       modal.show();
       AWS.s3.getSignedUrl('getObject', { Key: this.get('file') }, function (err, url) {
-        // TODO make this not suck so hard
-        modal.$('.content').html('<object class="pdf" type="application/pdf" data="' + url + '"></object>');
+        if (!err) {
+          // TODO make this not suck so hard
+          modal.$('.content').html('<object class="pdf" type="application/pdf" data="' + url + '"></object>');
+        } else {
+          alert(err.message);
+        }
       }.bind(this));
     }
   }

@@ -18,7 +18,6 @@ export default Ember.Component.extend({
     input.addEventListener('change', function () {
       var file = this.files[0];
       component.set('currentFile', file.name);
-      console.log('just set currentFile', file.name);
       component.sendAction('change', file);
     }, false);
 

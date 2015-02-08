@@ -126,22 +126,22 @@ code {
 
 .iphone4.size .feature-frame {
   width: 320px;
-  background-image: url('../images/feature-frame-4.png');
+  background-image: url('./images/feature-frame-4.png');
 }
 
 .iphone5.size .feature-frame {
   width: 320px;
-  background-image: url('../images/feature-frame-5.png');
+  background-image: url('./images/feature-frame-5.png');
 }
 
 .iphone6.size .feature-frame {
   width: 375px;
-  background-image: url('../images/feature-frame-6.png');
+  background-image: url('./images/feature-frame-6.png');
 }
 
 .iphone6plus.size .feature-frame {
   width: 414px;
-  background-image: url('../images/feature-frame-6plus.png');
+  background-image: url('./images/feature-frame-6plus.png');
 }
 
 .feature-content {

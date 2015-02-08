@@ -37,7 +37,7 @@
           <div class="date field">
             <label>Service Date</label>
             <div class="ui left labeled input">
-              {{view Fumc.DateField date=bulletin.date}}
+              {{view "date-field" date=bulletin.date}}
               {{#if errors.date}}
                 <div class="ui red pointing above label">{{errors.date}}</div>
               {{/if}}
