@@ -1,0 +1,49 @@
+.pdf-item {
+  
+  .editing.row {
+    padding-top: 0;
+    margin: 10px 0;
+    cursor: default;
+  }
+
+  &.item.editing, .bulletin.item.editing:active {
+    background-color: rgba(0, 0, 0, .02) !important;
+    color: rgba(0, 0, 0, .7);
+  }
+
+  &.item .unhide.icon {
+    line-height: 200%;
+  }
+}
+
+.ui.buttons .or::before {
+  line-height: 1.75;
+}
+
+.ui.grid .row .right.column {
+  text-align: right;
+}
+
+.right .button {
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+.pdf {
+  width: 100%;
+}
+
+.pdf-modal {
+  margin-top: 0 !important;
+  top: 0;
+  height: 100%;
+  
+  .content {
+    height: 90%;
+  }
+
+  object {
+    height: 100%;
+    top: 0;
+  }
+}

@@ -1,0 +1,79 @@
+@import './pdfs.scss';
+@import './featured.scss';
+@import './calendars.scss';
+
+$font-stack: 'myriad-pro', 'helvetica neue', helvetica, arial, sans-serif;
+
+body {
+  font-family: 'myriad-pro', 'helvetica neue', helvetica, arial, sans-serif;
+  margin: 0;
+  padding-top: 20px;
+  height: auto !important;
+}
+
+.ui.header, .ui.button {
+  font-family: $font-stack;
+}
+
+a {
+  color: #009FDA;
+  text-decoration: none;
+}
+
+code {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+}
+
+.narrow {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.slide {
+  -webkit-transition: max-height .3s;
+  transition: max-height .3s;
+  overflow: hidden;
+}
+
+.hidden.slide {
+  max-height: 0 !important;
+}
+
+.inline {
+  display: inline-block;
+}
+
+.list .item .content .button {
+  vertical-align: top;
+}
+
+.space-below {
+  margin-bottom: 25px;
+}
+
+.space-above {
+  margin-top: 25px;
+}
+
+.ui.progress .bar {
+  -webkit-transition: width .1s;
+  transition: width .1s;
+}
+
+.ui.horizontal.label {
+  margin-top: 0 !important;
+}
+
+.ui.input.error input:focus {
+  background-color: snow;
+  border-color: #E7BEBE;
+  color: #D95C5C;
+}

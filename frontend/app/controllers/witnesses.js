@@ -1,9 +1,14 @@
 /* global moment */
 
-import BulletinsController from './bulletins';
+import Ember from 'ember';
+import PDFSController from './pdfs';
 
-export default BulletinsController.extend({
-
+export default PDFSController.extend({
+  
+  needs: ['pdfs'],
+  modalURL: Ember.computed.alias('controllers.pdfs.modalURL'),
+  showingModal: Ember.computed.alias('controllers.pdfs.showingModal'),
+  
   actions: {
 
     newWitness: function () {
@@ -12,10 +17,6 @@ export default BulletinsController.extend({
         to: moment().add(1, 'weeks').endOf('week').startOf('day'),
         volume: moment().add(1, 'weeks').startOf('week').year() - 1820
       });
-    },
-
-    registerModal: function (modal) {
-      this.set('modal', modal);
     }
 
   }

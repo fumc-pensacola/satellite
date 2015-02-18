@@ -23,6 +23,7 @@ app.import('bower_components/aws-sdk/dist/aws-sdk.min.js');
 app.import('bower_components/cookies-js/dist/cookies.min.js');
 app.import('bower_components/moment/min/moment.min.js');
 app.import('bower_components/pikaday/pikaday.js');
+app.import('bower_components/pikaday/css/pikaday.css');
 app.import('bower_components/semantic-ui/dist/semantic.min.js');
 app.import('bower_components/semantic-ui/dist/semantic.min.css');
 

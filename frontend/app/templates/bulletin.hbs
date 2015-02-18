@@ -12,7 +12,7 @@
     </div>
     <div class="four wide right column">
       {{#if bulletin.file}}
-        <button class="ui small black button" {{action 'viewFile' bubbles=false}}>View</button>
+        <button class="ui small black button" {{action 'viewPDF' bubbles=false}}>View</button>
       {{/if}}
       <button class="ui small red button" {{action 'remove' bubbles=false}}>Delete</button>
     </div>
@@ -37,7 +37,7 @@
           <div class="date field">
             <label>Service Date</label>
             <div class="ui left labeled input">
-              {{view "date-field" date=bulletin.date}}
+              {{date-field date=bulletin.date}}
               {{#if errors.date}}
                 <div class="ui red pointing above label">{{errors.date}}</div>
               {{/if}}
