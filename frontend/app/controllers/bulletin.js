@@ -1,18 +1,8 @@
 /* global moment */
 
-import Ember from 'ember';
-import FileUpload from '../models/file-upload';
-import AWS from '../utils/aws';
+import PDFController from './pdf';
 
-export default Ember.ObjectController.extend({
-
-  needs: ['application', 'bulletins'],
-
-  editing: false,
-  fileUpload: null,
-  initialDate: null,
-
-  modal: Ember.computed.alias('controllers.bulletins.modal'),
+export default PDFController.extend({
 
   init: function () {
     this.set('initialDate', this.get('date'));
@@ -28,54 +18,9 @@ export default Ember.ObjectController.extend({
 
   actions: {
 
-    toggleEditing: function () {
-      this.toggleProperty('editing');
-    },
-
     save: function () {
-
-      var fileUpload = this.get('fileUpload'),
-          model = this.get('model'),
-          oldFile = this.get('file'),
-          saved = function () {
-            setTimeout(function () { this.set('editing', false); }.bind(this), 600);
-          }.bind(this);
-
-      if (fileUpload && fileUpload.isUploading) {
-        return false;
-      }
-
       this.set('date', new Date(this.get('date')));
-
-      if (fileUpload) {
-        if (fileUpload.name !== oldFile) {
-          AWS.s3.deleteObject({ Key: oldFile }).send();
-        }
-        fileUpload.uploadFile().then(function (key) {
-          this.set('file', key);
-          model.save().then(saved);
-        }.bind(this));
-      } else {
-        model.save().then(saved);
-      }
-    },
-
-    cancel: function () {
-      var model = this.get('model');
-      if (~this.get('currentState.stateName').indexOf('created.uncommitted')) {
-        model.destroyRecord();
-      } else {
-        model.rollback();
-        this.set('editing', false);
-      }
-    },
-
-    remove: function () {
-      var file = this.get('file');
-      if (file) {
-        AWS.s3.deleteObject({ Key: file }).send();
-      }
-      this.get('model').destroyRecord();
+      this._super();
     },
 
     fileSelected: function (file) {
@@ -83,8 +28,6 @@ export default Ember.ObjectController.extend({
         this.set('fileUpload', null);
         return;
       }
-
-      this.set('currentFile', file.name);
 
       var date = new Date(file.name
         .replace(/[-–—_]/g, '/')
@@ -107,22 +50,7 @@ export default Ember.ObjectController.extend({
         }
       }
 
-      this.set('fileUpload', FileUpload.create({
-        fileToUpload: file
-      }));
-    },
-
-    viewFile: function () {
-      var modal = this.get('modal');
-      modal.show();
-      AWS.s3.getSignedUrl('getObject', { Key: this.get('file') }, function (err, url) {
-        if (!err) {
-          // TODO make this not suck so hard
-          modal.$('.content').html('<object class="pdf" type="application/pdf" data="' + url + '"></object>');
-        } else {
-          alert(err.message);
-        }
-      }.bind(this));
+      this._super();
     }
   }
 });

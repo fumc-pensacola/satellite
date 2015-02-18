@@ -1,15 +1,13 @@
 /* global moment */
 
 import Ember from 'ember';
+import PDFSController from './pdfs';
 
-export default Ember.ArrayController.extend({
-
-	//itemController: 'bulletin',
-
-	modal: null,
-
-	sortAscending: false,
-	sortProperties: ['id'],
+export default PDFSController.extend({
+	
+	needs: ['pdfs'],
+	modalURL: Ember.computed.alias('controllers.pdfs.modalURL'),
+	showingModal: Ember.computed.alias('controllers.pdfs.showingModal'),
 
 	actions: {
 
@@ -17,10 +15,6 @@ export default Ember.ArrayController.extend({
 			this.store.createRecord('bulletin', {
 				date: moment().startOf('week').add(1, 'week')
 			});
-		},
-
-		registerModal: function (modal) {
-			this.set('modal', modal);
 		}
 
 	}

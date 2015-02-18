@@ -1,15 +1,8 @@
 /* global moment */
 
-import Ember from 'ember';
-import BulletinController from './bulletin';
-import FileUpload from '../models/file-upload';
-import AWS from '../utils/aws';
+import PDFController from './pdf';
 
-export default BulletinController.extend({
-
-  needs: ['application', 'witnesses'],
-
-  modal: Ember.computed.alias('controllers.witnesses.modal'),
+export default PDFController.extend({
 
   formattedDateRange: function () {
     return moment(this.get('from')).format('MMMM D') + " – " + moment(this.get('to')).format('MMMM D, YYYY');
@@ -26,32 +19,9 @@ export default BulletinController.extend({
   actions: {
 
     save: function () {
-
-      var fileUpload = this.get('fileUpload'),
-          model = this.get('model'),
-          oldFile = this.get('file'),
-          saved = function () {
-            setTimeout(function () { this.set('editing', false); }.bind(this), 600);
-          }.bind(this);
-
-      if (fileUpload && fileUpload.isUploading) {
-        return false;
-      }
-
       this.set('from', new Date(this.get('from')));
       this.set('to', new Date(this.get('to')));
-
-      if (fileUpload) {
-        if (fileUpload.name !== oldFile) {
-          AWS.s3.deleteObject({ Key: oldFile }).send();
-        }
-        fileUpload.uploadFile().then(function (key) {
-          this.set('file', key);
-          model.save().then(saved);
-        }.bind(this));
-      } else {
-        model.save().then(saved);
-      }
+      this._super();
     },
 
     fileSelected: function (file) {
@@ -60,8 +30,6 @@ export default BulletinController.extend({
         return;
       }
 
-      this.set('currentFile', file.name);
-
       var date = new Date(file.name
         .replace(/[-–—_]/g, '/')
         .replace(/[^0-9\/]/g, '')
@@ -69,14 +37,11 @@ export default BulletinController.extend({
         .replace(/\/$/, '')
       );
 
-
       if (!isNaN(date.getDate()) && date.getFullYear() - new Date().getFullYear() <= 1) {
         this.set('from', date);
       }
 
-      this.set('fileUpload', FileUpload.create({
-        fileToUpload: file
-      }));
+      this._super();
     }
 
   }

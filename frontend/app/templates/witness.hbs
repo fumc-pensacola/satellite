@@ -13,7 +13,7 @@
     </div>
     <div class="four wide right column">
       {{#if witness.file}}
-        <button class="ui small black button" {{action "viewFile" bubbles=false}}>View</button>
+        <button class="ui small black button" {{action "viewPDF" bubbles=false}}>View</button>
       {{/if}}
       <button class="ui small red button" {{action "remove" bubbles=false}}>Delete</button>
     </div>
@@ -47,7 +47,7 @@
           <div class="date field">
             <label>From Date</label>
             <div class="ui left labeled input">
-              {{view "date-field" date=witness.from}}
+              {{date-field date=witness.from}}
               {{#if errors.from}}
                 <div class="ui red pointing above label">{{errors.from}}</div>
               {{/if}}
@@ -56,7 +56,7 @@
           <div class="date field">
             <label>To Date</label>
             <div class="ui left labeled input">
-              {{view "date-field" date=witness.to}}
+              {{date-field date=witness.to}}
               {{#if errors.to}}
                 <div class="ui red pointing above label">{{errors.to}}</div>
               {{/if}}
