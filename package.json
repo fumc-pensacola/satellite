@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "foreman start web",
-    "postinstall": "cd frontend && node_modules/.bin/ember build --environment production"
+    "postinstall": "cd frontend && npm install && node_modules/.bin/ember build --environment production"
   },
   "repository": {
     "type": "git",
