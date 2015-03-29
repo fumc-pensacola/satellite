@@ -103,7 +103,16 @@ export default Ember.ObjectController.extend({
       var self = this,
           model = this.get('model'),
           devices = this.get('devices'),
-          uploads = [];
+          uploads = [],
+          setKey = function (d, resolve) {
+            return function (key) {
+              self.set(d + 'Image', key);
+              resolve();
+            };
+          },
+          upload = function (resolve, reject) {
+            fileUpload.uploadFile().then(setKey(device, resolve));
+          };
 
       for (var i = 0; i < devices.length; i++) {
         var device = devices[i],
@@ -114,14 +123,7 @@ export default Ember.ObjectController.extend({
           if (fileUpload.name !== oldFile) {
             AWS.s3.deleteObject({ Key: oldFile }).send();
           }
-          uploads.push(new Ember.RSVP.Promise(function (resolve, reject) {
-            fileUpload.uploadFile().then(function (d) {
-              return function (key) {
-                self.set(d + 'Image', key);
-                resolve();
-              };
-            }(device));
-          }));
+          uploads.push(new Ember.RSVP.Promise(upload));
         }
       }
 
