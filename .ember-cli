@@ -1,4 +1,3 @@
 {
-  "disableAnalytics": false,
-  "proxy": "http://localhost:8080"
+  "disableAnalytics": false
 }

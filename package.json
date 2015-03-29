@@ -18,6 +18,7 @@
   "dependencies": {
     "aws-sdk": "~2.0.21",
     "bluebird": "^2.3.11",
+    "body-parser": "^1.12.2",
     "express": "^4.12.3",
     "icalendar": "^0.7.1",
     "loopback": "~2.7.0",
