@@ -36,7 +36,7 @@ export default DS.RESTSerializer.extend({
   },
 
   normalizeRelationships: function(type, hash) {
-    var payloadKey, key, objList, idList = [];
+    var payloadKey, objList, idList = [];
 
     if (this.keyForRelationship) {
       type.eachRelationship(function(key, relationship) {
