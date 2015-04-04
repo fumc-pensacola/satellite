@@ -1,10 +1,22 @@
-# Logs
+# logs
 logs
 *.log
 
-.grunt
-node_modules
-bower_components
-tmp/
-dist/
+# secrets
 .env
+
+# compiled output
+/tmp
+/dist
+
+# dependencies
+/node_modules
+/bower_components
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
