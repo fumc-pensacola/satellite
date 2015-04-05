@@ -37,6 +37,7 @@
     "broccoli-asset-rev": "^2.0.3",
     "broccoli-merge-trees": "^0.2.1",
     "broccoli-static-compiler": "^0.2.1",
+    "connect-restreamer": "^1.0.2",
     "ember-cli": "^0.2.2",
     "ember-cli-autoprefixer": "^0.3.0",
     "ember-cli-content-security-policy": "0.4.0",
@@ -50,6 +51,8 @@
     "ember-cli-uglify": "1.0.1",
     "ember-data": "1.0.0-beta.16.1",
     "ember-export-application-global": "^1.0.2",
-    "glob": "^5.0.3"
+    "express": "^4.12.3",
+    "glob": "^4.5.3",
+    "morgan": "^1.5.2"
   }
 }

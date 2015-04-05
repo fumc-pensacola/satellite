@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import AWS from '../utils/aws';
 import FileUpload from '../models/file-upload';
+import config from '../config/environment';
 
 export default Ember.ObjectController.extend({
   
@@ -15,13 +16,7 @@ export default Ember.ObjectController.extend({
     },
     
     viewPDF: function () {
-      AWS.s3.getSignedUrl('getObject', { Key: this.get('file') }, function (err, url) {
-        if (!err) {
-          this.set('modalURL', url);
-        } else {
-          alert(err.message);
-        }
-      }.bind(this));
+      this.set('modalURL', config.APP.proxy + '/api/file/' +  this.get('file'));
     },
     
     cancel: function () {
