@@ -1,22 +1,10 @@
-var orm = require('orm');
+var mongoose = require('mongoose');
 
-module.exports = function (db) {
-  return db.define('witness', {
-    id: { type: 'serial', key: true },
-    from: { type: 'date', time: true },
-    to: { type: 'date', time: true },
-    volume: { type: 'number' },
-    issue: { type: 'number' },
-    visible: { type: 'boolean' },
-    file: { type: 'text' }
-  }, {
-    autoFetch: true,
-    cache: false,
-    validations: {
-      from: orm.enforce.required('From date is required'),
-      to: orm.enforce.required('To date is required'),
-      volume: orm.enforce.required('Volume is required'),
-      issue: orm.enforce.required('Issue is required')
-    }
-  });
-};
+module.exports = mongoose.model('Witness', new mongoose.Schema({
+  from: { type: Date, required: true },
+  to: { type: Date, required: true },
+  volume: { type: Number, required: true },
+  issue: { type: Number, required: true },
+  visible: { type: Boolean },
+  file: { type: String }
+}));

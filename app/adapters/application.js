@@ -1,6 +1,5 @@
 /* global Cookies */
 
-import Ember from 'ember';
 import DS from 'ember-data';
 
 export default DS.RESTAdapter.extend({
@@ -13,15 +12,4 @@ export default DS.RESTAdapter.extend({
     };
   }.property().volatile(),
 
-  ajaxError: function(jqXHR) {
-    var error = this._super(jqXHR);
-
-    if (jqXHR && jqXHR.status === 422) {
-      var errors = Ember.$.parseJSON(jqXHR.responseText)["errors"];
-
-      return new DS.InvalidError(errors);
-    } else {
-      return error;
-    }
-  }
 });
