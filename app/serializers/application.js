@@ -1,5 +1,3 @@
-import DS from 'ember-data';
+import JsonApiSerializer from 'ember-json-api/json-api-serializer';
 
-export default DS.RESTSerializer.extend({
-
-});
+export default JsonApiSerializer;
