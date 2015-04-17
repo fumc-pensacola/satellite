@@ -53,7 +53,7 @@
     "ember-cli-uglify": "1.0.1",
     "ember-data": "1.0.0-beta.16.1",
     "ember-export-application-global": "^1.0.2",
-    "ember-json-api": "^0.3.0",
+    "ember-json-api": "andrewbranch/ember-json-api",
     "express": "^4.12.3",
     "glob": "^4.5.3",
     "morgan": "^1.5.2"

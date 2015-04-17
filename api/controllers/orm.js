@@ -48,7 +48,7 @@ module.exports = function (server) {
     .post(requestHandler);
   server.route(singleRoutePattern)
     .get(requestHandler)
-    .put(requestHandler)
+    .patch(requestHandler)
     .delete(requestHandler);
 
 };
