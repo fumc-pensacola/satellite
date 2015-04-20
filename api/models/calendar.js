@@ -1,12 +1,7 @@
-var orm = require('orm');
+var mongoose = require('mongoose');
 
-module.exports = function (db) {
-  return db.define('calendar', {
-    id: { type: 'text', key: true },
-    name: { type: 'text' },
-    color: { type: 'text' },
-    image: { type: 'text' }
-  }, {
-    cache: false
-  });
-};
+module.exports = mongoose.model('Calendar', new mongoose.Schema({
+  name: { type: String, required: true },
+  color: { type: String },
+  image: { type: String }
+}));

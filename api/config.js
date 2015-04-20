@@ -1,8 +1,5 @@
-var express = require('express'),
-    bodyParser = require('body-parser'),
-    orm = require('orm'),
-    NODE_ENV = process.env.NODE_ENV,
-    DATABASE_URL = process.env.DATABASE_URL + '?ssl=true';
+var bodyParser = require('body-parser'),
+    NODE_ENV = process.env.NODE_ENV;
 
 module.exports = function (server) {
 
@@ -27,25 +24,5 @@ module.exports = function (server) {
   if (NODE_ENV === 'production') {
     server.use(forceSSL);
   }
-
-  server.use(orm.express(DATABASE_URL, {
-    define: function (db, models, next) {
-
-      models.bulletin = require('./models/bulletin')(db);
-      models.witness = require('./models/witness')(db);
-      models.setting = require('./models/setting')(db);
-      models.feature = require('./models/feature')(db);
-      models.notification = require('./models/notification')(db);
-      models.calendar = require('./models/calendar')(db);
-
-      models.notification.hasOne('feature', models.feature);
-
-      db.settings.set('instance.returnAllErrors', true);
-      // db.drop();
-      db.sync();
-
-      next();
-    }
-  }));
 
 };

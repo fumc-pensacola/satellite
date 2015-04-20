@@ -1,11 +1,6 @@
-var orm = require('orm');
+var mongoose = require('mongoose');
 
-module.exports = function (db) {
-  return db.define('setting', {
-    id: { type: 'serial', key: true },
-    key: { type: 'text' },
-    value: { type: 'text' }
-  }, {
-    autoFetch: true
-  });
-};
+module.exports = mongoose.model('Setting', new mongoose.Schema({
+  key: { type: String },
+  value: { type: String }
+}));
