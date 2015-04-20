@@ -49,6 +49,11 @@ module.exports = function (server) {
   server.route(singleRoutePattern)
     .get(requestHandler)
     .patch(requestHandler)
-    .delete(requestHandler);
+    .delete(function (req, res) {
+      // Bit of a hack to make sure this isn't a problem:
+      // https://github.com/emberjs/data/issues/3010
+      delete req.headers['content-length'];
+      requestHandler(req, res);
+    });
 
 };

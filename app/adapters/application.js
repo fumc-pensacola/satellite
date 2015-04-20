@@ -10,6 +10,6 @@ export default JsonApiAdapter.extend({
     return {
       token: Cookies.get('token')
     };
-  }.property().volatile(),
+  }.property().volatile()
 
 });
