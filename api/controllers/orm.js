@@ -39,21 +39,33 @@ module.exports = function (server) {
   });
   
   var front = new API.controllers.Front(controller),
+      multiRoutePattern = '/api/:type(' + resourceTypes.join('|') + ')',
+      singleRoutePattern = multiRoutePattern + '/:id',
+      linksRoutePattern = singleRoutePattern + '/links/:relationship',
       requestHandler = front.apiRequest.bind(front),
-      multiRoutePattern = '/api/:type(' + resourceTypes.join('|') + ')';
-      singleRoutePattern = multiRoutePattern + '/:id';
+      authRequestHandler = function (req, res) {
+        if (Authentication.isAuthenticatedRequest(req)) {
+          requestHandler(req, res);
+        } else {
+          res.status(401).end();
+        }
+      },
+      deleteHandler = function (req, res) {
+        // Bit of a hack to make sure this isn't a problem:
+        // https://github.com/emberjs/data/issues/3010
+        delete req.headers['content-length'];
+        authRequestHandler(req, res);
+      };
   
   server.route(multiRoutePattern)
     .get(requestHandler)
-    .post(requestHandler);
+    .post(authRequestHandler);
   server.route(singleRoutePattern)
     .get(requestHandler)
-    .patch(requestHandler)
-    .delete(function (req, res) {
-      // Bit of a hack to make sure this isn't a problem:
-      // https://github.com/emberjs/data/issues/3010
-      delete req.headers['content-length'];
-      requestHandler(req, res);
-    });
-
+    .patch(authRequestHandler)
+    .delete(deleteHandler);
+  server.route(linksRoutePattern)
+    .get(requestHandler)
+    .patch(authRequestHandler)
+    .delete(deleteHandler);
 };
