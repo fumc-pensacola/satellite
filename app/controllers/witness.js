@@ -41,7 +41,7 @@ export default PDFController.extend({
         this.set('from', date);
       }
 
-      this._super();
+      this._super(file);
     }
 
   }
