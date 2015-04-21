@@ -1,7 +1,8 @@
 var moment = require('moment'),
     Promise = require('bluebird').Promise,
     ical = require('icalendar'),
-    calendar;
+    mongoose = require('mongoose'),
+    Calendar = require('../models/calendar');
 
 module.exports = function (server, ACS) {
 
@@ -9,7 +10,7 @@ module.exports = function (server, ACS) {
 
   server.get('/api/calendars/list', function (req, res) {
     var getDBCalendars = new Promise(function (resolve, reject) {
-      req.models.calendar.find().run(function (err, models) {
+      Calendar.find().exec(function (err, models) {
         if (err) {
           reject(err);
         } else {

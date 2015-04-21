@@ -1,14 +1,15 @@
-var sendgrid = require('sendgrid')(process.env.SENDGRID_USER, process.env.SENDGRID_API_KEY);
+var sendgrid = require('sendgrid')(process.env.SENDGRID_USER, process.env.SENDGRID_API_KEY),
+    Setting = require('../models/setting');
 
 module.exports = function (server) {
 
   server.post('/api/emailer/send', function (req, res) {
-    req.models.setting.find().run(function(err, models) {
+    Setting.findOne({ key: 'prayer_request_email' }).exec(function(err, model) {
       if (err) {
         res.status(500).send(err.toString());
       } else {
         sendgrid.send({
-          to: models.filter(function (s) { return s.key === 'prayer_request_email'; })[0].value,
+          to: model.value,
           from: 'app@fumcpensacola.com',
           subject: 'New prayer request submission',
           text: 'A user of the FUMC app just submitted a prayer request:\r\n\r\n' + req.body.email
