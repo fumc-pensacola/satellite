@@ -1,4 +1,6 @@
 import Ember from 'ember';
+import config from '../config/environment';
+var TEST = config.environment === 'test';
 
 export default Ember.Component.extend({
 
@@ -14,12 +16,17 @@ export default Ember.Component.extend({
     if (!this.get('currentFile')) {
       component.set('currentFile', this.get('oldFile'));
     }
-
-    input.addEventListener('change', function () {
-      var file = this.files[0];
+    
+    var change = function (event) {
+      var file = TEST ? event.detail.file : this.files[0];
       component.set('currentFile', file.name);
       component.sendAction('change', file);
-    }, false);
+    };
+
+    input.addEventListener('change', change, false);
+    if (TEST) {
+      input.addEventListener('test.file', change, false);
+    }
 
     this.set('input', input);
   },
