@@ -5,7 +5,7 @@ import {
 
 moduleFor('controller:pdf', 'PdfController', {
   // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
+  needs: ['controller:pdfs']
 });
 
 // Replace this with your real tests.

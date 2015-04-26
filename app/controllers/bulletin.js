@@ -1,5 +1,4 @@
 /* global moment */
-
 import PDFController from './pdf';
 
 export default PDFController.extend({
@@ -50,7 +49,7 @@ export default PDFController.extend({
         }
       }
 
-      this._super();
+      this._super(file);
     }
   }
 });

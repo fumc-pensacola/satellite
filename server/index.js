@@ -1,16 +1,38 @@
-require('newrelic');
+// To use it create some files under `mocks/`
+// e.g. `server/mocks/ember-hamsters.js`
+//
+// module.exports = function(app) {
+//   app.get('/ember-hamsters', function(req, res) {
+//     res.send('hello');
+//   });
+// };
 
-var express = require('express'),
-    app = express(),
-    port = process.env.NODE_ENV === 'development' ? 8080 : (process.env.PORT || 8001);
+function usingProxy () {
+    return !!process.argv.filter(function (arg) {
+        return arg.indexOf('--proxy') !== -1;
+    }).length;
+}
 
-require('./config')(app);
-require('./static')(app);
-require('./api')(app);
+module.exports = function(app) {
+  var globSync   = require('glob').sync;
+  var mocks      = globSync('./mocks/**/*.js', { cwd: __dirname }).map(require);
+  var proxies    = globSync('./proxies/**/*.js', { cwd: __dirname }).map(require);
+  var bodyParser = require('body-parser');
 
-var server = app.listen(port, function () {
-  var host = server.address().address,
-      port = server.address().port;
+  // Log proxy requests
+  var morgan  = require('morgan');
+  app.use(morgan('dev'));
+  
+  app.use(bodyParser.json());
+  
+  if (usingProxy()) {
+    console.log('Detected proxy server; ignoring mocks');
+    return;
+  }
+  
+  console.log('Using mock API');
 
-  console.log('Server listening at http://%s:%s', host, port);
-});
+  mocks.forEach(function(route) { route(app); });
+  proxies.forEach(function(route) { route(app); });
+
+};

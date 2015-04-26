@@ -28,7 +28,7 @@
           <div class="field">
             <label>Service</label>
             <div class="ui left labeled input">
-              {{input value=bulletin.service placeholder="e.g. ICON"}}
+              {{input class="service" value=bulletin.service placeholder="e.g. ICON"}}
               {{#if errors.service}}
                 <div class="ui red pointing above label">{{errors.service}}</div>
               {{/if}}
@@ -53,7 +53,7 @@
         <div class="ui buttons field">
           <button type="button" class="ui button" {{action 'cancel'}}>Cancel</button>
           <div class="or"></div>
-          <button {{bind-attr class=":ui :blue :button bulletin.fileUpload.isUploading:disabled"}} {{action 'save'}}>Save</button>
+          <button {{bind-attr class=":save :ui :blue :button bulletin.fileUpload.isUploading:disabled"}} {{action 'save'}}>Save</button>
         </div>
         <div {{bind-attr class=":ui :blue :progress bulletin.fileUpload.showProgressBar::hidden bulletin.fileUpload.didUpload:successful"}}>
           <div class="bar" {{bind-attr style="bulletin.fileUpload.progressStyle"}}></div>

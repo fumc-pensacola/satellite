@@ -35,9 +35,10 @@ export default Ember.ObjectController.extend({
         var model = this.get('model');
         model.save().then(function () {
           Ember.$.ajax({
-            url: config.APP.proxy + (test === true ? '/api/notify/testers' : '/api/notify/everyone'),
+            url: config.APP.proxy + (test === true ? '/api/v2/notify/testers' : '/api/v2/notify/everyone'),
             type: 'POST',
-            data: { notification: model.toJSON({ includeId: true }) },
+            contentType: 'application/json; charset=utf8',
+            data: JSON.stringify({ notification: model.toJSON({ includeId: true }) }),
             beforeSend: function (xhr) {
               xhr.setRequestHeader('token', Cookies.get('token'));
             }

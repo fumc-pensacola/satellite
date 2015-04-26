@@ -1,15 +1,16 @@
 var moment = require('moment'),
     Promise = require('bluebird').Promise,
     ical = require('icalendar'),
-    calendar;
+    mongoose = require('mongoose'),
+    Calendar = require('../models/calendar');
 
-module.exports = function (server, ACS) {
+module.exports = function (router, ACS) {
 
   ACS.setup();
 
-  server.get('/api/calendars/list', function (req, res) {
+  router.get('/calendars/list', function (req, res) {
     var getDBCalendars = new Promise(function (resolve, reject) {
-      req.models.calendar.find().run(function (err, models) {
+      Calendar.find().exec(function (err, models) {
         if (err) {
           reject(err);
         } else {
@@ -37,7 +38,7 @@ module.exports = function (server, ACS) {
     });
   });
 
-  server.get('/api/calendars/:id.:format', function (req, res) {
+  router.get('/calendars/:id.:format', function (req, res) {
     ACS.sharedInstance().then(function (acs) {
       console.log('Getting events...');
       var from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),

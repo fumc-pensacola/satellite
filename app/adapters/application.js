@@ -1,27 +1,15 @@
 /* global Cookies */
 
-import Ember from 'ember';
-import DS from 'ember-data';
+import JsonApiAdapter from 'ember-json-api/json-api-adapter';
 
-export default DS.RESTAdapter.extend({
+export default JsonApiAdapter.extend({
 
-  namespace: 'api',
+  namespace: 'api/v2',
 
   headers: function () {
     return {
       token: Cookies.get('token')
     };
-  }.property().volatile(),
+  }.property().volatile()
 
-  ajaxError: function(jqXHR) {
-    var error = this._super(jqXHR);
-
-    if (jqXHR && jqXHR.status === 422) {
-      var errors = Ember.$.parseJSON(jqXHR.responseText)["errors"];
-
-      return new DS.InvalidError(errors);
-    } else {
-      return error;
-    }
-  }
 });

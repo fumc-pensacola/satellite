@@ -15,13 +15,7 @@ export default Ember.ObjectController.extend({
     },
     
     viewPDF: function () {
-      AWS.s3.getSignedUrl('getObject', { Key: this.get('file') }, function (err, url) {
-        if (!err) {
-          this.set('modalURL', url);
-        } else {
-          alert(err.message);
-        }
-      }.bind(this));
+      this.set('modalURL', '/api/file/' +  this.get('file'));
     },
     
     cancel: function () {
