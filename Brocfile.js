@@ -26,6 +26,7 @@ var app = new EmberApp({
 app.import('bower_components/aws-sdk/dist/aws-sdk.min.js');
 app.import('bower_components/cookies-js/dist/cookies.min.js');
 app.import('bower_components/moment/min/moment.min.js');
+app.import('bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.min.js');
 app.import('bower_components/pikaday/pikaday.js');
 app.import('bower_components/pikaday/css/pikaday.css');
 app.import('bower_components/semantic-ui/dist/semantic.min.js');
