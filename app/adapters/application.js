@@ -4,7 +4,7 @@ import JsonApiAdapter from 'ember-json-api/json-api-adapter';
 
 export default JsonApiAdapter.extend({
 
-  namespace: 'api',
+  namespace: 'api/v2',
 
   headers: function () {
     return {

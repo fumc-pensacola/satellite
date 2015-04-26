@@ -1,11 +1,10 @@
 import Ember from 'ember';
-import config from '../config/environment';
 
 export default Ember.Route.extend({
   beforeModel: function (transition) {
     var token = transition.queryParams.access_token;
     if (token) {
-      Ember.$.post(config.APP.proxy + '/authenticate', { access_token: token }).then(function (response) {
+      Ember.$.post('/api/v2/authenticate', { access_token: token }).then(function (response) {
         if (response.success) {
 
           var loginController = this.controllerFor('login'),

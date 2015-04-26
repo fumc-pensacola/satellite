@@ -1,7 +1,11 @@
-var bodyParser = require('body-parser'),
-    NODE_ENV = process.env.NODE_ENV;
+var mongoose = require('mongoose'),
+    bodyParser = require('body-parser'),
+    NODE_ENV = process.env.NODE_ENV,
+    MONGOLAB_URI = process.env.MONGOLAB_URI;
 
 module.exports = function (server) {
+  
+  mongoose.connect(MONGOLAB_URI);
 
   var forceSSL = function (req, res, next) {
     if (req.headers['x-forwarded-proto'] !== 'https') {

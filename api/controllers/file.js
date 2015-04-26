@@ -12,8 +12,8 @@ var _get = function (req, res) {
   });
 };
 
-var _exports = function (server) {
-  server.get('/api/file/:key', _get);
+var _exports = function (router) {
+  router.get('/file/:key', _get);
 };
 
 // The Ember http-mock can use the exact same function,

@@ -4,11 +4,11 @@ var moment = require('moment'),
     mongoose = require('mongoose'),
     Calendar = require('../models/calendar');
 
-module.exports = function (server, ACS) {
+module.exports = function (router, ACS) {
 
   ACS.setup();
 
-  server.get('/api/calendars/list', function (req, res) {
+  router.get('/calendars/list', function (req, res) {
     var getDBCalendars = new Promise(function (resolve, reject) {
       Calendar.find().exec(function (err, models) {
         if (err) {
@@ -38,7 +38,7 @@ module.exports = function (server, ACS) {
     });
   });
 
-  server.get('/api/calendars/:id.:format', function (req, res) {
+  router.get('/calendars/:id.:format', function (req, res) {
     ACS.sharedInstance().then(function (acs) {
       console.log('Getting events...');
       var from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),

@@ -1,11 +1,7 @@
-var mongoose = require('mongoose'),
-    API = require('json-api'),
-    Authentication = require('../authentication'),
-    MONGOLAB_URI = process.env.MONGOLAB_URI;
+var API = require('json-api'),
+    Authentication = require('../authentication');
 
-module.exports = function (server) {
-  
-  mongoose.connect(MONGOLAB_URI);
+module.exports = function (router, routeBase) {
 
   var models = {
     Bulletin: require('../models/bulletin'),
@@ -34,13 +30,13 @@ module.exports = function (server) {
     registry.type(t, {
       adapter: adapter,
       urlTemplates: {
-        self: '/api/' + t + '/{id}'
+        self: routeBase + '/' + t + '/{id}'
       }
     });
   });
   
   function generateRoutePatterns (resourceTypes, _private) {
-    var multi = '/api/:type(' + resourceTypes.join('|') + ')',
+    var multi = '/:type(' + resourceTypes.join('|') + ')',
         single = multi + '/:id',
         links = single + '/links/:relationship';
         
@@ -93,7 +89,7 @@ module.exports = function (server) {
   
   routes.forEach(function (r) {
     for (var pattern in r) {
-      var route = server.route(pattern);
+      var route = router.route(pattern);
       for (var method in r[pattern]) {
         route[method](r[pattern][method]);
         // E.g. route.get(requestHandler);

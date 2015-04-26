@@ -3,9 +3,9 @@ var request = require('request'),
     Authentication = require('../authentication'),
     AMAZON_CLIENT_ID = process.env.AMAZON_CLIENT_ID;
 
-module.exports = function (server) {
+module.exports = function (router) {
 
-  server.post('/authenticate', bodyParser.urlencoded({ extended: false }), function (req, res) {
+  router.post('/authenticate', bodyParser.urlencoded({ extended: false }), function (req, res) {
     request({
       url: 'https://api.amazon.com/auth/o2/tokeninfo',
       qs: { 'access_token': req.body.access_token }
