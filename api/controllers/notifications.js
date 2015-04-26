@@ -1,13 +1,15 @@
 var moment = require('moment-timezone'),
-    Authentication = require('./authentication'),
+    request = require('request'),
+    Authentication = require('../authentication'),
     ZEROPUSH_TOKEN = process.env[process.env.NODE_ENV === 'production' ? 'ZEROPUSH_PROD_TOKEN' : 'ZEROPUSH_DEV_TOKEN'];
 
 module.exports = function (router) {
   
-  router.post('/notify/:channel', function (req, res, next) {
+  router.post('/notify/:channel', function (req, res) {
     if (Authentication.isAuthenticatedRequest(req)) {
       var notification = req.body.notification,
           channel = req.params.channel.replace('everyone', '');
+      
       request.post({
         url: 'https://api.zeropush.com/broadcast/' + channel,
         form: {
@@ -25,7 +27,7 @@ module.exports = function (router) {
         if (error) {
           res.status(500).json(error);
         } else {
-          next();
+          res.status(201).json(notification);
         }
       });
     } else {
