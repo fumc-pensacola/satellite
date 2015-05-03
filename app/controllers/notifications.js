@@ -4,6 +4,8 @@ import Ember from 'ember';
 import config from '../config/environment';
 
 export default Ember.ObjectController.extend({
+  
+  tokenEnvironment: 'ZEROPUSH_PROD_TOKEN',
 
   init: function () {
     window.controller = this;
@@ -38,7 +40,10 @@ export default Ember.ObjectController.extend({
             url: config.APP.proxy + (test === true ? '/api/v2/notify/testers' : '/api/v2/notify/everyone'),
             type: 'POST',
             contentType: 'application/json; charset=utf8',
-            data: JSON.stringify({ notification: model.toJSON({ includeId: true }) }),
+            data: JSON.stringify({
+              notification: model.toJSON({ includeId: true }),
+              tokenEnvironment: self.get('tokenEnvironment')
+            }),
             beforeSend: function (xhr) {
               xhr.setRequestHeader('token', Cookies.get('token'));
             }

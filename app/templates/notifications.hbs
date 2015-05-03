@@ -14,6 +14,21 @@
       <label>Associated URL</label>
       {{validated-url value=url isValid=urlIsValid}}
     </div>
+    <div class="grouped fields">
+      <label>ZeroPush Token</label>
+      <div class="field">
+        <div class="ui radio checkbox">
+          {{radio-button groupValue=tokenEnvironment value="ZEROPUSH_PROD_TOKEN" name="environment"}}
+          <label>Production</label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="ui radio checked checkbox">
+          {{radio-button groupValue=tokenEnvironment value="ZEROPUSH_DEV_TOKEN" name="environment"}}
+          <label>Development</label>
+        </div>
+      </div>
+    </div>
     <div>
       <button type="button" {{bind-attr class=":ui :blue :button isValid::disabled"}} {{action "test"}}>Test</button>
       <button type="button" {{bind-attr class=":ui :red :button isValid::disabled"}} {{action "send"}}>Send</button>
