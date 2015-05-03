@@ -50,10 +50,12 @@ export default Ember.Object.extend({
     var self = this;
 
     this.set('isUploading', true);
+    var key = this.get('name').replace(/(\..+?)$/, '_' + Date.now() + '$1');
 
     AWS.s3.putObject({
-      Key: this.get('name'),
+      Key: key,
       ContentType: fileToUpload.type,
+      CacheControl: 'max-age=31536000',
       Body: fileToUpload
     }, function (err, data) {
       if (err) {
@@ -64,7 +66,7 @@ export default Ember.Object.extend({
 
       self.set('isUploading', false);
       self.set('didUpload', true);
-      self.get('uploadPromise').resolve(fileToUpload.name);
+      self.get('uploadPromise').resolve(key);
     }).on('httpUploadProgress', function (progress, response) {
       self.set('progress', progress.loaded / progress.total * 100);
     });
