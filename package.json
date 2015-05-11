@@ -22,6 +22,7 @@
     "express": "^4.12.3",
     "icalendar": "^0.7.1",
     "json-api": "^2.2.4",
+    "later": "^1.1.6",
     "loopback": "~2.7.0",
     "loopback-connector-soap": "^1.1.1",
     "moment": "~2.8.3",
