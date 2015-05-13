@@ -10,7 +10,8 @@ var schema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
   color: { type: String },
-  image: { type: String }
+  image: { type: String },
+  events: [{ type: String, ref: 'Event' }]
 }, {
   autoIndex: NODE_ENV !== 'production'
 });
@@ -34,9 +35,9 @@ schema.statics.scrape = function () {
             return Promise.resolve();
           }
           return new Promise(function (res, rej) {
+            c = Calendar.transform(c);
             var id = c._id;
             delete c._id;
-            c = Calendar.transform(c);
             Calendar.update({ _id: id }, c, { upsert: true }, function (err) {
               if (err) {
                 rej(err);
@@ -56,7 +57,7 @@ schema.statics.scrape = function () {
 };
 
 schema.statics.transform = function (calendar) {
-  calendar.id = calendar.CalendarId;
+  calendar._id = calendar.CalendarId;
   calendar.name = calendar.Name;
   calendar.description = calendar.Description;
   delete calendar.Name;

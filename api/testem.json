@@ -1,0 +1,13 @@
+{
+  "launchers": {
+    "Mocha": {
+      "command": "mocha tests/**/*-test.js"
+    }
+  },
+  "launch_in_ci": [
+    "Mocha"
+  ],
+  "launch_in_dev": [
+    "Mocha"
+  ]
+}

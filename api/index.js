@@ -13,6 +13,7 @@ require('./api')(app);
 var calendarsSchedule = later.parse.text('every 30 minutes');
 later.setInterval(Worker.scrapeCalendars, calendarsSchedule);
 Worker.scrapeCalendars();
+Worker.scrapeEvents('5/1/2015', '5/20/2015');
 
 var server = app.listen(port, function () {
   var host = server.address().address,

@@ -1,0 +1,43 @@
+{
+    "Page": [
+        {
+            "Description": "Weekly meeting of Veritas Homeschool Group",
+            "EventDateId": "1adbd191-dc2f-44d1-8696-a3fa010147f1",
+            "EventId": "09d5f8ae-0cf7-4308-b70e-a3d300c88e72",
+            "EventName": "Veritas Homeschool Group",
+            "EventType": null,
+            "EventTypeId": null,
+            "IsPublished": true,
+            "LocationId": "6baf008c-0260-43a5-87e6-34630e2ffef1",
+            "Location": "Youth Cafe",
+            "StartDate": "2015-05-01 08:30:00.000",
+            "StopDate": "2015-05-01 13:30:00.000",
+            "Status": "Confirmed",
+            "CalendarName": "Outside and Community Events",
+            "IsRecurringEvent": true,
+            "CalendarId": "a187cf16-420c-47c8-8092-a3f900a6da2f",
+            "AllowRegistration": false
+        },
+        {
+            "Description": "Alcoholics Anonymous is an international fellowship of men and women who have had a drinking problem. It is nonprofessional, self-supporting, multiracial, apolitical, and available almost everywhere. There are no age or education requirements. Membership is open to anyone who wants to do something about his or her drinking problem. Meetings are available Monday - Saturday.",
+            "EventDateId": "109e90c7-9a49-4064-ae45-a3fa0131a4f0",
+            "EventId": "6e79aa52-7001-449a-8931-a35a00e4140d",
+            "EventName": "AA Support Group",
+            "EventType": null,
+            "EventTypeId": null,
+            "IsPublished": true,
+            "LocationId": "4fff2729-941a-4f9f-8599-1bae6e01d6a8",
+            "Location": "Outreach Bldg Assembly Rm",
+            "StartDate": "2015-05-01 12:00:00.000",
+            "StopDate": "2015-05-01 13:00:00.000",
+            "Status": "Confirmed",
+            "CalendarName": "Missions and Outreach",
+            "IsRecurringEvent": true,
+            "CalendarId": "584948b7-f9da-4df9-a221-a3f9009c216a",
+            "AllowRegistration": false
+        }
+    ],
+    "PageCount": 3,
+    "PageIndex": 2,
+    "PageSize": 2
+}
