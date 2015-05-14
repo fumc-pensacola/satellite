@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
     NODE_ENV = process.env.NODE_ENV;
 
 var schema = new mongoose.Schema({
-  _id: { type: String, required: true },
+  _id: { type: String, required: true, index: { unique: true } },
   name: { type: String, required: true },
   description: { type: String },
   start: { type: Date, required: true },
