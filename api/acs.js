@@ -128,7 +128,7 @@ function ACS (ACSGeneralService, ACSEventService) {
           reject(err);
         } else {
           resolve(calendars = fixDataSet(response.getCalendarsResult.diffgram.NewDataSet).dbs.map(function (c) {
-            var dbCalendar = dbCalendars.filter(function (cal) { return cal._doc.id === c.CalendarID; })[0] || { };
+            var dbCalendar = dbCalendars.filter(function (cal) { return cal._doc._id === c.CalendarID; })[0] || { };
             return { id: c.CalendarID, name: c.CalendarName, colorString: dbCalendar.color, defaultImageKey: dbCalendar.image };
           }));
         }
