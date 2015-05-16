@@ -1,0 +1,43 @@
+{
+    "Page": [
+        {
+            "Description": "Students (6th - 12th grade) enjoy bagels and each others company as we study the parables of Jesus.",
+            "EventDateId": "508aded5-e794-4ca7-9f85-a40200db9251",
+            "EventId": "d49c5041-18eb-4672-b38f-a40200db7d04",
+            "EventName": "6th Grade and Youth Bagelheads Bible Study",
+            "EventType": null,
+            "EventTypeId": null,
+            "IsPublished": true,
+            "LocationId": null,
+            "Location": null,
+            "StartDate": "2015-05-01 06:30:00.000",
+            "StopDate": "2015-05-01 07:30:00.000",
+            "Status": "Confirmed",
+            "CalendarName": "Youth",
+            "IsRecurringEvent": true,
+            "CalendarId": "d78cb214-d010-4a26-8fea-a3f9009d63a9",
+            "AllowRegistration": false
+        },
+        {
+            "Description": "The Methodist Children&#39;s Academy (MCA) offers a full-time, year round program in the beautiful facilities of First United Methodist Church with an experienced staff. The hours are 7:00am-5:50pm and the program operates throughout the year with the exception of designated school holidays.",
+            "EventDateId": "b377f540-3015-4d02-945e-a3fc009618f3",
+            "EventId": "e95301de-4663-4d81-961a-a35600ebeb80",
+            "EventName": "Methodist Children's Academy",
+            "EventType": null,
+            "EventTypeId": null,
+            "IsPublished": true,
+            "LocationId": "13541b25-207a-4ce6-99f2-a35600bb76e0",
+            "Location": "Henry Robert Activity Center",
+            "StartDate": "2015-05-01 07:00:00.000",
+            "StopDate": "2015-05-01 17:50:00.000",
+            "Status": "Confirmed",
+            "CalendarName": "Methodist Children's Academy",
+            "IsRecurringEvent": true,
+            "CalendarId": "79aab762-f53a-480a-a35f-a3f9009edd65",
+            "AllowRegistration": false
+        }
+    ],
+    "PageCount": 3,
+    "PageIndex": 1,
+    "PageSize": 2
+}
