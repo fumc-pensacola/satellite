@@ -31,7 +31,7 @@ schema.statics.scrape = function () {
       } else {
         Promise.all(body.map(function (c) {
           if (!c.IsPublished) {
-            return Promise.resolve();
+            return;
           }
           return new Promise(function (res, rej) {
             c = Calendar.transform(c);
@@ -45,8 +45,12 @@ schema.statics.scrape = function () {
               }
             });
           });
-        })).then(function () {
-          resolve();
+        })).then(function (resolutions) {
+          resolve([].concat.apply([], resolutions).filter(function (c) {
+            if (c) {
+              return c;
+            }
+          }));
         }, function (err) {
           reject(err);
         });
@@ -56,14 +60,19 @@ schema.statics.scrape = function () {
 };
 
 schema.statics.transform = function (calendar) {
-  calendar._id = calendar.CalendarId;
-  calendar.name = calendar.Name;
-  calendar.description = calendar.Description;
-  delete calendar.Name;
-  delete calendar.Description;
-  delete calendar.RssSlug;
-  delete calendar.IsPublished;
-  delete calendar.CalendarId;
+  var map = {
+    CalendarId: '_id',
+    Name: 'name',
+    Description: 'description'
+  }, c = { };
+  
+  for (var key in calendar) {
+    if (map[key]) {
+      c[map[key]] = calendar[key];
+    }
+  }
+  
+  return c;
 };
 
 module.exports = mongoose.model('Calendar', schema);
