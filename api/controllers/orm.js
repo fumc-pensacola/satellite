@@ -6,6 +6,7 @@ module.exports = function (router, routeBase) {
   var models = {
     Bulletin: require('../models/bulletin'),
     Calendar: require('../models/calendar'),
+    Event: require('../models/event'),
     Feature: require('../models/feature'),
     Notification: require('../models/notification'),
     Setting: require('../models/setting'),
@@ -19,7 +20,9 @@ module.exports = function (router, routeBase) {
   var publicResourceTypes = [
     'bulletins',
     'features',
-    'witnesses'
+    'witnesses',
+    'calendars',
+    'events'
   ];
   
   var privateResourceTypes = [

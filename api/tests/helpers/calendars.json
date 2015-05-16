@@ -1,0 +1,163 @@
+[
+    {
+        "CalendarId": "f088210f-648c-4236-a216-a3f900a07fd9",
+        "Name": "50 Forward",
+        "Description": "Activities and events for adults 50 and over.",
+        "IsPublished": true,
+        "RssSlug": "50-forward"
+    },
+    {
+        "CalendarId": "9542e9fd-bdad-4412-baee-a11600a121c1",
+        "Name": "Artist of the Month",
+        "Description": "Featured art from the Artist of the Month is displayed in the Great Hall and Dining Room of The Wright Place.",
+        "IsPublished": false,
+        "RssSlug": "artist-of-the-month"
+    },
+    {
+        "CalendarId": "43c1cc21-573b-483b-a6a2-a3f80136df06",
+        "Name": "Children",
+        "Description": "Activities and events for children (Preschool - 4th grade).",
+        "IsPublished": true,
+        "RssSlug": "children"
+    },
+    {
+        "CalendarId": "36b2b1ce-892d-4e23-82dc-a3f900a33e6d",
+        "Name": "Christian Education",
+        "Description": "Bible studies, small groups, forums and other events involving Christian Education at First United Methodist Church.",
+        "IsPublished": true,
+        "RssSlug": "christian-education"
+    },
+    {
+        "CalendarId": "59a420c9-6854-43d4-89da-08e3ffa4e07f",
+        "Name": "Church-wide Events",
+        "Description": "Primary calendar of First Church including worship services and other church-wide events.",
+        "IsPublished": true,
+        "RssSlug": "church-wide-events"
+    },
+    {
+        "CalendarId": "d10a6692-e75d-4181-bf65-9fcc00dd10b3",
+        "Name": "City of Pensacola Events",
+        "Description": "Events for the city of Pensacola, Florida",
+        "IsPublished": true,
+        "RssSlug": "city-of-pensacola-events"
+    },
+    {
+        "CalendarId": "c3a1e83f-67ea-46c1-9c3e-a3f900a5de0c",
+        "Name": "District and Conference Events",
+        "Description": "District and Conference events of the United Methodist Church.",
+        "IsPublished": true,
+        "RssSlug": "district-and-conference-events"
+    },
+    {
+        "CalendarId": "3afcb791-03d7-41bc-9f15-a3f900a53fe0",
+        "Name": "Funerals",
+        "Description": "Services of death and resurrection at First United Methodist Church of Pensacola.",
+        "IsPublished": true,
+        "RssSlug": "funerals"
+    },
+    {
+        "CalendarId": "ea8194ce-f865-46be-b1db-3941fd8546b4",
+        "Name": "Henry Roberts Activity Center",
+        "Description": null,
+        "IsPublished": false,
+        "RssSlug": "child-care"
+    },
+    {
+        "CalendarId": "7a201d09-4dd6-49e6-ab49-a3f900a0c285",
+        "Name": "Men's Ministries",
+        "Description": "Activities and events for men of all ages.",
+        "IsPublished": true,
+        "RssSlug": "mens-ministries"
+    },
+    {
+        "CalendarId": "79aab762-f53a-480a-a35f-a3f9009edd65",
+        "Name": "Methodist Children's Academy",
+        "Description": "The Preschool, VPK and After-School Program of First United Methodist Church in beautiful downtown Pensacola.",
+        "IsPublished": true,
+        "RssSlug": "methodist-childrens-academy"
+    },
+    {
+        "CalendarId": "584948b7-f9da-4df9-a221-a3f9009c216a",
+        "Name": "Missions and Outreach",
+        "Description": "Activities and events involving missions and outreach",
+        "IsPublished": true,
+        "RssSlug": "missions-and-outreach"
+    },
+    {
+        "CalendarId": "dbe63e9a-0afa-4d87-aa4e-a3f9009159ed",
+        "Name": "Music and Worship Arts",
+        "Description": "Activities and events involving music and the worship arts",
+        "IsPublished": true,
+        "RssSlug": "music-and-worship-arts"
+    },
+    {
+        "CalendarId": "a187cf16-420c-47c8-8092-a3f900a6da2f",
+        "Name": "Outside and Community Events",
+        "Description": "Community and other external events on the campus of First United Methodist Church.",
+        "IsPublished": true,
+        "RssSlug": "outside-and-community-events"
+    },
+    {
+        "CalendarId": "b0269954-8b75-4466-9dd3-a3f900a15359",
+        "Name": "Ruth's Kitchen",
+        "Description": "Activities and events involving Ruth's Kitchen at First United Methodist Church.",
+        "IsPublished": true,
+        "RssSlug": "ruths-kitchen"
+    },
+    {
+        "CalendarId": "20b18836-cc1b-4370-b24a-a3f900b7ab57",
+        "Name": "Scouting Ministries",
+        "Description": "Activities and events involving the Cub, Boy and Girl scouting programs at First United Methodist Church.",
+        "IsPublished": true,
+        "RssSlug": "scouting-ministries"
+    },
+    {
+        "CalendarId": "144bf537-68ef-4ea1-93c2-a3db011f0fe9",
+        "Name": "Staff Time Away from Church",
+        "Description": "Unpublished calendar used for sheduling staff time off.",
+        "IsPublished": false,
+        "RssSlug": "staff-time-away-from-church"
+    },
+    {
+        "CalendarId": "26a7c5af-440d-47a1-a76a-7706b331dee9",
+        "Name": "The Wright Place",
+        "Description": null,
+        "IsPublished": false,
+        "RssSlug": "the-wright-place"
+    },
+    {
+        "CalendarId": "9c7f8b4e-d0c6-451d-8aba-a3f9009d0cd3",
+        "Name": "Tweens",
+        "Description": "Activities and events for tweens (5th and 6th grade).",
+        "IsPublished": true,
+        "RssSlug": "tweens"
+    },
+    {
+        "CalendarId": "3909588e-55fc-47f4-ba1a-07814a180203",
+        "Name": "Vehicles",
+        "Description": "Unpublished calendar used for scheduling vehicles.",
+        "IsPublished": false,
+        "RssSlug": "vehicles"
+    },
+    {
+        "CalendarId": "b2ad88a9-2dcb-45f2-ac62-a3f900a4ddb4",
+        "Name": "Weddings",
+        "Description": "Wedding ceremonies and rehearsals at First United Methodist Church.",
+        "IsPublished": true,
+        "RssSlug": "weddings"
+    },
+    {
+        "CalendarId": "3451d38a-618c-4b39-9ec3-a3f900a0f837",
+        "Name": "Women's Ministries",
+        "Description": "Activities and events for women of all ages.",
+        "IsPublished": true,
+        "RssSlug": "womens-ministries"
+    },
+    {
+        "CalendarId": "d78cb214-d010-4a26-8fea-a3f9009d63a9",
+        "Name": "Youth",
+        "Description": "Activities and events for youth (7th - 12th grade).",
+        "IsPublished": true,
+        "RssSlug": "youth"
+    }
+]
