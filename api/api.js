@@ -25,12 +25,12 @@ module.exports = function (server) {
 	});
 	
 	// Version-specific controllers
-	var routeBase = '/api/v2';
+	var routeBase = '(/api)?/v2';
 	ormControllerV1(v1);
 	ormController(v2, routeBase);
 	notificationsControllerV1(v1);
 	notificationsController(v2);
 
-	server.use('/api(/v1)?', v1);
+	server.use('(/api)?(/v1)?', v1);
 	server.use(routeBase, v2);
 };
