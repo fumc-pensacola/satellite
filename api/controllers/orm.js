@@ -17,19 +17,16 @@ module.exports = function (router, routeBase) {
       registry = new API.ResourceTypeRegistry(),
       controller = new API.controllers.API(registry);
       
-  var publicResourceTypes = [
+  var resourceTypes = [
     'bulletins',
     'features',
     'witnesses',
     'calendars',
-    'events'
-  ];
-  
-  var privateResourceTypes = [
+    'events',
     'notifications'
   ];
   
-  publicResourceTypes.concat(privateResourceTypes).forEach(function (t) {
+  resourceTypes.forEach(function (t) {
     registry.type(t, {
       adapter: adapter,
       urlTemplates: {
@@ -38,13 +35,12 @@ module.exports = function (router, routeBase) {
     });
   });
   
-  function generateRoutePatterns (resourceTypes, _private) {
+  function generateRoutePatterns (resourceTypes) {
     var multi = '/:type(' + resourceTypes.join('|') + ')',
         single = multi + '/:id',
         links = single + '/links/:relationship';
         
     return {
-      private: _private,
       multi: multi,
       single: single,
       links: links
@@ -53,9 +49,7 @@ module.exports = function (router, routeBase) {
   
   var front = new API.controllers.Front(controller),
       requestHandler = front.apiRequest.bind(front),
-      publicRoutePatterns = generateRoutePatterns(publicResourceTypes, false),
-      privateRoutePatterns = generateRoutePatterns(privateResourceTypes, true),
-      routes = [],
+      patterns = generateRoutePatterns(resourceTypes),
       authRequestHandler = function (req, res) {
         if (Authentication.isAuthenticatedRequest(req)) {
           requestHandler(req, res);
@@ -70,33 +64,28 @@ module.exports = function (router, routeBase) {
         authRequestHandler(req, res);
       };
   
-  [publicRoutePatterns, privateRoutePatterns].forEach(function (p) {
-    var route = { };
-    route[p.multi] = {
-      get: p.private ? authRequestHandler : requestHandler,
-      post: authRequestHandler
-    };
-    route[p.single] = {
-      get: p.private ? authRequestHandler : requestHandler,
-      patch: authRequestHandler,
-      delete: deleteHandler
-    };
-    route[p.links] = {
-      get: p.private ? authRequestHandler : requestHandler,
-      patch: authRequestHandler,
-      delete: deleteHandler
-    };
-    routes.push(route);
-  });
+  var route = { };
+  route[patterns.multi] = {
+    get: requestHandler,
+    post: authRequestHandler
+  };
+  route[patterns.single] = {
+    get: requestHandler,
+    patch: authRequestHandler,
+    delete: deleteHandler
+  };
+  route[patterns.links] = {
+    get: requestHandler,
+    patch: authRequestHandler,
+    delete: deleteHandler
+  };
   
   
-  routes.forEach(function (r) {
-    for (var pattern in r) {
-      var route = router.route(pattern);
-      for (var method in r[pattern]) {
-        route[method](r[pattern][method]);
-        // E.g. route.get(requestHandler);
-      }
+  for (var pattern in route) {
+    var r = router.route(pattern);
+    for (var method in route[pattern]) {
+      r[method](route[pattern][method]);
+      // E.g. route.get(requestHandler);
     }
-  });
+  }
 };
