@@ -44,6 +44,7 @@ schema.statics.scrape = function (start, end, page) {
         
         // Recur for other pages
         if (page === 0) {
+          console.log(body, ACS_USERNAME, ACS_PASSWORD, ACS_SITENUMBER);
           pages = Array.apply(0, new Array(body.PageCount - 1)).map(function (x, i) {
             return Event.scrape(start, end, i + 1);
           });

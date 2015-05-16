@@ -7,7 +7,8 @@ var eventPages = [
   require('./events-page-3.json'),
 ];
 
-var calendarResponse = require('./calendars.json');
+var calendarResponse = require('./calendars.json'),
+    eventsSinglePage = require('./events-single-page.json');
 
 function switcheroo (json) {
   // Event
@@ -37,7 +38,9 @@ module.exports = {
       .get('/events?startdate=05%2F02%2F2015&stopdate=05%2F03%2F2015&pageIndex=1&pageSize=500')
       .reply(200, JSON.stringify(eventPages[1]))
       .get('/events?startdate=05%2F02%2F2015&stopdate=05%2F03%2F2015&pageIndex=2&pageSize=500')
-      .reply(200, JSON.stringify(switcheroo(eventPages[2])));
+      .reply(200, JSON.stringify(switcheroo(eventPages[2])))
+      .get('/events?startdate=05%2F03%2F2015&stopdate=05%2F03%2F2015&pageIndex=0&pageSize=500')
+      .reply(200, JSON.stringify(eventsSinglePage));
       
     nock('https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER)
       .get('/calendars')

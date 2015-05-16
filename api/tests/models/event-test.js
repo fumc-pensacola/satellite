@@ -31,6 +31,13 @@ describe('Event', function () {
       }, done).catch(done);
     });
     
+    it('should work for only a single page of events', function (done) {
+      Event.scrape(new Date('5/3/2015'), new Date('5/3/2015')).then(function (events) {
+        assert.equal(events.length, 2);
+        done();
+      }, done).catch(done);
+    });
+    
     it('should insert events into the database', function (done) {
       Event.count({ }, function (err, count) {
         if (err) {
