@@ -27,7 +27,6 @@ module.exports = {
   seed: function() {
     return new Promise(function(resolve, reject) {
       for (var m in seeds) {
-        console.log(m);
         models[m].create(seeds[m], function(err) {
           if (err) {
             reject(err);

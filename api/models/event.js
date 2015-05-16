@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     request = require('request'),
     moment = require('moment'),
+    Calendar = require('./calendar'),
     ACS_USERNAME = process.env.ACS_USERNAME,
     ACS_PASSWORD = process.env.ACS_PASSWORD,
     ACS_SITENUMBER = process.env.ACS_SITENUMBER,

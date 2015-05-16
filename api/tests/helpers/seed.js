@@ -19,8 +19,7 @@ module.exports = {
     "_id": "43c1cc21-573b-483b-a6a2-a3f80136df06",
     "name": "Children",
     "color": "#1cc2f2",
-    "image": "Children.jpg",
-    "events": ["d99cc7c3-bbdf-499a-af29-a41800b1d9cb"]
+    "image": "Children.jpg"
   }, {
     "_id": "36b2b1ce-892d-4e23-82dc-a3f900a33e6d",
     "name": "Christian Education",

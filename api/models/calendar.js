@@ -10,8 +10,7 @@ var schema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
   color: { type: String },
-  image: { type: String },
-  events: [{ type: String, ref: 'Event' }]
+  image: { type: String }
 }, {
   autoIndex: NODE_ENV !== 'production'
 });

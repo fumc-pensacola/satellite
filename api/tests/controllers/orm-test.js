@@ -50,8 +50,11 @@ describe('ORM', function () {
     });
   });
   
-  it('can GET a record’s *-to-many relationships', function (done) {
-    request.get(base + '/calendars/43c1cc21-573b-483b-a6a2-a3f80136df06/links/events', {
+  // calendars/{id}/links/events doesn’t work,
+  // because we’re not storing an array of events on Calendar.
+  // This relationship should only be retrieved event -> calendar.
+  it('can GET a record’s *-to-many relationships by filtering ref', function (done) {
+    request.get(base + '/events?filter[simple][calendar]=43c1cc21-573b-483b-a6a2-a3f80136df06', {
       json: true
     }, function (err, response, body) {
       assert.ok(!err);
