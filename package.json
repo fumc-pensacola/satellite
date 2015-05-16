@@ -28,7 +28,7 @@
     "loopback-connector-soap": "^1.1.1",
     "moment": "~2.8.3",
     "moment-timezone": "^0.2.4",
-    "mongoose": ">= 4.0",
+    "mongoose": "3.8.x",
     "natural": "~0.1.24",
     "newrelic": "^1.14.1",
     "pg": "~3.5.0",
