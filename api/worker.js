@@ -1,4 +1,4 @@
-var Calendar = require('./models/calendar').
+var Calendar = require('./models/calendar'),
     Event = require('./models/event');
 
 module.exports = {

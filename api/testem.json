@@ -1,7 +1,10 @@
 {
+  "src_files": [
+    "tests/**/*-test.js"
+  ],
   "launchers": {
     "Mocha": {
-      "command": "mocha tests/**/*-test.js"
+      "command": "NODE_ENV=test mocha tests/**/*-test.js"
     }
   },
   "launch_in_ci": [

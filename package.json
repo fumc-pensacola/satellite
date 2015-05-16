@@ -8,7 +8,8 @@
     "npm": "2.5.x"
   },
   "scripts": {
-    "start": "foreman start web"
+    "start": "foreman start web",
+    "test": "NODE_ENV=test mocha api/tests/**/*-test.js"
   },
   "repository": {
     "type": "git",

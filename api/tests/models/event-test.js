@@ -1,7 +1,7 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') });
 
 var assert = require('assert'),
-    createServer = require('../helpers/server');
+    server = require('../helpers/server');
     db = require('../helpers/db'),
     Event = require('../../models/event');
 
@@ -10,7 +10,7 @@ describe('Event', function () {
   describe('scrape', function () {
     
     beforeEach(function () {
-      createServer();
+      server.create();
     });
     
     before(function (done) {
@@ -21,13 +21,12 @@ describe('Event', function () {
     });
     
     after(function () {
-      db.disconnect();
+      server.destroy();
     });
-    
     
     it('should resolve to all three pages of events', function (done) {
       Event.scrape(new Date('5/1/2015'), new Date('5/2/2015')).then(function (events) {
-        // assert.equal(events.length, 6);
+        assert.equal(events.length, 6);
         done();
       }, done).catch(done);
     });

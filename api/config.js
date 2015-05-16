@@ -1,11 +1,9 @@
 var mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
     NODE_ENV = process.env.NODE_ENV,
-    MONGOLAB_URI = process.env.MONGOLAB_URI;
+    MONGO_URI = NODE_ENV === 'test' ? process.env.MONGO_TEST : process.env.MONGOLAB_URI;
 
 module.exports = function (server) {
-  
-  mongoose.connect(MONGOLAB_URI);
 
   var forceSSL = function (req, res, next) {
     if (req.headers['x-forwarded-proto'] !== 'https') {
@@ -28,5 +26,8 @@ module.exports = function (server) {
   if (NODE_ENV === 'production') {
     server.use(forceSSL);
   }
-
+  
+  return new Promise(function(resolve, reject) {
+    mongoose.connect(MONGO_URI, resolve);
+  });
 };
