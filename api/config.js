@@ -24,7 +24,8 @@ module.exports = function (server) {
   server.use(bodyParser.json());
   server.use(allowCrossDomain);
   if (NODE_ENV === 'production') {
-    server.use(forceSSL);
+    // TODO reenable after getting an SSL certificate
+    // server.use(forceSSL);
   }
   
   return new Promise(function(resolve, reject) {
