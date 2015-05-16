@@ -6,7 +6,9 @@ module.exports = {
   scrapeCalendars: function () {
     Calendar.scrape();
   },
-  scrapeEvents: function () {
-    Event.scrape(moment().subtract(1, 'weeks'), moment().add(2, 'weeks'));
+  scrapeEvents: function (start, end) {
+    start = start || moment().subtract(1, 'weeks');
+    end = end || moment().add(2, 'weeks');
+    Event.scrape(start, end);
   }
 };

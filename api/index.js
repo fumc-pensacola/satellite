@@ -14,8 +14,9 @@ require('./api')(app);
 
 var calendarsSchedule = later.parse.text('every 30 minutes');
 later.setInterval(Worker.scrapeCalendars, calendarsSchedule);
+later.setInterval(Worker.scrapeEvents, calendarsSchedule);
 Worker.scrapeCalendars();
-Worker.scrapeEvents('5/1/2015', '5/20/2015');
+Worker.scrapeEvents();
 
 var serverReady = new Promise(function (resolve, reject) {
   var server = app.listen(port, function () {
