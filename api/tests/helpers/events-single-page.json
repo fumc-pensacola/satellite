@@ -1,0 +1,43 @@
+{
+    "Page": [
+        {
+            "Description": null,
+            "EventDateId": "8f8c196c-9f5a-4fee-b483-a3fa0162d77c",
+            "EventId": "15b0f198-54f2-4f10-a234-a3f5010dccd7",
+            "EventName": "WACCI Art Show",
+            "EventType": null,
+            "EventTypeId": null,
+            "IsPublished": false,
+            "LocationId": null,
+            "Location": null,
+            "StartDate": "2015-04-30 00:00:00.000",
+            "StopDate": "2015-06-04 23:59:00.000",
+            "Status": "Confirmed",
+            "CalendarName": "Artist of the Month",
+            "IsRecurringEvent": false,
+            "CalendarId": "9542e9fd-bdad-4412-baee-a11600a121c1",
+            "AllowRegistration": false
+        },
+        {
+            "Description": "Fellowship trip for 4th graders.",
+            "EventDateId": "14db77b9-4756-46d1-8e14-a41800b1d9d0",
+            "EventId": "d99cc7c3-bbdf-499a-af29-a41800b1d9cb",
+            "EventName": "4th Grade Mystry Trip",
+            "EventType": null,
+            "EventTypeId": null,
+            "IsPublished": true,
+            "LocationId": "b4fd788e-d676-4420-bcb8-a3f900bb1527",
+            "Location": "Off-Campus",
+            "StartDate": "2015-05-01 00:00:00.000",
+            "StopDate": "2015-05-03 23:59:00.000",
+            "Status": "Confirmed",
+            "CalendarName": "Children",
+            "IsRecurringEvent": false,
+            "CalendarId": "43c1cc21-573b-483b-a6a2-a3f80136df06",
+            "AllowRegistration": false
+        }
+    ],
+    "PageCount": 1,
+    "PageIndex": 0,
+    "PageSize": 2
+}

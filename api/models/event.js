@@ -24,7 +24,7 @@ schema.statics.scrape = function (start, end, page) {
   return new Promise(function (resolve, reject) {
     var url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/events';
     page = page || 0;
-    request(url, {
+    console.log(request(url, {
       json: true,
       auth: {
         user: ACS_USERNAME,
@@ -44,7 +44,6 @@ schema.statics.scrape = function (start, end, page) {
         
         // Recur for other pages
         if (page === 0) {
-          console.log(body, ACS_USERNAME, ACS_PASSWORD, ACS_SITENUMBER);
           pages = Array.apply(0, new Array(body.PageCount - 1)).map(function (x, i) {
             return Event.scrape(start, end, i + 1);
           });
@@ -69,7 +68,7 @@ schema.statics.scrape = function (start, end, page) {
           reject(err);
         });
       }
-    });
+    }));
   });
 };
 
