@@ -5,7 +5,7 @@ var assert = require('assert'),
     db = require('../helpers/db'),
     Calendar = require('../../models/calendar');
 
-describe('Event', function () {
+describe('Calendar', function () {
   
   describe('scrape', function () {
     
