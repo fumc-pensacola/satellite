@@ -81,8 +81,8 @@ schema.statics.transform = function (event) {
     EventDateId: '_id',
     EventName: 'name',
     Location: 'location',
-    StartDate: function (e) { return ['start', moment.tz(new Date(e.StartDate), 'America/Chicago')]; },
-    StopDate: function (e) { return ['end', moment.tz(new Date(e.StopDate), 'America/Chicago')]; },
+    StartDate: function (e) { return ['start', new Date(e.StartDate + ' ' + moment.tz(new Date(e.StartDate), 'America/Chicago').zoneAbbr())]; },
+    StopDate: function (e) { return ['end', new Date(e.StopDate + ' ' + moment.tz(new Date(e.StopDate), 'America/Chicago').zoneAbbr())]; },
     CalendarId: 'calendar'
   }, e = { };
   

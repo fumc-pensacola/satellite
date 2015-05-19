@@ -1,7 +1,8 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') });
 
 var assert = require('assert'),
-    server = require('../helpers/server');
+    moment = require('moment-timezone'),
+    server = require('../helpers/server'),
     db = require('../helpers/db'),
     Event = require('../../models/event');
 
@@ -73,7 +74,17 @@ describe('Event', function () {
     
     it('should optionally use a function to transform values', function () {
       var e = Event.transform({ StartDate: '5/1/2015 12:00 PM' });
-      assert.equal(e.start.format(), '2015-05-01T07:00:00-05:00');
+      assert.ok(e.start instanceof Date);
+    });
+    
+    it('should interpret times as CST', function () {
+      var e = Event.transform({ StartDate: '2/1/2015 12:00 PM' });
+      assert.equal(moment.tz(e.start, 'America/Chicago').format(), '2015-02-01T12:00:00-06:00');
+    });
+    
+    it('should interpret times as CDT during daylight savings', function () {
+      var e = Event.transform({ StartDate: '5/1/2015 12:00 PM' });
+      assert.equal(moment.tz(e.start, 'America/Chicago').format(), '2015-05-01T12:00:00-05:00');
     });
     
     it('should exclude an object’s non-whitelisted keys', function () {
