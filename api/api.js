@@ -1,7 +1,7 @@
 var express = require('express'),
-		ACS = require('./acs'),
+		ACS = require('./v1/acs'),
 		authenticationController = require('./controllers/authentication'),
-		calendarsController = require('./controllers/calendars'),
+		calendarsController = require('./v1/controllers/calendars'),
 		emailerController = require('./controllers/emailer'),
 		fileController = require('./controllers/file'),
 		notificationsController = require('./controllers/notifications'),
@@ -13,13 +13,11 @@ var express = require('express'),
 module.exports = function (server) {
 
 	var v1 = express.Router(),
-			v2 = express.Router(),
-			acs = new ACS();
+			v2 = express.Router();
 	
 	// Shared controllers
 	[v1, v2].forEach(function (v) {
 		authenticationController(v);
-		calendarsController(v, acs);
 		emailerController(v);
 		fileController(v);
 	});
@@ -30,6 +28,7 @@ module.exports = function (server) {
 	ormController(v2, routeBase);
 	notificationsControllerV1(v1);
 	notificationsController(v2);
+	calendarsController(v1, new ACS());
 
 	server.use('(/api)?(/v1)?', v1);
 	server.use(routeBase, v2);

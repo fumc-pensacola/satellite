@@ -38,36 +38,39 @@ schema.statics.scrape = function (start, end, page) {
       }
     }, function (error, response, body) {
       if (error) {
-        reject(error);
-      } else {
-        var pages = [];
-        
-        // Recur for other pages
-        if (page === 0) {
-          pages = Array.apply(0, new Array(body.PageCount - 1)).map(function (x, i) {
-            return Event.scrape(start, end, i + 1);
-          });
-        }
-        
-        Promise.all(body.Page.map(function (e) {
-          return new Promise(function (res, rej) {
-            e = Event.transform(e);
-            var id = e._id;
-            delete e._id;
-            Event.update({ _id: id }, e, { upsert: true }, function (err, raw) {
-              if (err) {
-                rej(err);
-              } else {
-                res(e);
-              }
-            });
-          });
-        }).concat(pages)).then(function (events) {
-          resolve([].concat.apply([], events));
-        }, function (err) {
-          reject(err);
+        return reject(error);
+      }
+      if (!body || !body.Page) {
+        return reject(new Error('ACS API response was not as expected: ' + body));
+      }
+      
+      var pages = [];
+      
+      // Recur for other pages
+      if (page === 0) {
+        pages = Array.apply(0, new Array(body.PageCount - 1)).map(function (x, i) {
+          return Event.scrape(start, end, i + 1);
         });
       }
+      
+      Promise.all(body.Page.map(function (e) {
+        return new Promise(function (res, rej) {
+          e = Event.transform(e);
+          var id = e._id;
+          delete e._id;
+          Event.update({ _id: id }, e, { upsert: true }, function (err, raw) {
+            if (err) {
+              rej(err);
+            } else {
+              res(e);
+            }
+          });
+        });
+      }).concat(pages)).then(function (events) {
+        resolve([].concat.apply([], events));
+      }, function (err) {
+        reject(err);
+      });
     });
   });
 };
