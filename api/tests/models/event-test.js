@@ -66,9 +66,14 @@ describe('Event', function () {
   describe('transform', function () {
     
     it('should transform an object’s whitelisted keys', function () {
-      var e = Event.transform({ EventId: '1', EventName: 'Fun Times' });
+      var e = Event.transform({ EventDateId: '1', EventName: 'Fun Times' });
       assert.equal(e._id, '1');
       assert.equal(e.name, 'Fun Times');
+    });
+    
+    it('should optionally use a function to transform values', function () {
+      var e = Event.transform({ StartDate: '5/1/2015 12:00 PM' });
+      assert.equal(e.start.format(), '2015-05-01T07:00:00-05:00');
     });
     
     it('should exclude an object’s non-whitelisted keys', function () {

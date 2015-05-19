@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
     request = require('request'),
-    moment = require('moment'),
+    moment = require('moment-timezone'),
     Calendar = require('./calendar'),
     ACS_USERNAME = process.env.ACS_USERNAME,
     ACS_PASSWORD = process.env.ACS_PASSWORD,
@@ -75,17 +75,22 @@ schema.statics.scrape = function (start, end, page) {
 schema.statics.transform = function (event) {
   var map = {
     Description: 'description',
-    EventId: '_id',
+    EventDateId: '_id',
     EventName: 'name',
     Location: 'location',
-    StartDate: 'start',
-    StopDate: 'end',
+    StartDate: function (e) { return ['start', moment.tz(new Date(e.StartDate), 'America/Chicago')]; },
+    StopDate: function (e) { return ['end', moment.tz(new Date(e.StopDate), 'America/Chicago')]; },
     CalendarId: 'calendar'
   }, e = { };
   
   for (var key in event) {
     if (map[key]) {
-      e[map[key]] = event[key];
+      if (map[key] instanceof Function) {
+        var hash = map[key](event);
+        e[hash[0]] = hash[1];
+      } else {
+        e[map[key]] = event[key];
+      }
     }
   }
   
