@@ -27,34 +27,36 @@ schema.statics.scrape = function () {
       }
     }, function (error, response, body) {
       if (error) {
-        reject(error);
-      } else {
-        Promise.all(body.map(function (c) {
-          if (!c.IsPublished) {
-            return;
-          }
-          return new Promise(function (res, rej) {
-            c = Calendar.transform(c);
-            var id = c._id;
-            delete c._id;
-            Calendar.update({ _id: id }, c, { upsert: true }, function (err) {
-              if (err) {
-                rej(err);
-              } else {
-                res(c);
-              }
-            });
-          });
-        })).then(function (resolutions) {
-          resolve([].concat.apply([], resolutions).filter(function (c) {
-            if (c) {
-              return c;
-            }
-          }));
-        }, function (err) {
-          reject(err);
-        });
+        return reject(error);
       }
+      if (!(body instanceof Array)) {
+        return reject(new Error('ACS API response was not an Array: ' + body));
+      }
+      Promise.all(body.map(function (c) {
+        if (!c.IsPublished) {
+          return;
+        }
+        return new Promise(function (res, rej) {
+          c = Calendar.transform(c);
+          var id = c._id;
+          delete c._id;
+          Calendar.update({ _id: id }, c, { upsert: true }, function (err) {
+            if (err) {
+              rej(err);
+            } else {
+              res(c);
+            }
+          });
+        });
+      })).then(function (resolutions) {
+        resolve([].concat.apply([], resolutions).filter(function (c) {
+          if (c) {
+            return c;
+          }
+        }));
+      }, function (err) {
+        reject(err);
+      });
     });
   });
 };

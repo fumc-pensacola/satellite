@@ -2,7 +2,7 @@ var moment = require('moment'),
     Promise = require('bluebird').Promise,
     ical = require('icalendar'),
     mongoose = require('mongoose'),
-    Calendar = require('../models/calendar');
+    Calendar = require('../../models/calendar');
 
 module.exports = function (router, ACS) {
 
