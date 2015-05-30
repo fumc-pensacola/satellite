@@ -44,16 +44,27 @@ schema.statics.scrape = function () {
             if (err) {
               rej(err);
             } else {
+              c._id = id;
               res(c);
             }
           });
         });
-      })).then(function (resolutions) {
-        resolve([].concat.apply([], resolutions).filter(function (c) {
+      })).then(function (calendars) {
+        calendars = [].concat.apply([], calendars).filter(function (c) {
           if (c) {
             return c;
           }
-        }));
+        });
+        
+        Calendar.find()
+          .where('_id')
+          .nin(calendars.map(function (c) { return c._id; }))
+          .remove().exec(function (err) {
+            if (err) {
+              return reject(err);
+            }
+            resolve(calendars);
+          });
       }, function (err) {
         reject(err);
       });

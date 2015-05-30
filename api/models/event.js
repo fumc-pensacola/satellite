@@ -58,16 +58,26 @@ schema.statics.scrape = function (start, end, page) {
           e = Event.transform(e);
           var id = e._id;
           delete e._id;
-          Event.update({ _id: id }, e, { upsert: true }, function (err, raw) {
+          Event.update({ _id: id }, e, { upsert: true }, function (err, n, result) {
             if (err) {
               rej(err);
             } else {
+              e._id = id;
               res(e);
             }
           });
         });
       }).concat(pages)).then(function (events) {
-        resolve([].concat.apply([], events));
+        events = [].concat.apply([], events);
+        Event.find()
+          .where('start').gte(start).lte(end)
+          .where('_id').nin(events.map(function (e) { return e._id; }))
+          .remove().exec(function (err) {
+            if (err) {
+              return reject(err);
+            }
+            resolve(events);
+          });
       }, function (err) {
         reject(err);
       });

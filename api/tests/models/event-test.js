@@ -44,7 +44,7 @@ describe('Event', function () {
         if (err) {
           return done(err);
         }
-        assert.equal(count, 6);
+        assert.ok(count > 0);
         done();
       });
     });
@@ -60,6 +60,16 @@ describe('Event', function () {
           done();
         });
       }, done).catch(done);
+    });
+    
+    it('should delete events that have been deleted', function (done) {
+      Event.scrape(new Date('4/29/2015'), new Date('5/2/2015')).then(function (events) {
+        Event.count({ _id: '8f8c196c-9f5a-4fee-b483-a3fa0162d77c' }, function (err, count) {
+          assert.ok(!err);
+          assert.equal(count, 0);
+          done();
+        })
+      });
     });
     
   });

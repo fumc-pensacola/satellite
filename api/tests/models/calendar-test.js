@@ -49,6 +49,16 @@ describe('Calendar', function () {
         });
       }, done).catch(done);
     });
+    
+    it('should delete deleted calendars', function (done) {
+      Calendar.scrape().then(function (calendars) {
+        Calendar.count({ _id: 'f088210f-648c-4236-a216-a3f900a07fd9' }, function (err, count) {
+          assert.ok(!err);
+          assert.equal(count, 0);
+          done();
+        });
+      }, done).catch(done);
+    });
   });
   
   describe('transform', function () {

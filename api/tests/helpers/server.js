@@ -21,6 +21,16 @@ function switcheroo (json) {
   return json;
 }
 
+function deleteOne (json) {
+  // Event
+  if (json.Page) {
+    json.Page.shift();
+  } else {
+    json.shift();
+  }
+  return json;
+}
+
 nock.enableNetConnect();
 
 module.exports = {
@@ -40,13 +50,17 @@ module.exports = {
       .get('/events?startdate=05%2F02%2F2015&stopdate=05%2F03%2F2015&pageIndex=2&pageSize=500')
       .reply(200, JSON.stringify(switcheroo(eventPages[2])))
       .get('/events?startdate=05%2F03%2F2015&stopdate=05%2F03%2F2015&pageIndex=0&pageSize=500')
-      .reply(200, JSON.stringify(eventsSinglePage));
+      .reply(200, JSON.stringify(eventsSinglePage))
+      .get('/events?startdate=04%2F29%2F2015&stopdate=05%2F02%2F2015&pageIndex=0&pageSize=500')
+      .reply(200, JSON.stringify(deleteOne(eventsSinglePage)));
       
     nock('https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER)
       .get('/calendars')
       .reply(200, JSON.stringify(calendarResponse))
       .get('/calendars')
-      .reply(200, JSON.stringify(switcheroo(calendarResponse)));
+      .reply(200, JSON.stringify(switcheroo(calendarResponse)))
+      .get('/calendars')
+      .reply(200, JSON.stringify(deleteOne(calendarResponse)));
   },
   destroy: function () {
     nock.enableNetConnect();
