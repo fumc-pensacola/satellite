@@ -1,9 +1,0 @@
-<h1 class="ui header">Featured Content</h1>
-
-<button class="ui blue button" {{action "newFeature"}}>New Featured Content</button>
-
-<div class="ui divided list">
-  {{#each feature in arrangedContent itemController="feature"}}
-    {{view "feature"}}
-  {{/each}}
-</div>
