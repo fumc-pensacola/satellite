@@ -88,24 +88,24 @@ function ACS (ACSGeneralService, ACSEventService) {
   this.tokenExpiry = moment();
 
   this.login = function() {
-    return new Promise((resolve, reject) => {
+    return new Promise(function(resolve, reject) {
       console.log('Logging in...');
       try {
-        ACSGeneralService.getLoginToken({ secid: secId, siteid: siteId }, (err, response) => {
+        ACSGeneralService.getLoginToken({ secid: secId, siteid: siteId }, function(err, response) {
           if (err || !response.getLoginTokenResult) {
             console.error('Error logging in.', err);
             reject(err || new Error('getLoginToken failed'));
           } else {
-            self.tokenExpiry = moment().add(59, 'minutes');
+            this.tokenExpiry = moment().add(59, 'minutes');
             token = response.getLoginTokenResult;
             console.log('Logged in!');
-            resolve(self);
+            resolve(this);
           }
-        });
+        }.bind(this));
       } catch (error) {
         reject(error);
       }
-    });
+    }.bind(this));
   };
 
   this.loggedIn = function() {
