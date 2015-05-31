@@ -1,5 +1,5 @@
 var express = require('express');
 
 module.exports = function (app) {
-	app.use('/', express.static('./dist'));
+  app.use('/', express.static('./dist'));
 };
