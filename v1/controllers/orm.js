@@ -1,4 +1,6 @@
-var Bulletin = require('../../models/bulletin'),
+"use strict";
+
+let Bulletin = require('../../models/bulletin'),
     Witness = require('../../models/witness'),
     Feature = require('../../models/feature'),
     Calendar = require('../../models/calendar'),
@@ -7,7 +9,7 @@ var Bulletin = require('../../models/bulletin'),
 
 module.exports = function(router) {
   
-  var types = {
+  let types = {
     bulletins: Bulletin,
     witnesses: Witness,
     features: Feature,
@@ -16,12 +18,12 @@ module.exports = function(router) {
   };
   
   router.get('/:type(' + Object.keys(types).join('|') + ')', (req, res) => {
-    var Model = types[req.params.type],
+    let Model = types[req.params.type],
         query = req.query,
         modifiers = [];
     
     if (query.orderBy) {
-      var sortString = query.orderBy.replace(':A', '').replace(/(.+?):Z/, '-$1').replace(',', ' ');
+      let sortString = query.orderBy.replace(':A', '').replace(/(.+?):Z/, '-$1').replace(',', ' ');
       modifiers.push({
         method: 'sort',
         params: [sortString]
@@ -29,7 +31,7 @@ module.exports = function(router) {
       delete query.orderBy;
     }
     
-    var find = Model.find(req.query);
+    let find = Model.find(req.query);
     modifiers.forEach(function(m) {
       find = find[m.method].apply(find, m.params);
     });

@@ -1,6 +1,8 @@
+"use strict";
+
 try { require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') }); } catch (e) {}
 
-var assert = require('assert'),
+let assert = require('assert'),
     server = require('../helpers/server'),
     db = require('../helpers/db'),
     Calendar = require('../../models/calendar');
@@ -64,13 +66,13 @@ describe('Calendar', () => {
   describe('transform', () => {
     
     it('should transform an object’s whitelisted keys', () => {
-      var c = Calendar.transform({ CalendarId: '1', Name: 'Fun Times' });
+      let c = Calendar.transform({ CalendarId: '1', Name: 'Fun Times' });
       assert.equal(c._id, '1');
       assert.equal(c.name, 'Fun Times');
     });
     
     it('should exclude an object’s non-whitelisted keys', () => {
-      var c = Calendar.transform({ CalendarId: '1', Name: 'Fun Times', RssSlug: 'http://goo.gl' });
+      let c = Calendar.transform({ CalendarId: '1', Name: 'Fun Times', RssSlug: 'http://goo.gl' });
       assert.ok(!c.RssSlug);
     });
   });

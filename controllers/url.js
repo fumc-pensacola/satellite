@@ -1,4 +1,6 @@
-var request = require('request');
+"use strict";
+
+let request = require('request');
 
 module.exports = function(server) {
 

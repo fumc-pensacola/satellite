@@ -1,4 +1,6 @@
-var moment = require('moment-timezone'),
+"use strict";
+
+let moment = require('moment-timezone'),
     request = require('request'),
     Authentication = require('../authentication');
 
@@ -6,7 +8,7 @@ module.exports = function(router) {
   
   router.post('/notify/:channel', (req, res) => {
     if (Authentication.isAuthenticatedRequest(req)) {
-      var notification = req.body.notification,
+      let notification = req.body.notification,
           channel = req.params.channel.replace('everyone', ''),
           tokenEnvironment = req.body.tokenEnvironment;
       

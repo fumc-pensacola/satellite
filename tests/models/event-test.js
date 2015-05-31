@@ -1,6 +1,8 @@
+"use strict";
+
 try { require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') }); } catch (e) {}
 
-var assert = require('assert'),
+let assert = require('assert'),
     moment = require('moment-timezone'),
     server = require('../helpers/server'),
     db = require('../helpers/db'),
@@ -77,28 +79,28 @@ describe('Event', () => {
   describe('transform', () => {
     
     it('should transform an object’s whitelisted keys', () => {
-      var e = Event.transform({ EventDateId: '1', EventName: 'Fun Times' });
+      let e = Event.transform({ EventDateId: '1', EventName: 'Fun Times' });
       assert.equal(e._id, '1');
       assert.equal(e.name, 'Fun Times');
     });
     
     it('should optionally use a function to transform values', () => {
-      var e = Event.transform({ StartDate: '5/1/2015 12:00 PM' });
+      let e = Event.transform({ StartDate: '5/1/2015 12:00 PM' });
       assert.ok(e.start instanceof Date);
     });
     
     it('should interpret times as CST', () => {
-      var e = Event.transform({ StartDate: '2/1/2015 12:00 PM' });
+      let e = Event.transform({ StartDate: '2/1/2015 12:00 PM' });
       assert.equal(moment.tz(e.start, 'America/Chicago').format(), '2015-02-01T12:00:00-06:00');
     });
     
     it('should interpret times as CDT during daylight savings', () => {
-      var e = Event.transform({ StartDate: '5/1/2015 12:00 PM' });
+      let e = Event.transform({ StartDate: '5/1/2015 12:00 PM' });
       assert.equal(moment.tz(e.start, 'America/Chicago').format(), '2015-05-01T12:00:00-05:00');
     });
     
     it('should exclude an object’s non-whitelisted keys', () => {
-      var e = Event.transform({ EventId: '1', EventName: 'Fun Times', RssSlug: 'http://goo.gl' });
+      let e = Event.transform({ EventId: '1', EventName: 'Fun Times', RssSlug: 'http://goo.gl' });
       assert.ok(!e.RssSlug);
     });
     

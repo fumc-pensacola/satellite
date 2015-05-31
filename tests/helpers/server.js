@@ -1,13 +1,16 @@
-var nock = require('nock'),
-    ACS_SITENUMBER = process.env.ACS_SITENUMBER;
+"use strict";
+
+let nock = require('nock');
+
+const ACS_SITENUMBER = process.env.ACS_SITENUMBER;
     
-var eventPages = [
+let eventPages = [
   require('./events-page-1.json'),
   require('./events-page-2.json'),
   require('./events-page-3.json'),
 ];
 
-var calendarResponse = require('./calendars.json'),
+let calendarResponse = require('./calendars.json'),
     eventsSinglePage = require('./events-single-page.json');
 
 function switcheroo (json) {

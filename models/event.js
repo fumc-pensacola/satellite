@@ -1,13 +1,16 @@
-var mongoose = require('mongoose'),
+"use strict";
+
+let mongoose = require('mongoose'),
     request = require('request'),
     moment = require('moment-timezone'),
-    Calendar = require('./calendar'),
-    ACS_USERNAME = process.env.ACS_USERNAME,
-    ACS_PASSWORD = process.env.ACS_PASSWORD,
-    ACS_SITENUMBER = process.env.ACS_SITENUMBER,
-    NODE_ENV = process.env.NODE_ENV;
+    Calendar = require('./calendar');
+    
+const ACS_USERNAME = process.env.ACS_USERNAME,
+      ACS_PASSWORD = process.env.ACS_PASSWORD,
+      ACS_SITENUMBER = process.env.ACS_SITENUMBER,
+      NODE_ENV = process.env.NODE_ENV;
 
-var schema = new mongoose.Schema({
+let schema = new mongoose.Schema({
   _id: { type: String, required: true },
   name: { type: String, required: true },
   description: { type: String },
@@ -20,9 +23,9 @@ var schema = new mongoose.Schema({
 });
 
 schema.statics.scrape = function(start, end, page) {
-  var Event = this;
+  let Event = this;
   return new Promise((resolve, reject) => {
-    var url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/events';
+    let url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/events';
     page = page || 0;
     request(url, {
       json: true,
@@ -44,7 +47,7 @@ schema.statics.scrape = function(start, end, page) {
         return reject(new Error('ACS API response was not as expected: ' + body));
       }
       
-      var pages = [];
+      let pages = [];
       
       // Recur for other pages
       if (page === 0) {
@@ -56,7 +59,7 @@ schema.statics.scrape = function(start, end, page) {
       Promise.all(body.Page.map(e => {
         return new Promise((res, rej) => {
           e = Event.transform(e);
-          var id = e._id;
+          let id = e._id;
           delete e._id;
           Event.update({ _id: id }, e, { upsert: true }, (err, n, result) => {
             if (err) {
@@ -86,7 +89,7 @@ schema.statics.scrape = function(start, end, page) {
 };
 
 schema.statics.transform = function(event) {
-  var map = {
+  let map = {
     Description: 'description',
     EventDateId: '_id',
     EventName: 'name',
@@ -96,10 +99,10 @@ schema.statics.transform = function(event) {
     CalendarId: 'calendar'
   }, e = { };
   
-  for (var key in event) {
+  for (let key in event) {
     if (map[key]) {
       if (map[key] instanceof Function) {
-        var hash = map[key](event);
+        let hash = map[key](event);
         e[hash[0]] = hash[1];
       } else {
         e[map[key]] = event[key];

@@ -1,4 +1,6 @@
-var sendgrid = require('sendgrid')(process.env.SENDGRID_USER, process.env.SENDGRID_API_KEY),
+"use strict";
+
+let sendgrid = require('sendgrid')(process.env.SENDGRID_USER, process.env.SENDGRID_API_KEY),
     Setting = require('../models/setting');
 
 module.exports = function(router) {

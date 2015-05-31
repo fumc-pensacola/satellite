@@ -1,5 +1,6 @@
-var mongoose = require('mongoose'),
-    MONGO_TEST = process.env.MONGO_TEST,
+"use strict";
+
+let mongoose = require('mongoose'),
     seeds = require('./seed'),
     models = {
       Bulletin: require('../../models/bulletin'),
@@ -10,6 +11,8 @@ var mongoose = require('mongoose'),
       Setting: require('../../models/setting'),
       Witness: require('../../models/witness')
     };
+    
+const MONGO_TEST = process.env.MONGO_TEST;
 
 module.exports = {
   connect: function() {
@@ -26,7 +29,7 @@ module.exports = {
   },
   seed: function() {
     return new Promise((resolve, reject) => {
-      for (var m in seeds) {
+      for (let m in seeds) {
         models[m].create(seeds[m], err => {
           if (err) {
             reject(err);

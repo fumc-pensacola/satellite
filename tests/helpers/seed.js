@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
   "Bulletin": [{
     "date": new Date("2015-04-19T07:00:00.000Z"),

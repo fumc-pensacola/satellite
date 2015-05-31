@@ -1,4 +1,6 @@
-var express = require('express'),
+"use strict";
+
+let express = require('express'),
     ACS = require('./v1/acs'),
     authenticationController = require('./controllers/authentication'),
     calendarsController = require('./v1/controllers/calendars'),
@@ -12,7 +14,7 @@ var express = require('express'),
 
 module.exports = function(server) {
 
-  var v1 = express.Router(),
+  let v1 = express.Router(),
       v2 = express.Router();
   
   // Shared controllers
@@ -23,7 +25,7 @@ module.exports = function(server) {
   });
   
   // Version-specific controllers
-  var routeBase = '(/api)?/v2';
+  let routeBase = '(/api)?/v2';
   ormControllerV1(v1);
   ormController(v2, routeBase);
   notificationsControllerV1(v1);

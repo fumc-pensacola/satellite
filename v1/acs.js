@@ -1,4 +1,6 @@
-var loopback = require('loopback'),
+"use strict";
+
+let loopback = require('loopback'),
     Promise = require('bluebird').Promise,
     moment = require('moment-timezone'),
     instance = null;
@@ -12,7 +14,7 @@ function fixTimeZone (date) {
 }
 
 function matchCalendar (calendars, name) {
-  for (var i = 0; i < calendars.length; i++) {
+  for (let i = 0; i < calendars.length; i++) {
     if (calendars[i].name.toLowerCase().replace(/[^a-z0-9]/g, '') === name.toLowerCase()) {
       return calendars[i];
     }
@@ -20,7 +22,7 @@ function matchCalendar (calendars, name) {
 }
 
 function matchLocation (locations, id) {
-  for (var i = 0; i < locations.length; i++) {
+  for (let i = 0; i < locations.length; i++) {
     if (locations[i].id === id) {
       return locations[i];
     }
@@ -28,8 +30,8 @@ function matchLocation (locations, id) {
 }
 
 function intersect (a, b) {
-  var ai = bi= 0;
-  var result = [];
+  let ai = bi= 0;
+  let result = [];
 
   while (ai < a.length && bi < b.length) {
     if      (a[ai] < b[bi] ) { ai++; }
@@ -55,7 +57,7 @@ function fixDataSet (newDataSet) {
 
 function ACS (ACSGeneralService, ACSEventService) {
 
-  var secId = '_ane=U&RAP_u4aS-a5ebreJufU',
+  let secId = '_ane=U&RAP_u4aS-a5ebreJufU',
       siteId = 10978,
       mainCalendarId = '59a420c9-6854-43d4-89da-08e3ffa4e07f',
       excludeFromPublicTagId = '34e52691-93a1-4f08-9d74-a3f700da04b9',
@@ -64,7 +66,7 @@ function ACS (ACSGeneralService, ACSEventService) {
       locations = [],
       dbCalendars = [];
 
-  var getExcludedEventIds = function() {
+  let getExcludedEventIds = function() {
     return new Promise((resolve, reject) => {
       try {
         ACSEventService.getTagsbyTagID({ token: token, tagid: excludeFromPublicTagId }, (err, response) => {
@@ -140,7 +142,7 @@ function ACS (ACSGeneralService, ACSEventService) {
             reject(err);
           } else {
             resolve(calendars = fixDataSet(response.getCalendarsResult.diffgram.NewDataSet).dbs.map(c => {
-              var dbCalendar = dbCalendars.filter(function(cal) { return cal._doc._id === c.CalendarID; })[0] || { };
+              let dbCalendar = dbCalendars.filter(function(cal) { return cal._doc._id === c.CalendarID; })[0] || { };
               return { id: c.CalendarID, name: c.CalendarName, colorString: dbCalendar.color, defaultImageKey: dbCalendar.image };
             }));
           }
@@ -152,7 +154,7 @@ function ACS (ACSGeneralService, ACSEventService) {
   };
 
   this.getCalendarEvents = function(requestedCalendars, from, to) {
-    var locationsRequest = this.getLocations(),
+    let locationsRequest = this.getLocations(),
     calendarIds = requestedCalendars.map(calendar => {
       return new Promise((resolve, reject) => {
         if (calendar.toLowerCase() === 'all') {
@@ -160,7 +162,7 @@ function ACS (ACSGeneralService, ACSEventService) {
         } else if (/([a-f0-9]+?-)+?/.test(calendar)) {
           resolve(calendar);
         } else {
-          var c;
+          let c;
           if (c = matchCalendar(calendars, calendar)) {
             resolve(c.id);
           } else {
@@ -180,13 +182,13 @@ function ACS (ACSGeneralService, ACSEventService) {
 
     return new Promise((resolve, reject) => {
 
-      var apiCalls = [];
+      let apiCalls = [];
 
-      for (var i = 0; i < calendarIds.length; i++) {
+      for (let i = 0; i < calendarIds.length; i++) {
         apiCalls.push(new Promise((res, rej) => {
           calendarIds[i].then(id => {
 
-            var params = {
+            let params = {
               token: token,
               startdate: moment(from).format('YYYY-MM-DD'),
               stopdate: moment(to).format('YYYY-MM-DD'),
@@ -205,27 +207,27 @@ function ACS (ACSGeneralService, ACSEventService) {
                   console.error(method + ' failed.', err);
                   rej(err);
                 } else {
-                  var requestedLocationIds = [],
+                  let requestedLocationIds = [],
                   cachedLocationIds = locations.map(l => l.id),
                   needsLocationCacheUpdate = false,
                   events = fixDataSet(response[method + 'Result'].diffgram.NewDataSet).dbs.map(e => {
                     if (e.isPublished !== false) {
-                      var event = new ACS.CalendarEvent(e);
+                      let event = new ACS.CalendarEvent(e);
                       event.locationId && requestedLocationIds.push(event.locationId);
                       return event;
                     }
                   });
 
-                  for (var i = 0; i < requestedLocationIds.length; i++) {
+                  for (let i = 0; i < requestedLocationIds.length; i++) {
                     if (!~cachedLocationIds.indexOf(requestedLocationIds[i])) {
                       needsLocationCacheUpdate = true;
                       break;
                     }
                   }
 
-                  var processLocations = function(locations) {
+                  let processLocations = function(locations) {
                     for (i = 0; i < events.length; i++) {
-                      var event = events[i], l;
+                      let event = events[i], l;
                       if (!event.locationId) {
                         event.location = null;
                       } else if (l = matchLocation(locations, event.locationId)) {
@@ -263,7 +265,7 @@ function ACS (ACSGeneralService, ACSEventService) {
       }
 
       Promise.settle(apiCalls).then(eventsByCalendar => {
-        var results = { }, i = 0;
+        let results = { }, i = 0;
         eventsByCalendar.forEach(p => {
           if (p.isFulfilled()) {
             results[p.value().id || ('no-id-' + i++)] = p.value().events;
@@ -299,7 +301,7 @@ module.exports = function() {
   this.connect = function() {
     
     try {
-      var wsca = loopback.createDataSource('soap', {
+      let wsca = loopback.createDataSource('soap', {
             connector: 'loopback-connector-soap',
             // remotingEnabled: true,
             url: 'https://secure.accessacs.com/acscfwsv2/wsca.asmx',
@@ -334,7 +336,7 @@ module.exports = function() {
       return new Promise((resolve, reject) => {
         console.log('Connecting...');
         Promise.all([connect(wsca), connect(wscea)]).then(() => {
-          var ACSGeneralService = wsca.createModel('wsca', { }),
+          let ACSGeneralService = wsca.createModel('wsca', { }),
               ACSEventService = wscea.createModel('wscea', { });
           console.log('Connected!');
           resolve(new ACS(ACSGeneralService, ACSEventService));

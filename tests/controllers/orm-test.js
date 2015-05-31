@@ -1,6 +1,8 @@
+"use strict";
+
 try { require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') }); } catch (e) {}
 
-var assert = require('assert'),
+let assert = require('assert'),
     request = require('request'),
     server = require('../helpers/server'),
     appReady = require('../../index'),

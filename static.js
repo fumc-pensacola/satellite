@@ -1,4 +1,6 @@
-var express = require('express');
+"use strict";
+
+let express = require('express');
 
 module.exports = function(app) {
   app.use('/', express.static('./dist'));

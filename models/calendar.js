@@ -1,11 +1,14 @@
-var mongoose = require('mongoose'),
-    request = require('request'),
-    ACS_USERNAME = process.env.ACS_USERNAME,
-    ACS_PASSWORD = process.env.ACS_PASSWORD,
-    ACS_SITENUMBER = process.env.ACS_SITENUMBER,
-    NODE_ENV = process.env.NODE_ENV;
+"use strict";
 
-var schema = new mongoose.Schema({
+let mongoose = require('mongoose'),
+    request = require('request');
+    
+const ACS_USERNAME = process.env.ACS_USERNAME,
+      ACS_PASSWORD = process.env.ACS_PASSWORD,
+      ACS_SITENUMBER = process.env.ACS_SITENUMBER,
+      NODE_ENV = process.env.NODE_ENV;
+
+let schema = new mongoose.Schema({
   _id: { type: String, required: true },
   name: { type: String, required: true },
   description: { type: String },
@@ -16,9 +19,9 @@ var schema = new mongoose.Schema({
 });
 
 schema.statics.scrape = function() {
-  var Calendar = this;
+  let Calendar = this;
   return new Promise((resolve, reject) => {
-    var url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/calendars';
+    let url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/calendars';
     request.get(url, {
       json: true,
       auth: {
@@ -38,7 +41,7 @@ schema.statics.scrape = function() {
         }
         return new Promise((res, rej) => {
           c = Calendar.transform(c);
-          var id = c._id;
+          let id = c._id;
           delete c._id;
           Calendar.update({ _id: id }, c, { upsert: true }, err => {
             if (err) {
@@ -73,13 +76,13 @@ schema.statics.scrape = function() {
 };
 
 schema.statics.transform = function(calendar) {
-  var map = {
+  let map = {
     CalendarId: '_id',
     Name: 'name',
     Description: 'description'
   }, c = { };
   
-  for (var key in calendar) {
+  for (let key in calendar) {
     if (map[key]) {
       c[map[key]] = calendar[key];
     }

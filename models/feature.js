@@ -1,4 +1,6 @@
-var mongoose = require('mongoose');
+"use strict";
+
+let mongoose = require('mongoose');
 
 module.exports = mongoose.model('Feature', new mongoose.Schema({
   active: { type: Boolean },

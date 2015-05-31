@@ -1,4 +1,6 @@
-var Notification = require('../../models/notification');
+"use strict";
+
+let Notification = require('../../models/notification');
 
 module.exports = function(router) {
 

@@ -1,4 +1,6 @@
-var moment = require('moment'),
+"use strict";
+
+let moment = require('moment'),
     Promise = require('bluebird').Promise,
     ical = require('icalendar'),
     mongoose = require('mongoose'),
@@ -9,7 +11,7 @@ module.exports = function(router, ACS) {
   ACS.setup();
 
   router.get('/calendars/list', (req, res) => {
-    var getDBCalendars = new Promise((resolve, reject) => {
+    let getDBCalendars = new Promise((resolve, reject) => {
       Calendar.find().exec((err, models) => {
         if (err) {
           reject(err);
@@ -41,7 +43,7 @@ module.exports = function(router, ACS) {
   router.get('/calendars/:id.:format', (req, res) => {
     ACS.sharedInstance().then(acs => {
       console.log('Getting events...');
-      var from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),
+      let from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),
           to = req.query.to ? new Date(req.query.to) : moment().add(1, 'years'),
           ids = req.params.id.split(','),
           min = req.query.min || 0;
@@ -49,7 +51,7 @@ module.exports = function(router, ACS) {
     }).then(eventsByCalendar => {
       console.log('Got events!');
 
-      var keys = Object.keys(eventsByCalendar);
+      let keys = Object.keys(eventsByCalendar);
       if ((req.params.format || '').toLowerCase() === 'json') {
         keys.forEach(key => {
           eventsByCalendar[key].sort((a, b) => {
@@ -58,13 +60,13 @@ module.exports = function(router, ACS) {
         });
         res.send(eventsByCalendar);
       } else {
-        var events = [];
-        for (var key in keys) {
+        let events = [];
+        for (let key in keys) {
           events = events.concat(eventsByCalendar[key]);
         }
-        var calendar = new ical.iCalendar();
-        for (var i = 0; i < events.length; i++) {
-          var e = new ical.VEvent(calendar, events[i].id + i);
+        let calendar = new ical.iCalendar();
+        for (let i = 0; i < events.length; i++) {
+          let e = new ical.VEvent(calendar, events[i].id + i);
           e.setDate(events[i].from, events[i].to);
           e.setSummary(events[i].name);
           e.setDescription(events[i].description);

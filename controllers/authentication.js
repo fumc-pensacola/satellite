@@ -1,7 +1,10 @@
-var request = require('request'),
+"use strict";
+
+let request = require('request'),
     bodyParser = require('body-parser'),
-    Authentication = require('../authentication'),
-    AMAZON_CLIENT_ID = process.env.AMAZON_CLIENT_ID;
+    Authentication = require('../authentication');
+    
+const AMAZON_CLIENT_ID = process.env.AMAZON_CLIENT_ID;
 
 module.exports = function(router) {
 
@@ -16,7 +19,7 @@ module.exports = function(router) {
         return;
       }
 
-      var data = JSON.parse(body),
+      let data = JSON.parse(body),
           users = [
             'amzn1.account.AFC2TKGPU7KRSE4SEKWMGEV56PSA', // Drew
             'amzn1.account.AGWSVRRT7XXKLFRXVK3VRD4ZFQFA', // Jeb
@@ -41,7 +44,7 @@ module.exports = function(router) {
         url: 'https://api.amazon.com/user/profile',
         headers: { 'Authorization': 'bearer ' + req.body.access_token }
       }, (err, response, body) => {
-        var data = JSON.parse(body);
+        let data = JSON.parse(body);
         res.send({
           success: true,
           token: req.body.access_token,

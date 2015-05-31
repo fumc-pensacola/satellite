@@ -1,4 +1,6 @@
-var Calendar = require('./models/calendar'),
+"use strict";
+
+let Calendar = require('./models/calendar'),
     Event = require('./models/event'),
     moment = require('moment');
 

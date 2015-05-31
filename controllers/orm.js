@@ -1,9 +1,11 @@
-var API = require('json-api'),
+"use strict";
+
+let API = require('json-api'),
     Authentication = require('../authentication');
 
 module.exports = function(router, routeBase) {
 
-  var models = {
+  let models = {
     Bulletin: require('../models/bulletin'),
     Calendar: require('../models/calendar'),
     Event: require('../models/event'),
@@ -13,11 +15,11 @@ module.exports = function(router, routeBase) {
     Witness: require('../models/witness')
   };
   
-  var adapter = new API.adapters.Mongoose(models),
+  let adapter = new API.adapters.Mongoose(models),
       registry = new API.ResourceTypeRegistry(),
       controller = new API.controllers.API(registry);
       
-  var resourceTypes = [
+  let resourceTypes = [
     'bulletins',
     'features',
     'witnesses',
@@ -36,7 +38,7 @@ module.exports = function(router, routeBase) {
   });
   
   function generateRoutePatterns (resourceTypes) {
-    var multi = '/:type(' + resourceTypes.join('|') + ')',
+    let multi = '/:type(' + resourceTypes.join('|') + ')',
         single = multi + '/:id',
         links = single + '/links/:relationship';
         
@@ -47,7 +49,7 @@ module.exports = function(router, routeBase) {
     };
   }
   
-  var front = new API.controllers.Front(controller),
+  let front = new API.controllers.Front(controller),
       requestHandler = front.apiRequest.bind(front),
       patterns = generateRoutePatterns(resourceTypes),
       authRequestHandler = (req, res) => {
@@ -64,7 +66,7 @@ module.exports = function(router, routeBase) {
         authRequestHandler(req, res);
       };
   
-  var route = { };
+  let route = { };
   route[patterns.multi] = {
     get: requestHandler,
     post: authRequestHandler
@@ -81,9 +83,9 @@ module.exports = function(router, routeBase) {
   };
   
   
-  for (var pattern in route) {
-    var r = router.route(pattern);
-    for (var method in route[pattern]) {
+  for (let pattern in route) {
+    let r = router.route(pattern);
+    for (let method in route[pattern]) {
       r[method](route[pattern][method]);
       // E.g. route.get(requestHandler);
     }

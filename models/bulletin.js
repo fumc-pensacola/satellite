@@ -1,4 +1,6 @@
-var mongoose = require('mongoose');
+"use strict";
+
+let mongoose = require('mongoose');
 
 module.exports = mongoose.model('Bulletin', new mongoose.Schema({
   date: { type: Date, required: true },
