@@ -1,4 +1,4 @@
-require('dotenv').load();
+try { require('dotenv').load(); } catch (e) {}
 
 if (process.env.NODE_ENV === 'production') {
   require('newrelic');
