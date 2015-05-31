@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node --harmony_arrow_functions --harmony_classes index.js",
-    "test": "NODE_ENV=test --harmony_arrow_functions --harmony_classes mocha tests/**/*-test.js"
+    "test": "NODE_ENV=test mocha --harmony_arrow_functions --harmony_classes tests/**/*-test.js"
   },
   "repository": {
     "type": "git",
