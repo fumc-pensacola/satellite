@@ -36,6 +36,11 @@ nock.enableNetConnect();
 module.exports = {
   create: function () {
     nock.disableNetConnect();
+    
+    nock('https://secure.accessacs.com/acscfwsv2')
+      .post('/wsca.asmx')
+      .reply(200, '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><getLoginTokenResponse xmlns="http://acstechnologies.com/"><getLoginTokenResult>dca79857-e6d5-49c7-b982-aa69ada09ce8</getLoginTokenResult></getLoginTokenResponse></soap:Body></soap:Envelope>');
+    
     nock('https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER)
       .get('/events?startdate=05%2F01%2F2015&stopdate=05%2F02%2F2015&pageIndex=0&pageSize=500')
       .reply(200, JSON.stringify(eventPages[0]))
