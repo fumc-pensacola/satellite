@@ -1,19 +1,19 @@
 "use strict";
 
-try { require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') }); } catch (e) {}
+try { require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') }); } catch (e) {}
 
 let assert = require('assert'),
     request = require('request'),
-    server = require('../helpers/server'),
-    appReady = require('../../index'),
-    db = require('../helpers/db'),
+    server = require('../../helpers/server'),
+    appReady = require('../../../index'),
+    db = require('../../helpers/db'),
     base;
     
-describe('ORM', () => {
+describe('ORM v2', () => {
   
   before(done => {
     appReady.then(resolutions => {
-      base = 'http://localhost:' + resolutions[1].address().port + '/v3';
+      base = 'http://localhost:' + resolutions[1].address().port + '/api/v2';
       return db.clear();
     }).then(() => {
       return db.seed();
@@ -35,7 +35,7 @@ describe('ORM', () => {
       json: true
     }, (err, response, body) => {
       assert.ok(!err);
-      assert.equal(body.data.attributes.name, 'Children');
+      assert.equal(body.data.name, 'Children');
       done();
     });
   });

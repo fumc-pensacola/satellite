@@ -16,11 +16,13 @@ let dbReady = require('./config')(app);
 require('./static')(app);
 require('./api')(app);
 
-let calendarsSchedule = later.parse.text('every 30 minutes');
-later.setInterval(Worker.scrapeCalendars, calendarsSchedule);
-later.setInterval(Worker.scrapeEvents, calendarsSchedule);
-Worker.scrapeCalendars();
-Worker.scrapeEvents();
+if (process.env.NODE_ENV !== 'test') {
+  let calendarsSchedule = later.parse.text('every 30 minutes');
+  later.setInterval(Worker.scrapeCalendars, calendarsSchedule);
+  later.setInterval(Worker.scrapeEvents, calendarsSchedule);
+  Worker.scrapeCalendars();
+  Worker.scrapeEvents();
+}
 
 let serverReady = new Promise((resolve, reject) => {
   let server = app.listen(port, function() {
