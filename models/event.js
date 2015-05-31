@@ -19,7 +19,7 @@ var schema = new mongoose.Schema({
   autoIndex: NODE_ENV !== 'production'
 });
 
-schema.statics.scrape = function (start, end, page) {
+schema.statics.scrape = function(start, end, page) {
   var Event = this;
   return new Promise((resolve, reject) => {
     var url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/events';
@@ -85,7 +85,7 @@ schema.statics.scrape = function (start, end, page) {
   });
 };
 
-schema.statics.transform = function (event) {
+schema.statics.transform = function(event) {
   var map = {
     Description: 'description',
     EventDateId: '_id',

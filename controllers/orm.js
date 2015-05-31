@@ -1,7 +1,7 @@
 var API = require('json-api'),
     Authentication = require('../authentication');
 
-module.exports = function (router, routeBase) {
+module.exports = function(router, routeBase) {
 
   var models = {
     Bulletin: require('../models/bulletin'),

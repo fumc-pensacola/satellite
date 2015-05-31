@@ -4,7 +4,7 @@ var moment = require('moment'),
     mongoose = require('mongoose'),
     Calendar = require('../../models/calendar');
 
-module.exports = function (router, ACS) {
+module.exports = function(router, ACS) {
 
   ACS.setup();
 

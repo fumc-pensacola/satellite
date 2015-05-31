@@ -1,7 +1,7 @@
 var sendgrid = require('sendgrid')(process.env.SENDGRID_USER, process.env.SENDGRID_API_KEY),
     Setting = require('../models/setting');
 
-module.exports = function (router) {
+module.exports = function(router) {
 
   router.post('/emailer/send', (req, res) => {
     Setting.findOne({ key: 'prayer_request_email' }).exec((err, model) => {

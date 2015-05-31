@@ -1,6 +1,6 @@
 var request = require('request');
 
-module.exports = function (server) {
+module.exports = function(server) {
 
   server.get('/api/url/test', (req, res) => {
     request({

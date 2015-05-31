@@ -15,7 +15,7 @@ var schema = new mongoose.Schema({
   autoIndex: NODE_ENV !== 'production'
 });
 
-schema.statics.scrape = function () {
+schema.statics.scrape = function() {
   var Calendar = this;
   return new Promise((resolve, reject) => {
     var url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/calendars';
@@ -72,7 +72,7 @@ schema.statics.scrape = function () {
   });
 };
 
-schema.statics.transform = function (calendar) {
+schema.statics.transform = function(calendar) {
   var map = {
     CalendarId: '_id',
     Name: 'name',

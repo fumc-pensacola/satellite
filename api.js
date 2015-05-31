@@ -10,7 +10,7 @@ var express = require('express'),
     ormControllerV1 = require('./v1/controllers/orm');
     
 
-module.exports = function (server) {
+module.exports = function(server) {
 
   var v1 = express.Router(),
       v2 = express.Router();

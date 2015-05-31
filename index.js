@@ -21,7 +21,7 @@ Worker.scrapeCalendars();
 Worker.scrapeEvents();
 
 var serverReady = new Promise((resolve, reject) => {
-  var server = app.listen(port, function () {
+  var server = app.listen(port, function() {
     var host = server.address().address,
         port = server.address().port;
 

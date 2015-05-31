@@ -3,7 +3,7 @@ var request = require('request'),
     Authentication = require('../authentication'),
     AMAZON_CLIENT_ID = process.env.AMAZON_CLIENT_ID;
 
-module.exports = function (router) {
+module.exports = function(router) {
 
   router.post('/authenticate', bodyParser.urlencoded({ extended: false }), (req, res) => {
     request({

@@ -12,7 +12,7 @@ var mongoose = require('mongoose'),
     };
 
 module.exports = {
-  connect: function () {
+  connect: function() {
     return new Promise((resolve, reject) => {
       mongoose.connect(MONGO_TEST, resolve);
     });

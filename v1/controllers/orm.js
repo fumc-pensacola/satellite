@@ -5,7 +5,7 @@ var Bulletin = require('../../models/bulletin'),
     Notification = require('../../models/notification'),
     fakeId = 1;
 
-module.exports = function (router) {
+module.exports = function(router) {
   
   var types = {
     bulletins: Bulletin,
@@ -30,16 +30,16 @@ module.exports = function (router) {
     }
     
     var find = Model.find(req.query);
-    modifiers.forEach(function (m) {
+    modifiers.forEach(function(m) {
       find = find[m.method].apply(find, m.params);
     });
     
-    find.exec(function (err, models) {
+    find.exec(function(err, models) {
       if (err) {
         res.status(500).send(err);
       } else {
         if (req.params.type !== 'calendars') {
-          models.forEach(function (m) {
+          models.forEach(function(m) {
             delete m._doc._id;
             m._doc.id = fakeId++;
             delete m._doc.__v;

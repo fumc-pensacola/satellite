@@ -64,7 +64,7 @@ function ACS (ACSGeneralService, ACSEventService) {
       locations = [],
       dbCalendars = [];
 
-  var getExcludedEventIds = function () {
+  var getExcludedEventIds = function() {
     return new Promise((resolve, reject) => {
       try {
         ACSEventService.getTagsbyTagID({ token: token, tagid: excludeFromPublicTagId }, (err, response) => {
@@ -85,7 +85,7 @@ function ACS (ACSGeneralService, ACSEventService) {
 
   this.tokenExpiry = moment();
 
-  this.login = function () {
+  this.login = function() {
     return new Promise((resolve, reject) => {
       console.log('Logging in...');
       try {
@@ -106,11 +106,11 @@ function ACS (ACSGeneralService, ACSEventService) {
     });
   };
 
-  this.loggedIn = function () {
+  this.loggedIn = function() {
     return token && this.tokenExpiry > new Date();
   };
 
-  this.getLocations = function () {
+  this.getLocations = function() {
     return new Promise((resolve, reject) => {
       try {
         ACSEventService.getResourcesByType({ token: token, typeID: 2 }, (err, response) => {
@@ -129,7 +129,7 @@ function ACS (ACSGeneralService, ACSEventService) {
     });
   };
 
-  this.getCalendars = function (databaseCalendars) {
+  this.getCalendars = function(databaseCalendars) {
     if (databaseCalendars) {
       dbCalendars = databaseCalendars;
     }
@@ -140,7 +140,7 @@ function ACS (ACSGeneralService, ACSEventService) {
             reject(err);
           } else {
             resolve(calendars = fixDataSet(response.getCalendarsResult.diffgram.NewDataSet).dbs.map(c => {
-              var dbCalendar = dbCalendars.filter(function (cal) { return cal._doc._id === c.CalendarID; })[0] || { };
+              var dbCalendar = dbCalendars.filter(function(cal) { return cal._doc._id === c.CalendarID; })[0] || { };
               return { id: c.CalendarID, name: c.CalendarName, colorString: dbCalendar.color, defaultImageKey: dbCalendar.image };
             }));
           }
@@ -151,7 +151,7 @@ function ACS (ACSGeneralService, ACSEventService) {
     });
   };
 
-  this.getCalendarEvents = function (requestedCalendars, from, to) {
+  this.getCalendarEvents = function(requestedCalendars, from, to) {
     var locationsRequest = this.getLocations(),
     calendarIds = requestedCalendars.map(calendar => {
       return new Promise((resolve, reject) => {
@@ -200,7 +200,7 @@ function ACS (ACSGeneralService, ACSEventService) {
             }
             
             try {
-              ACSEventService[method](params, function (err, response) {
+              ACSEventService[method](params, function(err, response) {
                 if (err) {
                   console.error(method + ' failed.', err);
                   rej(err);
@@ -223,7 +223,7 @@ function ACS (ACSGeneralService, ACSEventService) {
                     }
                   }
 
-                  var processLocations = function (locations) {
+                  var processLocations = function(locations) {
                     for (i = 0; i < events.length; i++) {
                       var event = events[i], l;
                       if (!event.locationId) {
@@ -245,12 +245,12 @@ function ACS (ACSGeneralService, ACSEventService) {
                     locationsRequest = Promise.resolve();
                   }
 
-                  locationsRequest.then(function () {
+                  locationsRequest.then(function() {
                     res({
                       id: id,
                       events: events
                     });
-                  }, function () {
+                  }, function() {
                     rej();
                   });
                 }
@@ -277,7 +277,7 @@ function ACS (ACSGeneralService, ACSEventService) {
   };
 }
 
-ACS.CalendarEvent = function (e) {
+ACS.CalendarEvent = function(e) {
   this.id = e.EventId || e.eventId;
   this.calendar = e.CalendarName;
   this.calendarId = e.CalendarId;
@@ -288,15 +288,15 @@ ACS.CalendarEvent = function (e) {
   this.locationId = e.locationid || e.LocationID || null;
 };
 
-ACS.Location = function (l) {
+ACS.Location = function(l) {
   this.id = l.resourceid;
   this.name = l.resourcename;
   this.description = l.description;
 };
 
-module.exports = function () {
+module.exports = function() {
 
-  this.connect = function () {
+  this.connect = function() {
     
     try {
       var wsca = loopback.createDataSource('soap', {
@@ -325,7 +325,7 @@ module.exports = function () {
             }
           }),
 
-          connect = function (ds) {
+          connect = function(ds) {
             return new Promise((resolve, reject) => {
               ds.once('connected', resolve);
             });
@@ -346,8 +346,8 @@ module.exports = function () {
     }
   };
 
-  this.sharedInstance = function () {
-    return new Promise(function (resolve, reject) {
+  this.sharedInstance = function() {
+    return new Promise(function(resolve, reject) {
       if (!instance) {
         this.connect().then(acs => {
           instance = acs;
@@ -365,7 +365,7 @@ module.exports = function () {
     }.bind(this));
   };
 
-  this.setup = function () {
+  this.setup = function() {
     return this.sharedInstance();
   };
 

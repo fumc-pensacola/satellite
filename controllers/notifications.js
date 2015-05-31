@@ -2,7 +2,7 @@ var moment = require('moment-timezone'),
     request = require('request'),
     Authentication = require('../authentication');
 
-module.exports = function (router) {
+module.exports = function(router) {
   
   router.post('/notify/:channel', (req, res) => {
     if (Authentication.isAuthenticatedRequest(req)) {

@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
     NODE_ENV = process.env.NODE_ENV,
     MONGO_URI = NODE_ENV === 'test' ? process.env.MONGO_TEST : process.env.MONGOLAB_URI;
 
-module.exports = function (server) {
+module.exports = function(server) {
 
   var forceSSL = (req, res, next) => {
     if (req.headers['x-forwarded-proto'] !== 'https') {

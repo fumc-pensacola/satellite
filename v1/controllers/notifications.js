@@ -1,6 +1,6 @@
 var Notification = require('../../models/notification');
 
-module.exports = function (router) {
+module.exports = function(router) {
 
   router.get('/notifications/current', (req, res) => {
     if (req.query.tester === true || (typeof req.query.tester === 'string' && req.query.tester.toLowerCase() === "true")) {

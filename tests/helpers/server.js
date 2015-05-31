@@ -34,7 +34,7 @@ function deleteOne (json) {
 nock.enableNetConnect();
 
 module.exports = {
-  create: function () {
+  create: function() {
     nock.disableNetConnect();
     
     nock('https://secure.accessacs.com/acscfwsv2')
@@ -67,7 +67,7 @@ module.exports = {
       .get('/calendars')
       .reply(200, JSON.stringify(deleteOne(calendarResponse)));
   },
-  destroy: function () {
+  destroy: function() {
     nock.enableNetConnect();
   }
 };
