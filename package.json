@@ -4,7 +4,7 @@
   "description": "API backing FUMC apps and services.",
   "main": "index.js",
   "engines": {
-    "node": "0.12.0",
+    "iojs": "^2.1.0",
     "npm": "2.5.x"
   },
   "scripts": {
