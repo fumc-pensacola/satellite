@@ -65,14 +65,14 @@ function ACS (ACSGeneralService, ACSEventService) {
       dbCalendars = [];
 
   var getExcludedEventIds = function () {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       try {
-        ACSEventService.getTagsbyTagID({ token: token, tagid: excludeFromPublicTagId }, function (err, response) {
+        ACSEventService.getTagsbyTagID({ token: token, tagid: excludeFromPublicTagId }, (err, response) => {
           if (err || !response.getTagsbyTagIDResult) {
             console.error('Error getting excluded event IDs');
             reject(err || new Error('getExcludedEventIds failed'));
           } else {
-            resolve(fixDataSet(response.getTagsbyTagIDResult.diffgram.NewDataSet).dbs.map(function (j) {
+            resolve(fixDataSet(response.getTagsbyTagIDResult.diffgram.NewDataSet).dbs.map(j => {
               return j.EventId;
             }));
           }
@@ -86,11 +86,10 @@ function ACS (ACSGeneralService, ACSEventService) {
   this.tokenExpiry = moment();
 
   this.login = function () {
-    var self = this;
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       console.log('Logging in...');
       try {
-        ACSGeneralService.getLoginToken({ secid: secId, siteid: siteId }, function (err, response) {
+        ACSGeneralService.getLoginToken({ secid: secId, siteid: siteId }, (err, response) => {
           if (err || !response.getLoginTokenResult) {
             console.error('Error logging in.', err);
             reject(err || new Error('getLoginToken failed'));
@@ -112,14 +111,14 @@ function ACS (ACSGeneralService, ACSEventService) {
   };
 
   this.getLocations = function () {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       try {
-        ACSEventService.getResourcesByType({ token: token, typeID: 2 }, function (err, response) {
+        ACSEventService.getResourcesByType({ token: token, typeID: 2 }, (err, response) => {
           if (err) {
             console.error('Could not get locations.', err);
             reject(err);
           } else {
-            resolve(locations = fixDataSet(response.getResourcesByTypeResult.diffgram.NewDataSet).dbs.map(function (l) {
+            resolve(locations = fixDataSet(response.getResourcesByTypeResult.diffgram.NewDataSet).dbs.map(l => {
               return new ACS.Location(l);
             }));
           }
@@ -134,13 +133,13 @@ function ACS (ACSGeneralService, ACSEventService) {
     if (databaseCalendars) {
       dbCalendars = databaseCalendars;
     }
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       try {
-        ACSEventService.getCalendars({ token: token, isPublished: true }, function (err, response) {
+        ACSEventService.getCalendars({ token: token, isPublished: true }, (err, response) => {
           if (err) {
             reject(err);
           } else {
-            resolve(calendars = fixDataSet(response.getCalendarsResult.diffgram.NewDataSet).dbs.map(function (c) {
+            resolve(calendars = fixDataSet(response.getCalendarsResult.diffgram.NewDataSet).dbs.map(c => {
               var dbCalendar = dbCalendars.filter(function (cal) { return cal._doc._id === c.CalendarID; })[0] || { };
               return { id: c.CalendarID, name: c.CalendarName, colorString: dbCalendar.color, defaultImageKey: dbCalendar.image };
             }));
@@ -153,10 +152,9 @@ function ACS (ACSGeneralService, ACSEventService) {
   };
 
   this.getCalendarEvents = function (requestedCalendars, from, to) {
-    var self = this,
-    locationsRequest = self.getLocations(),
-    calendarIds = requestedCalendars.map(function (calendar) {
-      return new Promise(function (resolve, reject) {
+    var locationsRequest = this.getLocations(),
+    calendarIds = requestedCalendars.map(calendar => {
+      return new Promise((resolve, reject) => {
         if (calendar.toLowerCase() === 'all') {
           resolve(null);
         } else if (/([a-f0-9]+?-)+?/.test(calendar)) {
@@ -166,13 +164,13 @@ function ACS (ACSGeneralService, ACSEventService) {
           if (c = matchCalendar(calendars, calendar)) {
             resolve(c.id);
           } else {
-            self.getCalendars().then(function (calendars) {
+            this.getCalendars().then(calendars => {
               if (c = matchCalendar(calendars, calendar)) {
                 resolve(c.id);
               } else {
                 reject(new Error('Could not find calendar with name: ' + calendar));
               }
-            }, function () {
+            }, () => {
               reject(new Error('Failed to update calendar list'));
             });
           }
@@ -180,13 +178,13 @@ function ACS (ACSGeneralService, ACSEventService) {
       });
     });
 
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
 
       var apiCalls = [];
 
       for (var i = 0; i < calendarIds.length; i++) {
-        apiCalls.push(new Promise(function (res, rej) {
-          calendarIds[i].then(function (id) {
+        apiCalls.push(new Promise((res, rej) => {
+          calendarIds[i].then(id => {
 
             var params = {
               token: token,
@@ -208,9 +206,9 @@ function ACS (ACSGeneralService, ACSEventService) {
                   rej(err);
                 } else {
                   var requestedLocationIds = [],
-                  cachedLocationIds = locations.map(function (l) { return l.id; }),
+                  cachedLocationIds = locations.map(l => l.id),
                   needsLocationCacheUpdate = false,
-                  events = fixDataSet(response[method + 'Result'].diffgram.NewDataSet).dbs.map(function (e) {
+                  events = fixDataSet(response[method + 'Result'].diffgram.NewDataSet).dbs.map(e => {
                     if (e.isPublished !== false) {
                       var event = new ACS.CalendarEvent(e);
                       event.locationId && requestedLocationIds.push(event.locationId);
@@ -260,15 +258,13 @@ function ACS (ACSGeneralService, ACSEventService) {
             } catch (error) {
               rej(error);
             }
-          }, function (reason) {
-            rej(reason);
-          });
+          }, rej);
         }));
       }
 
-      Promise.settle(apiCalls).then(function (eventsByCalendar) {
+      Promise.settle(apiCalls).then(eventsByCalendar => {
         var results = { }, i = 0;
-        eventsByCalendar.forEach(function (p) {
+        eventsByCalendar.forEach(p => {
           if (p.isFulfilled()) {
             results[p.value().id || ('no-id-' + i++)] = p.value().events;
           } else {
@@ -276,9 +272,7 @@ function ACS (ACSGeneralService, ACSEventService) {
           }
         });
         resolve(results);
-      }, function () {
-        reject();
-      });
+      }, reject);
     });
   };
 }
@@ -332,21 +326,19 @@ module.exports = function () {
           }),
 
           connect = function (ds) {
-            return new Promise(function (resolve, reject) {
+            return new Promise((resolve, reject) => {
               ds.once('connected', resolve);
             });
           };
 
-      return new Promise(function (resolve, reject) {
+      return new Promise((resolve, reject) => {
         console.log('Connecting...');
-        Promise.all([connect(wsca), connect(wscea)]).then(function () {
+        Promise.all([connect(wsca), connect(wscea)]).then(() => {
           var ACSGeneralService = wsca.createModel('wsca', { }),
               ACSEventService = wscea.createModel('wscea', { });
           console.log('Connected!');
           resolve(new ACS(ACSGeneralService, ACSEventService));
-        }, function (error) {
-          reject(error);
-        });
+        }, reject);
 
       });
     } catch (error) {
@@ -357,14 +349,14 @@ module.exports = function () {
   this.sharedInstance = function () {
     return new Promise(function (resolve, reject) {
       if (!instance) {
-        this.connect().then(function (acs) {
+        this.connect().then(acs => {
           instance = acs;
           return acs.login();
-        }).then(function (acs) {
+        }).then(acs => {
           resolve(acs);
         });
       } else if (!instance.loggedIn()) {
-        instance.login().then(function (acs) {
+        instance.login().then(acs => {
           resolve(acs);
         });
       } else {

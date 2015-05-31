@@ -5,14 +5,14 @@ var mongoose = require('mongoose'),
 
 module.exports = function (server) {
 
-  var forceSSL = function (req, res, next) {
+  var forceSSL = (req, res, next) => {
     if (req.headers['x-forwarded-proto'] !== 'https') {
       return res.redirect(['https://', req.get('Host'), req.url].join(''));
     }
     return next();
   };
 
-  var allowCrossDomain = function(req, res, next) {
+  var allowCrossDomain = (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, token');
@@ -28,7 +28,7 @@ module.exports = function (server) {
     // server.use(forceSSL);
   }
   
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     mongoose.connect(MONGO_URI, resolve);
   });
 };

@@ -26,7 +26,7 @@ module.exports = function (router, routeBase) {
     'notifications'
   ];
   
-  resourceTypes.forEach(function (t) {
+  resourceTypes.forEach(t => {
     registry.type(t, {
       adapter: adapter,
       urlTemplates: {
@@ -50,14 +50,14 @@ module.exports = function (router, routeBase) {
   var front = new API.controllers.Front(controller),
       requestHandler = front.apiRequest.bind(front),
       patterns = generateRoutePatterns(resourceTypes),
-      authRequestHandler = function (req, res) {
+      authRequestHandler = (req, res) => {
         if (Authentication.isAuthenticatedRequest(req)) {
           requestHandler(req, res);
         } else {
           res.status(401).end();
         }
       },
-      deleteHandler = function (req, res) {
+      deleteHandler = (req, res) => {
         // Bit of a hack to make sure this isn't a problem:
         // https://github.com/emberjs/data/issues/3010
         delete req.headers['content-length'];

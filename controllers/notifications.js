@@ -4,7 +4,7 @@ var moment = require('moment-timezone'),
 
 module.exports = function (router) {
   
-  router.post('/notify/:channel', function (req, res) {
+  router.post('/notify/:channel', (req, res) => {
     if (Authentication.isAuthenticatedRequest(req)) {
       var notification = req.body.notification,
           channel = req.params.channel.replace('everyone', ''),
@@ -23,7 +23,7 @@ module.exports = function (router) {
             sendDate: moment.tz(notification.sendDate, 'US/Central').format()
           })
         }
-      }, function (error, response, body) {
+      }, (error, response, body) => {
         if (error) {
           res.status(500).json(error);
         } else {

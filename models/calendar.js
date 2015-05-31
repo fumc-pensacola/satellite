@@ -17,7 +17,7 @@ var schema = new mongoose.Schema({
 
 schema.statics.scrape = function () {
   var Calendar = this;
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     var url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/calendars';
     request.get(url, {
       json: true,
@@ -25,22 +25,22 @@ schema.statics.scrape = function () {
         user: ACS_USERNAME,
         pass: ACS_PASSWORD
       }
-    }, function (error, response, body) {
+    }, (error, response, body) => {
       if (error) {
         return reject(error);
       }
       if (!(body instanceof Array)) {
         return reject(new Error('ACS API response was not an Array: ' + body));
       }
-      Promise.all(body.map(function (c) {
+      Promise.all(body.map(c => {
         if (!c.IsPublished) {
           return;
         }
-        return new Promise(function (res, rej) {
+        return new Promise((res, rej) => {
           c = Calendar.transform(c);
           var id = c._id;
           delete c._id;
-          Calendar.update({ _id: id }, c, { upsert: true }, function (err) {
+          Calendar.update({ _id: id }, c, { upsert: true }, err => {
             if (err) {
               rej(err);
             } else {
@@ -49,8 +49,8 @@ schema.statics.scrape = function () {
             }
           });
         });
-      })).then(function (calendars) {
-        calendars = [].concat.apply([], calendars).filter(function (c) {
+      })).then(calendars => {
+        calendars = [].concat.apply([], calendars).filter(c => {
           if (c) {
             return c;
           }
@@ -58,14 +58,14 @@ schema.statics.scrape = function () {
         
         Calendar.find()
           .where('_id')
-          .nin(calendars.map(function (c) { return c._id; }))
-          .remove().exec(function (err) {
+          .nin(calendars.map(c => c._id))
+          .remove().exec(err => {
             if (err) {
               return reject(err);
             }
             resolve(calendars);
           });
-      }, function (err) {
+      }, err => {
         reject(err);
       });
     });

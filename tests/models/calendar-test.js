@@ -5,44 +5,44 @@ var assert = require('assert'),
     db = require('../helpers/db'),
     Calendar = require('../../models/calendar');
 
-describe('Calendar', function () {
+describe('Calendar', () => {
   
-  describe('scrape', function () {
+  describe('scrape', () => {
     
-    beforeEach(function () {
+    beforeEach(() => {
       server.create();
     });
     
-    before(function (done) {
-      db.connect().then(function () {
+    before(done => {
+      db.connect().then(() => {
         db.clear();
         done();
       });
     });
     
-    after(function () {
+    after(() => {
       server.destroy();
     });
     
-    it('should resolve to all published calendars', function (done) {
-      Calendar.scrape().then(function (calendars) {
+    it('should resolve to all published calendars', done => {
+      Calendar.scrape().then(calendars => {
         assert.equal(calendars.length, 18);
         done();
       }, done).catch(done);
     });
     
-    it('should insert calendars into the database', function (done) {
-      Calendar.count({ }, function (err, count) {
+    it('should insert calendars into the database', done => {
+      Calendar.count({ }, (err, count) => {
         assert.ok(!err);
         assert.equal(count, 18);
         done();
       });
     });
     
-    it('should update calendars on subsequent scrape', function (done) {
-      Calendar.scrape().then(function (calendars) {
+    it('should update calendars on subsequent scrape', done => {
+      Calendar.scrape().then(calendars => {
         assert.equal(calendars.length, 18);
-        Calendar.count({ name: 'The Breakfast Club' }, function (err, count) {
+        Calendar.count({ name: 'The Breakfast Club' }, (err, count) => {
           assert.ok(!err);
           assert.equal(count, 1);
           done();
@@ -50,9 +50,9 @@ describe('Calendar', function () {
       }, done).catch(done);
     });
     
-    it('should delete deleted calendars', function (done) {
-      Calendar.scrape().then(function (calendars) {
-        Calendar.count({ _id: 'f088210f-648c-4236-a216-a3f900a07fd9' }, function (err, count) {
+    it('should delete deleted calendars', done => {
+      Calendar.scrape().then(calendars => {
+        Calendar.count({ _id: 'f088210f-648c-4236-a216-a3f900a07fd9' }, (err, count) => {
           assert.ok(!err);
           assert.equal(count, 0);
           done();
@@ -61,15 +61,15 @@ describe('Calendar', function () {
     });
   });
   
-  describe('transform', function () {
+  describe('transform', () => {
     
-    it('should transform an object’s whitelisted keys', function () {
+    it('should transform an object’s whitelisted keys', () => {
       var c = Calendar.transform({ CalendarId: '1', Name: 'Fun Times' });
       assert.equal(c._id, '1');
       assert.equal(c.name, 'Fun Times');
     });
     
-    it('should exclude an object’s non-whitelisted keys', function () {
+    it('should exclude an object’s non-whitelisted keys', () => {
       var c = Calendar.transform({ CalendarId: '1', Name: 'Fun Times', RssSlug: 'http://goo.gl' });
       assert.ok(!c.RssSlug);
     });

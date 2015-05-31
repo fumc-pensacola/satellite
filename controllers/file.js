@@ -1,4 +1,4 @@
-var _get = function (req, res) {
+var _get = (req, res) => {
   res.redirect(303, 'https://s3.amazonaws.com/fumcappfiles/' + req.params.key);
 };
 

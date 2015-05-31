@@ -13,21 +13,21 @@ var mongoose = require('mongoose'),
 
 module.exports = {
   connect: function () {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       mongoose.connect(MONGO_TEST, resolve);
     });
   },
   clear: function() {
-    return Promise.all(Object.keys(models).map(function (m) {
-      return new Promise(function (resolve, reject) {
-        models[m].remove({}, function () { resolve(); });
+    return Promise.all(Object.keys(models).map(m => {
+      return new Promise((resolve, reject) => {
+        models[m].remove({}, () => resolve());
       });
     }));
   },
   seed: function() {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       for (var m in seeds) {
-        models[m].create(seeds[m], function(err) {
+        models[m].create(seeds[m], err => {
           if (err) {
             reject(err);
           } else {

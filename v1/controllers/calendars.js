@@ -8,9 +8,9 @@ module.exports = function (router, ACS) {
 
   ACS.setup();
 
-  router.get('/calendars/list', function (req, res) {
-    var getDBCalendars = new Promise(function (resolve, reject) {
-      Calendar.find().exec(function (err, models) {
+  router.get('/calendars/list', (req, res) => {
+    var getDBCalendars = new Promise((resolve, reject) => {
+      Calendar.find().exec((err, models) => {
         if (err) {
           reject(err);
         } else {
@@ -19,9 +19,9 @@ module.exports = function (router, ACS) {
       });
     });
 
-    Promise.all([ACS.sharedInstance(), getDBCalendars]).then(function (values) {
-      values[0].getCalendars(values[1]).then(function (calendars) {
-        res.json(calendars.sort(function (a, b) {
+    Promise.all([ACS.sharedInstance(), getDBCalendars]).then(values => {
+      values[0].getCalendars(values[1]).then(calendars => {
+        res.json(calendars.sort((a, b) => {
           if (a.name > b.name) {
             return 1;
           }
@@ -30,29 +30,29 @@ module.exports = function (router, ACS) {
           }
           return 0;
         }));
-      }, function (reason) {
+      }, reason => {
         res.status(500).json(reason);
       });
-    }, function (reason) {
+    }, reason => {
       res.status(500).json(reason);
     });
   });
 
-  router.get('/calendars/:id.:format', function (req, res) {
-    ACS.sharedInstance().then(function (acs) {
+  router.get('/calendars/:id.:format', (req, res) => {
+    ACS.sharedInstance().then(acs => {
       console.log('Getting events...');
       var from = req.query.from ? new Date(req.query.from) : moment().subtract(1, 'years'),
           to = req.query.to ? new Date(req.query.to) : moment().add(1, 'years'),
           ids = req.params.id.split(','),
           min = req.query.min || 0;
       return acs.getCalendarEvents(ids, from, to, min);
-    }).then(function (eventsByCalendar) {
+    }).then(eventsByCalendar => {
       console.log('Got events!');
 
       var keys = Object.keys(eventsByCalendar);
       if ((req.params.format || '').toLowerCase() === 'json') {
-        keys.forEach(function (key) {
-          eventsByCalendar[key].sort(function (a, b) {
+        keys.forEach(key => {
+          eventsByCalendar[key].sort((a, b) => {
             return a.from - b.from;
           });
         });
@@ -75,7 +75,7 @@ module.exports = function (router, ACS) {
         res.setHeader('Content-type', 'text/calendar');
         res.send(calendar.toString());
       }
-    }, function (reason) {
+    }, reason => {
       res.status(500).json(reason);
     });
   });

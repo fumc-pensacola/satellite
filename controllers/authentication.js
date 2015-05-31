@@ -5,11 +5,11 @@ var request = require('request'),
 
 module.exports = function (router) {
 
-  router.post('/authenticate', bodyParser.urlencoded({ extended: false }), function (req, res) {
+  router.post('/authenticate', bodyParser.urlencoded({ extended: false }), (req, res) => {
     request({
       url: 'https://api.amazon.com/auth/o2/tokeninfo',
       qs: { 'access_token': req.body.access_token }
-    }, function (err, response, body) {
+    }, (err, response, body) => {
       if (err) {
         console.error(err);
         res.status(500).send('Error reaching Amazon authenticator');
@@ -40,7 +40,7 @@ module.exports = function (router) {
       request({
         url: 'https://api.amazon.com/user/profile',
         headers: { 'Authorization': 'bearer ' + req.body.access_token }
-      }, function (err, response, body) {
+      }, (err, response, body) => {
         var data = JSON.parse(body);
         res.send({
           success: true,

@@ -21,7 +21,7 @@ var schema = new mongoose.Schema({
 
 schema.statics.scrape = function (start, end, page) {
   var Event = this;
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     var url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/events';
     page = page || 0;
     request(url, {
@@ -36,7 +36,7 @@ schema.statics.scrape = function (start, end, page) {
         pageIndex: page,
         pageSize: 500 // Max 500
       }
-    }, function (error, response, body) {
+    }, (error, response, body) => {
       if (error) {
         return reject(error);
       }
@@ -48,17 +48,17 @@ schema.statics.scrape = function (start, end, page) {
       
       // Recur for other pages
       if (page === 0) {
-        pages = Array.apply(0, new Array(body.PageCount - 1)).map(function (x, i) {
+        pages = Array.apply(0, new Array(body.PageCount - 1)).map((x, i) => {
           return Event.scrape(start, end, i + 1);
         });
       }
       
-      Promise.all(body.Page.map(function (e) {
-        return new Promise(function (res, rej) {
+      Promise.all(body.Page.map(e => {
+        return new Promise((res, rej) => {
           e = Event.transform(e);
           var id = e._id;
           delete e._id;
-          Event.update({ _id: id }, e, { upsert: true }, function (err, n, result) {
+          Event.update({ _id: id }, e, { upsert: true }, (err, n, result) => {
             if (err) {
               rej(err);
             } else {
@@ -67,18 +67,18 @@ schema.statics.scrape = function (start, end, page) {
             }
           });
         });
-      }).concat(pages)).then(function (events) {
+      }).concat(pages)).then(events => {
         events = [].concat.apply([], events);
         Event.find()
           .where('start').gte(start).lte(end)
-          .where('_id').nin(events.map(function (e) { return e._id; }))
-          .remove().exec(function (err) {
+          .where('_id').nin(events.map(e => e._id))
+          .remove().exec(err => {
             if (err) {
               return reject(err);
             }
             resolve(events);
           });
-      }, function (err) {
+      }, err => {
         reject(err);
       });
     });
@@ -91,8 +91,8 @@ schema.statics.transform = function (event) {
     EventDateId: '_id',
     EventName: 'name',
     Location: 'location',
-    StartDate: function (e) { return ['start', new Date(e.StartDate + ' ' + moment.tz(new Date(e.StartDate), 'America/Chicago').zoneAbbr())]; },
-    StopDate: function (e) { return ['end', new Date(e.StopDate + ' ' + moment.tz(new Date(e.StopDate), 'America/Chicago').zoneAbbr())]; },
+    StartDate: e => ['start', new Date(e.StartDate + ' ' + moment.tz(new Date(e.StartDate), 'America/Chicago').zoneAbbr())],
+    StopDate: e => ['end', new Date(e.StopDate + ' ' + moment.tz(new Date(e.StopDate), 'America/Chicago').zoneAbbr())],
     CalendarId: 'calendar'
   }, e = { };
   

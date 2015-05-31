@@ -16,7 +16,7 @@ module.exports = function (server) {
       v2 = express.Router();
   
   // Shared controllers
-  [v1, v2].forEach(function (v) {
+  [v1, v2].forEach(v => {
     authenticationController(v);
     emailerController(v);
     fileController(v);

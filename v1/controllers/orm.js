@@ -15,7 +15,7 @@ module.exports = function (router) {
     notifications: Notification
   };
   
-  router.get('/:type(' + Object.keys(types).join('|') + ')', function (req, res) {
+  router.get('/:type(' + Object.keys(types).join('|') + ')', (req, res) => {
     var Model = types[req.params.type],
         query = req.query,
         modifiers = [];

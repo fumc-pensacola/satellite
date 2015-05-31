@@ -2,11 +2,11 @@ var request = require('request');
 
 module.exports = function (server) {
 
-  server.get('/api/url/test', function (req, res) {
+  server.get('/api/url/test', (req, res) => {
     request({
       url: req.query.url,
       method: 'HEAD'
-    }, function (error, response, body) {
+    }, (error, response, body) => {
       if (error) {
         res.json({ found: false });
       } else {
