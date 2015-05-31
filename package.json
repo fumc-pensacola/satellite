@@ -1,25 +1,26 @@
 {
-  "name": "fumc",
-  "version": "1.3.2",
-  "description": "Internal app for IT admins to control website and mobile app content",
-  "main": "server/index.js",
+  "name": "satellite",
+  "version": "2.0.0",
+  "description": "API backing FUMC apps and services.",
+  "main": "index.js",
   "engines": {
     "node": "0.12.0",
     "npm": "2.5.x"
   },
   "scripts": {
-    "start": "foreman start web",
-    "test": "NODE_ENV=test mocha api/tests/**/*-test.js"
+    "start": "node --harmony_arrow_functions --harmony_classes index.js",
+    "test": "NODE_ENV=test --harmony_arrow_functions --harmony_classes mocha tests/**/*-test.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/andrewbranch/fumc"
+    "url": "https://github.com/fumc-pensacola/satellite"
   },
   "author": "Andrew Branch <andrewbranch@mail.com>",
   "dependencies": {
     "aws-sdk": "~2.0.21",
     "bluebird": "^2.3.11",
     "body-parser": "^1.12.2",
+    "dotenv": "^1.1.0",
     "express": "^4.12.3",
     "icalendar": "^0.7.1",
     "json-api": "^2.2.4",
@@ -29,39 +30,11 @@
     "moment": "~2.8.3",
     "moment-timezone": "^0.2.4",
     "mongoose": "3.8.x",
-    "natural": "~0.1.24",
     "newrelic": "^1.14.1",
-    "pg": "~3.5.0",
     "request": "^2.47.0",
     "sendgrid": "^1.3.0"
   },
   "devDependencies": {
-    "bower": "^1.3.12",
-    "broccoli-asset-rev": "^2.0.3",
-    "broccoli-merge-trees": "^0.2.1",
-    "broccoli-static-compiler": "^0.2.1",
-    "connect-restreamer": "^1.0.2",
-    "dotenv": "^1.1.0",
-    "ember-cli": "0.2.3",
-    "ember-cli-autoprefixer": "^0.3.0",
-    "ember-cli-content-security-policy": "0.4.0",
-    "ember-cli-dependency-checker": "0.0.8",
-    "ember-cli-esnext": "0.1.1",
-    "ember-cli-htmlbars": "^0.7.4",
-    "ember-cli-ic-ajax": "0.1.1",
-    "ember-cli-inject-live-reload": "^1.3.1",
-    "ember-cli-pretender": "0.3.1",
-    "ember-cli-qunit": "0.3.9",
-    "ember-cli-sass": "^3.2.1",
-    "ember-cli-uglify": "1.0.1",
-    "ember-data": "1.0.0-beta.16.1",
-    "ember-export-application-global": "^1.0.2",
-    "ember-json-api": "andrewbranch/ember-json-api",
-    "ember-radio-button": "1.0.5",
-    "express": "^4.12.3",
-    "glob": "^4.5.3",
-    "morgan": "^1.5.2",
-    "nock": "^2.0.1",
-    "shmock": "^0.7.1"
+    "nock": "^2.0.1"
   }
 }
