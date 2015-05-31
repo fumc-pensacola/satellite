@@ -8,7 +8,7 @@ var express = require('express'),
     later = require('later'),
     Worker = require('./worker'),
     app = express(),
-    port = process.env.NODE_ENV === 'development' ? 8080 : (process.env.PORT || 8001);
+    port = process.env.PORT;
 
 var dbReady = require('./config')(app);
 require('./static')(app);
