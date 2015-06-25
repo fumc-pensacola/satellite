@@ -17,7 +17,7 @@ describe('ORM', () => {
       return db.clear();
     }).then(() => {
       return db.seed();
-    }).then(done);
+    }).then(done).catch(done);
   });
   
   it('can GET a list of records', done => {

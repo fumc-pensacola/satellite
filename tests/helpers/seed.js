@@ -5,12 +5,14 @@ module.exports = {
     "date": new Date("2015-04-19T07:00:00.000Z"),
     "service": "ICON",
     "visible": true,
-    "file": "041915_ICONbulletin.pdf"
+    "file": "041915_ICONbulletin.pdf",
+    "liturgicalDay": "Pentacost"
   }, {
     "date": new Date("2015-04-19T07:00:00.000Z"),
     "service": "Main Sanctuary Services",
     "visible": true,
-    "file": "04-19-15_bulletin.pdf"
+    "file": "04-19-15_bulletin.pdf",
+    "liturgicalDay": "Second Sunday of Advent"
   }],
   "Calendar": [{
     "_id": "f088210f-648c-4236-a216-a3f900a07fd9",
