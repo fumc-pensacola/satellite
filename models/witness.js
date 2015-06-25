@@ -10,5 +10,5 @@ module.exports = mongoose.model('Witness', new mongoose.Schema({
   issue: { type: Number, required: true },
   visible: { type: Boolean },
   file: { type: String },
-  screenshot: { type: String }
+  preview: { type: String }
 }));

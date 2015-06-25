@@ -9,5 +9,5 @@ module.exports = mongoose.model('Bulletin', new mongoose.Schema({
   liturgicalDay: { type: String, required: true },
   visible: { type: Boolean },
   file: { type: String },
-  screenshot: { type: String }
+  preview: { type: String }
 }));
