@@ -10,14 +10,13 @@ let assert = require('assert'),
     base;
     
 describe('ORM', () => {
-  
   before(done => {
     appReady.then(resolutions => {
       base = 'http://localhost:' + resolutions[1].address().port + '/v3';
       return db.clear();
-    }).then(() => {
+    }, done).then(() => {
       return db.seed();
-    }).then(done).catch(done);
+    }, done).then(done).catch(done);
   });
   
   it('can GET a list of records', done => {
@@ -40,10 +39,11 @@ describe('ORM', () => {
     });
   });
   
-  it('can GET a record’s *-to-one relationship', done => {
+  it.skip('can GET a record’s *-to-one relationship', done => {
     request.get(base + '/events/e95301de-4663-4d81-961a-a35600ebeb80/links/calendar', {
       json: true
     }, (err, response, body) => {
+      console.log(body);
       assert.ok(!err);
       assert.equal(body.data.type, 'calendars');
       done();

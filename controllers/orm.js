@@ -15,9 +15,10 @@ module.exports = function(router, routeBase) {
     Witness: require('../models/witness')
   };
   
-  let adapter = new API.adapters.Mongoose(models),
+  let adapter = new API.dbAdapters.Mongoose(models),
       registry = new API.ResourceTypeRegistry(),
-      controller = new API.controllers.API(registry);
+      controller = new API.controllers.API(registry),
+      expressStrategy = new API.httpStrategies.Express(controller);
       
   let resourceTypes = [
     'bulletins',
@@ -30,7 +31,7 @@ module.exports = function(router, routeBase) {
   
   resourceTypes.forEach(t => {
     registry.type(t, {
-      adapter: adapter,
+      dbAdapter: adapter,
       urlTemplates: {
         self: routeBase + '/' + t + '/{id}'
       }
@@ -49,8 +50,7 @@ module.exports = function(router, routeBase) {
     };
   }
   
-  let front = new API.controllers.Front(controller),
-      requestHandler = front.apiRequest.bind(front),
+  let requestHandler = expressStrategy.apiRequest.bind(expressStrategy),
       patterns = generateRoutePatterns(resourceTypes),
       authRequestHandler = (req, res) => {
         if (Authentication.isAuthenticatedRequest(req)) {
