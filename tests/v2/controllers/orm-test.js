@@ -15,9 +15,9 @@ describe('ORM v2', () => {
     appReady.then(resolutions => {
       base = 'http://localhost:' + resolutions[1].address().port + '/api/v2';
       return db.clear();
-    }).then(() => {
+    }, done).then(() => {
       return db.seed();
-    }).then(done);
+    }, done).then(done).catch(done);
   });
   
   it('can GET a list of records', done => {
