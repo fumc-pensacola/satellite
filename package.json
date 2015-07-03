@@ -1,6 +1,6 @@
 {
   "name": "satellite",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "API backing FUMC apps and services.",
   "main": "index.js",
   "engines": {
