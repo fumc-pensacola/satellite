@@ -8,7 +8,8 @@ let assert = require('assert'),
     db = require('../helpers/db'),
     Event = require('../../models/event');
 
-describe('Event', () => {
+describe('Event', function() {
+  this.timeout(3000);
   
   describe('scrape', () => {
     
