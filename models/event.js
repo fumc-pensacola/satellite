@@ -22,11 +22,8 @@ let schema = new mongoose.Schema({
   autoIndex: NODE_ENV !== 'production'
 });
 
-schema.statics.scrape = function(start, end, page) {
-  let Event = this;
+function makeRequest(url, start, end, page) {
   return new Promise((resolve, reject) => {
-    let url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/events';
-    page = page || 0;
     request(url, {
       json: true,
       auth: {
@@ -52,11 +49,27 @@ schema.statics.scrape = function(start, end, page) {
       // Recur for other pages
       if (page === 0) {
         pages = Array.apply(0, new Array(body.PageCount - 1)).map((x, i) => {
-          return Event.scrape(start, end, i + 1);
+          return makeRequest(url, start, end, i + 1);
         });
+        
+        return Promise.all(pages).then(pages => {
+          resolve(body.Page.concat([].concat.apply([], pages)));
+        }, reject);
       }
       
-      Promise.all(body.Page.map(e => {
+      resolve(body.Page);
+    });
+  });
+}
+
+schema.statics.scrape = function(start, end, page) {
+  let Event = this;
+  return new Promise((resolve, reject) => {
+    let url = 'https://secure.accessacs.com/api_accessacs_mobile/v2/' + ACS_SITENUMBER + '/events';
+    page = page || 0;
+    
+    makeRequest(url, start, end, page).then(events => {
+      return Promise.all(events.map(e => {
         return new Promise((res, rej) => {
           e = Event.transform(e);
           let id = e._id;
@@ -70,21 +83,18 @@ schema.statics.scrape = function(start, end, page) {
             }
           });
         });
-      }).concat(pages)).then(events => {
-        events = [].concat.apply([], events);
-        Event.find()
-          .where('start').gte(start).lte(end)
-          .where('_id').nin(events.map(e => e._id))
-          .remove().exec(err => {
-            if (err) {
-              return reject(err);
-            }
-            resolve(events);
-          });
-      }, err => {
-        reject(err);
-      });
-    });
+      }));
+    }, reject).then(events => {
+      Event.find()
+        .where('start').gte(start).lte(end)
+        .where('_id').nin(events.map(e => e._id))
+        .remove().exec(err => {
+          if (err) {
+            throw err;
+          }
+          resolve(events);
+        });
+    }, reject).catch(reject);
   });
 };
 

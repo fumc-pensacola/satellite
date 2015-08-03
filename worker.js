@@ -11,8 +11,8 @@ module.exports = {
     });
   },
   scrapeEvents: function(start, end) {
-    start = start || moment().subtract(1, 'weeks');
-    end = end || moment().add(2, 'weeks');
+    start = start || moment().subtract(1, 'month');
+    end = end || moment().add(12, 'months');
     Event.scrape(start, end).catch(err => {
       console.error(err);
     });
