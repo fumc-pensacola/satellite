@@ -123,4 +123,4 @@ schema.statics.transform = function(event) {
   return e;
 };
 
-module.exports = mongoose.model('Event', schema);
+module.exports = mongoose.models.Event || mongoose.model('Event', schema);

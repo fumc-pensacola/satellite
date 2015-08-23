@@ -5,16 +5,17 @@ try { require('dotenv').config({ path: require('path').resolve(__dirname, '../..
 let assert = require('assert'),
     request = require('request'),
     server = require('../../helpers/server'),
-    appReady = require('../../../index'),
+    startApp = require('../../../index'),
     db = require('../../helpers/db'),
-    base;
+    appServer, base;
     
 describe('ORM v2', () => {
   
   before(function(done) {
     this.timeout(3000);
-    appReady.then(resolutions => {
-      base = 'http://localhost:' + resolutions[1].address().port + '/api/v2';
+    startApp().then(resolutions => {
+      appServer = resolutions[1];
+      base = 'http://localhost:' + appServer.address().port + '/api/v2';
       return db.clear();
     }, done).then(() => {
       return db.seed();
@@ -22,6 +23,7 @@ describe('ORM v2', () => {
   });
   
   after(done => {
+    appServer.close();
     db.disconnect().then(done);
   });
   

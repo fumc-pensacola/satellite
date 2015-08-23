@@ -2,7 +2,7 @@
 
 let mongoose = require('mongoose');
 
-module.exports = mongoose.model('Witness', new mongoose.Schema({
+let schema = new mongoose.Schema({
   from: { type: Date, required: true },
   to: { type: Date, required: true },
   description: { type: String },
@@ -11,4 +11,6 @@ module.exports = mongoose.model('Witness', new mongoose.Schema({
   visible: { type: Boolean },
   file: { type: String },
   preview: { type: String }
-}));
+});
+
+module.exports = mongoose.models.Witness || mongoose.model('Witness', schema);

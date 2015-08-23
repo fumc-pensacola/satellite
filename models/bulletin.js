@@ -2,7 +2,7 @@
 
 let mongoose = require('mongoose');
 
-module.exports = mongoose.model('Bulletin', new mongoose.Schema({
+let schema = new mongoose.Schema({
   date: { type: Date, required: true },
   service: { type: String, required: true },
   description: { type: String },
@@ -10,4 +10,6 @@ module.exports = mongoose.model('Bulletin', new mongoose.Schema({
   visible: { type: Boolean },
   file: { type: String },
   preview: { type: String }
-}));
+});
+
+module.exports = mongoose.models.Bulletin || mongoose.model('Bulletin', schema);

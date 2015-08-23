@@ -2,7 +2,9 @@
 
 let mongoose = require('mongoose');
 
-module.exports = mongoose.model('Setting', new mongoose.Schema({
+let schema = new mongoose.Schema({
   key: { type: String },
   value: { type: String }
-}));
+});
+
+module.exports = mongoose.models.Setting || mongoose.model('Setting', schema);

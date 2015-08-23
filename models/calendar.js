@@ -91,4 +91,4 @@ schema.statics.transform = function(calendar) {
   return c;
 };
 
-module.exports = mongoose.model('Calendar', schema);
+module.exports = mongoose.models.Calendar || mongoose.model('Calendar', schema);
