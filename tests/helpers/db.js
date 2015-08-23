@@ -17,27 +17,41 @@ const MONGO_TEST = process.env.MONGO_TEST;
 module.exports = {
   connect: function() {
     return new Promise((resolve, reject) => {
-      mongoose.connect(MONGO_TEST, resolve);
+      mongoose.connect(MONGO_TEST, err => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  },
+  disconnect: function() {
+    return new Promise((resolve, reject) => {
+      mongoose.disconnect(resolve);
     });
   },
   clear: function() {
     return Promise.all(Object.keys(models).map(m => {
       return new Promise((resolve, reject) => {
-        models[m].remove({}, () => resolve());
+        models[m].remove({}, err => {
+          if (err) {
+            return reject(err);
+          }
+          resolve();
+        });
       });
     }));
   },
   seed: function() {
-    return new Promise((resolve, reject) => {
-      for (let m in seeds) {
+    return Promise.all(Object.keys(seeds).map(m => {
+      return new Promise((resolve, reject) => {
         models[m].create(seeds[m], err => {
           if (err) {
-            reject(err);
-          } else {
-            resolve();
+            return reject(err);
           }
+          resolve();
         });
-      }
-    });
+      });
+    }));
   }
 };

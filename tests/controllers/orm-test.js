@@ -16,7 +16,11 @@ describe('ORM', () => {
       return db.clear();
     }, done).then(() => {
       return db.seed();
-    }, done).then(done).catch(done);
+    }, done).then(() => done()).catch(done);
+  });
+  
+  after(done => {
+    db.disconnect().then(done);
   });
   
   it('can GET a list of records', done => {

@@ -19,11 +19,12 @@ describe('Calendar', () => {
       db.connect().then(() => {
         db.clear();
         done();
-      });
+      }).catch(done);
     });
     
-    after(() => {
+    after(done => {
       server.destroy();
+      db.disconnect().then(done);
     });
     
     it('should resolve to all published calendars', done => {

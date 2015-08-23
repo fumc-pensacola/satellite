@@ -32,6 +32,12 @@ module.exports = function(server) {
   }
   
   return new Promise((resolve, reject) => {
-    mongoose.connect(MONGO_URI, resolve);
+    mongoose.connect(MONGO_URI, err => {
+      if (err) {
+        return reject(err);
+      }
+      console.log('Database connected');
+      resolve();
+    });
   });
 };

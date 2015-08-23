@@ -11,13 +11,18 @@ let assert = require('assert'),
     
 describe('ORM v2', () => {
   
-  before(done => {
+  before(function(done) {
+    this.timeout(3000);
     appReady.then(resolutions => {
       base = 'http://localhost:' + resolutions[1].address().port + '/api/v2';
       return db.clear();
     }, done).then(() => {
       return db.seed();
-    }, done).then(done).catch(done);
+    }, done).then(() => done()).catch(done);
+  });
+  
+  after(done => {
+    db.disconnect().then(done);
   });
   
   it('can GET a list of records', done => {
