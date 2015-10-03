@@ -21,8 +21,10 @@ function startApp() {
     let calendarsSchedule = later.parse.text('every 30 minutes');
     later.setInterval(Worker.scrapeCalendars, calendarsSchedule);
     later.setInterval(Worker.scrapeEvents, calendarsSchedule);
+    later.setInterval(Worker.scrapeVideos, calendarsSchedule);
     Worker.scrapeCalendars();
     Worker.scrapeEvents();
+    Worker.scrapeVideos();
   }
 
   let serverReady = new Promise((resolve, reject) => {
