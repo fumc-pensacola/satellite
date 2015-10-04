@@ -12,7 +12,9 @@ module.exports = function(router, routeBase) {
     Feature: require('../models/feature'),
     Notification: require('../models/notification'),
     Setting: require('../models/setting'),
-    Witness: require('../models/witness')
+    Witness: require('../models/witness'),
+    VideoAlbum: require('../models/video-album'),
+    Video: require('../models/video')
   };
   
   let adapter = new API.dbAdapters.Mongoose(models),
@@ -26,14 +28,16 @@ module.exports = function(router, routeBase) {
     'witnesses',
     'calendars',
     'events',
-    'notifications'
+    'notifications',
+    'video-albums',
+    'videos'
   ];
   
   resourceTypes.forEach(t => {
     registry.type(t, {
       dbAdapter: adapter,
       urlTemplates: {
-        self: routeBase + '/' + t + '/{id}'
+        self: `${routeBase}/${t}/{id}`
       }
     });
   });

@@ -15,7 +15,8 @@ let schema = new mongoose.Schema({
     height: { type: Number, required: true },
     link: { type: String, required: true }
   }],
-  fileHD: { type: String, required: true }
+  fileHD: { type: String, required: true },
+  visible: { type: Boolean, required: true, default: true }
 });
 
 module.exports = mongoose.models.Video || mongoose.model('Video', schema);
