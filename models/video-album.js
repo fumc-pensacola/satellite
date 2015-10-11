@@ -20,8 +20,8 @@ let schema = new mongoose.Schema({
   link: { type: String, required: true },
   videosURI: { type: String, required: true },
   videos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Video' }],
-  visible: { type: String, required: true, default: true },
-  featured: { type: String, required: true, default: false }
+  visible: { type: Boolean, required: true, default: true },
+  featured: { type: Boolean, required: true, default: false }
 });
 
 function fetch(url, token, query) {
