@@ -25,3 +25,11 @@ let schema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model(schema, 'Family');
+
+// get all pages for /individuals?q=A
+// add each member to a list
+// repeat for B-Z
+// delete any database members not in the list
+// delete any empty families
+// upsert all members
+// find any members without a family, create one
