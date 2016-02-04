@@ -25,6 +25,7 @@
     "json-api": "andrewbranch/json-api",
     "json-api-rc3": "andrewbranch/json-api-rc3#mongoose-4",
     "later": "^1.1.6",
+    "lodash": "^4.2.1",
     "moment": "~2.8.3",
     "moment-timezone": "^0.2.4",
     "mongoose": "4.0.x",

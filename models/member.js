@@ -1,4 +1,5 @@
 "use strict";
+let mongoose = require('mongoose');
 
 let schema = new mongoose.Schema({
   firstName: { type: String, required: true },
@@ -18,4 +19,4 @@ let schema = new mongoose.Schema({
   }]
 });
 
-module.exports = mongoose.model(schema, 'Member');
+module.exports = mongoose.models.Member || mongoose.model('Member', schema);
