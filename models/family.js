@@ -97,12 +97,14 @@ function extractData(bodies) {
 }
 
 function gatherIndividuals() {
-  return Promise.all(LETTERS.map(q => 
-    fetch(`${BASE}/individuals`, { pageSize: 500, q })
-      .then(verifyFamilyResponse)
-      .then(aggregatePages).then(x => (console.log(`got all for ${q}`), x))
-      .then(extractData)
-    )).then(compose(uniqBy('IndvId'), flatten));
+  return new Promise((resolve, reject) => {
+    Stream(LETTERS).ratelimit(1, RATELIMIT).map(q => 
+      fetch(`${BASE}/individuals`, { pageSize: 500, q })
+        .then(verifyFamilyResponse)
+        .then(aggregatePages)
+        .then(extractData)
+    ).map(Stream).merge().stopOnError(reject).toArray(resolve)
+  }).then(compose(uniqBy('IndvId'), flatten));
 }
 
 function purgeMembers(individuals) {
