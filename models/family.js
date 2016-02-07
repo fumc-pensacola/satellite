@@ -222,11 +222,11 @@ function removeEmptyFamilies() {
 }
 
 schema.statics.scrape = () => {
+  let startTime = Date.now();
   console.log('Starting individuals scrape...');
   let logErrorStack = compose(console.error, get('stack'));
   
   gatherIndividuals().then(_individuals => {
-    _individuals = _individuals.slice(0, 10);
     console.log('Finished getting individuals overview.');
     console.log('Getting detailed information about each individual...');
     let individuals = Stream(_individuals);
@@ -262,7 +262,7 @@ schema.statics.scrape = () => {
           .errors(logErrorStack)
           .done(() => {
             removeEmptyFamilies()
-              .then(() => console.log('Finished scraping directory info.'))
+              .then(() => console.log(`Finished scraping directory info after ${Math.round((Date.now() - startTime) / 1000 / 60)} minutes.`))
               .catch(logErrorStack);
           });
       });
