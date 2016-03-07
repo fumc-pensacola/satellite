@@ -6,7 +6,7 @@ let schema = new mongoose.Schema({
   acsFamilyId: { type: Number, required: true },
   hide: { type: Boolean, required: true, default: false },
   firstName: { type: String, required: true },
-  lastname: { type: String, required: true },
+  lastName: { type: String, required: true },
   title: { type: String },
   suffix: { type: String },
   goesBy: { type: String },

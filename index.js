@@ -1,5 +1,11 @@
 "use strict";
 
+// Only one babel/polyfill can be loaded at a time,
+// so we’ll wipe these out and load it ourselves.
+require('fs').writeFileSync(require('path').resolve(__dirname, './node_modules/json-api-rc3/node_modules/babel/polyfill.js'), '');
+require('fs').writeFileSync(require('path').resolve(__dirname, './node_modules/json-api/node_modules/babel/polyfill.js'), '');
+require('babel-polyfill');
+
 try { require('dotenv').load(); } catch (e) {}
 
 if (process.env.NODE_ENV === 'production') {

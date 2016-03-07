@@ -14,13 +14,12 @@ const ENUMS = {
 };
 
 let schema = new mongoose.Schema({
-  dateRequested: { type: Date, required: true },
+  dateRequested: { type: Date, required: true, default: Date.now },
   dateSettled: Date,
   status: { type: String, enum: Object.values(ENUMS.STATUS), required: true, default: ENUMS.STATUS.PENDING },
   scopes: [{ type: String, enum: ENUMS.SCOPES }],
-  deviceId: { type: String, required: true },
-  deviceType: { type: String, required: true },
-  publicKey: { type: String, required: true },
+  digitsId: String,
+  phone: String,
   twitter: String,
   facebook: String,
   email: String

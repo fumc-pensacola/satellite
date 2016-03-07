@@ -1,6 +1,7 @@
 "use strict";
 
 let express = require('express'),
+    morgan = require('morgan'),
     authenticationController = require('./controllers/authentication'),
     icalController = require('./controllers/ical'),
     emailerController = require('./controllers/emailer'),
@@ -11,7 +12,8 @@ let express = require('express'),
     
 
 module.exports = function(server) {
-
+  
+  server.use(morgan('combined'));
   let v2 = express.Router(),
       v3 = express.Router();
   

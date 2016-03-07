@@ -1,9 +1,5 @@
 "use strict";
 
-// Only one babel/polyfill can be loaded at a time,
-// so we’ll let the real json-api package load it.
-require('fs').writeFileSync(require('path').resolve(__dirname, '../../node_modules/json-api-rc3/node_modules/babel/polyfill.js'), '');
-
 let API = require('json-api-rc3'),
     Authentication = require('../../authentication');
 
