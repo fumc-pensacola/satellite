@@ -1,10 +1,9 @@
 "use strict";
-
-// Only one babel/polyfill can be loaded at a time,
-// so we’ll wipe these out and load it ourselves.
-require('fs').writeFileSync(require('path').resolve(__dirname, './node_modules/json-api-rc3/node_modules/babel/polyfill.js'), '');
-require('fs').writeFileSync(require('path').resolve(__dirname, './node_modules/json-api/node_modules/babel/polyfill.js'), '');
 require('babel-polyfill');
+
+// Make mongoose use native Promises
+let mongoose = require('mongoose');
+mongoose.Promise = Promise;
 
 try { require('dotenv').load(); } catch (e) {}
 
@@ -25,19 +24,16 @@ function startApp() {
 
   if (process.env.NODE_ENV !== 'test') {
     let calendarsSchedule = later.parse.text('every 30 minutes');
+    let directorySchedule = later.parse.recur().on(0).hour(); // Every night at midnight
     later.setInterval(Worker.scrapeCalendars, calendarsSchedule);
     later.setInterval(Worker.scrapeEvents, calendarsSchedule);
     later.setInterval(Worker.scrapeVideos, calendarsSchedule);
-    Worker.scrapeCalendars();
-    Worker.scrapeEvents();
-    Worker.scrapeVideos();
+    later.setInterval(Worker.scrapeMembers, directorySchedule);
   }
 
   let serverReady = new Promise((resolve, reject) => {
     let server = app.listen(port, function() {
-      let host = server.address().address,
-          port = server.address().port;
-
+      let port = server.address().port;
       console.log('Server listening on port ' + port);
       resolve(server);
     });

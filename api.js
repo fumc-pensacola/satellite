@@ -7,8 +7,7 @@ let express = require('express'),
     emailerController = require('./controllers/emailer'),
     fileController = require('./controllers/file'),
     notificationsController = require('./controllers/notifications'),
-    ormController = require('./controllers/orm'),
-    ormControllerV2 = require('./v2/controllers/orm');
+    ormController = require('./controllers/orm');
     
 
 module.exports = function(server) {
@@ -33,7 +32,6 @@ module.exports = function(server) {
   };
   
   // Version-specific controllers
-  ormControllerV2(v2, routeBase.v2);
   ormController(v3, routeBase.v3);
   icalController(v3);
   notificationsController(v2);

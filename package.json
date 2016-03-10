@@ -4,7 +4,7 @@
   "description": "API backing FUMC apps and services.",
   "main": "index.js",
   "engines": {
-    "iojs": "^2.1.0",
+    "node": "5.5.0",
     "npm": "2.5.x"
   },
   "scripts": {
@@ -26,14 +26,13 @@
     "highland": "^2.6.0",
     "icalendar": "^0.7.1",
     "json-api": "andrewbranch/json-api",
-    "json-api-rc3": "andrewbranch/json-api-rc3#mongoose-4",
     "jsonwebtoken": "^5.7.0",
     "later": "^1.1.6",
     "lodash": "^4.2.1",
     "moment": "~2.8.3",
     "moment-timezone": "^0.2.4",
-    "mongoose": "4.0.x",
-    "mongoose-timestamps": "0.0.1",
+    "mongoose": "4.4.6",
+    "mongoose-timestamp": "^0.5.0",
     "morgan": "^1.7.0",
     "newrelic": "^1.14.1",
     "node-uuid": "^1.4.7",

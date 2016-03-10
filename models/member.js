@@ -1,5 +1,6 @@
 "use strict";
 let mongoose = require('mongoose');
+let timestamps = require('mongoose-timestamp');
 
 let schema = new mongoose.Schema({
   acsId: { type: Number, required: true },
@@ -19,7 +20,10 @@ let schema = new mongoose.Schema({
   phones: [{
     label: String,
     value: String
-  }]
+  }],
+  isDeleted: { type: Boolean, required: true, default: false }
 });
+
+schema.plugin(timestamps);
 
 module.exports = mongoose.models.Member || mongoose.model('Member', schema);

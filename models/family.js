@@ -1,6 +1,7 @@
 "use strict";
 
 let mongoose = require('mongoose'),
+    timestamps = require('mongoose-timestamp'),
     request = require('request'),
     Stream = require('highland'),
     tryFormatPhone = require('../utils/try-format-phone'),
@@ -35,8 +36,11 @@ let schema = new mongoose.Schema({
     city: String,
     state: String,
     zip: String
-  }]
+  }],
+  isDeleted: { type: Boolean, required: true, default: false }
 });
+
+schema.plugin(timestamps);
 
 // get all pages for /individuals?q=A
 // add each member to a list
@@ -109,17 +113,14 @@ function gatherIndividuals() {
 }
 
 function purgeMembers(individuals) {
-  return new Promise((resolve, reject) => {
-    console.log('Removing any members not in the list...');
-    Member
-      .find()
-      .where('acsId')
-      .nin(individuals.map(get('IndvId')))
-      .remove()
-      .exec(err => {
-        if (err) return reject(err);
-        resolve(individuals);
-      });
+  console.log('Removing any members not in the list...');
+  return Member.find({
+    isDeleted: false,
+    acsId: { $nin: individuals.map(get('IndvId')) }
+  }).update({
+    isDeleted: true
+  }).exec().then(() => {
+    return individuals;
   });
 }
 
@@ -162,12 +163,13 @@ function toMember(individual) {
     emails: individual.Emails.filter(listedNotDeleted).map(e => ({
       label: e.EmailType,
       value: e.Email
-    }))
+    })),
+    isDeleted: false
   };
 }
 
 function toFamily(member) {
-  return { acsId: member.acsFamilyId };
+  return { acsId: member.acsFamilyId, isDeleted: false };
 }
 
 const withMembers = members => family => Object.assign({}, family, {
@@ -191,35 +193,27 @@ const withAddresses = addresses => family => Object.assign({}, family, {
 });
 
 function upsertMember(member) {
-  return new Promise((resolve, reject) => {
-    console.log(`Saving ${member.firstName} ${member.lastName}...`);
-    let query = { acsId: member.acsId };
-    let options = { upsert: true, new: true };
-    Member.findOneAndUpdate(query, member, options, (err, record) => {
-      if (err) return reject(err);
-      resolve(record);
-    });
-  });
+  console.log(`Saving ${member.firstName} ${member.lastName}...`);
+  let query = { acsId: member.acsId };
+  let options = { upsert: true, new: true };
+  return Member.findOneAndUpdate(query, member, options).exec();
 }
 
 function upsertFamily(family) {
-  return new Promise((resolve, reject) => {
-    console.log(`Saving family with ${family.members.length} members...`);
-    Family.update({ acsId: family.acsId }, family, { upsert: true }, err => {
-      if (err) return reject(err);
-      console.log(`Saved family ${family.acsId}.`);
-      resolve(family);
-    });
+  console.log(`Saving family with ${family.members.length} members...`);
+  return Family.update({ acsId: family.acsId }, family, { upsert: true }).exec().then(() => {
+    console.log(`Saved family ${family.acsId}.`);
+    return family;
   });
 }
 
 function removeEmptyFamilies() {
-  return new Promise((resolve, reject) => {
-    Family.find().where('members').equals([]).remove().exec(err => {
-      if (err) return reject(err);
-      resolve();
-    });
-  });
+  return Family.find({
+    isDeleted: false,
+    members: { $size: 0 }
+  }).update({
+    isDeleted: true
+  }).exec();
 }
 
 schema.statics.scrape = () => {

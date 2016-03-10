@@ -3,6 +3,7 @@
 let Calendar = require('./models/calendar'),
     VideoAlbum = require('./models/video-album'),
     Event = require('./models/event'),
+    Family = require('./models/family'),
     moment = require('moment');
 
 module.exports = {
@@ -22,5 +23,8 @@ module.exports = {
     VideoAlbum.scrape().catch(err => {
       console.error(err.stack);
     });
+  },
+  scrapeMembers: function() {
+    Family.scrape();
   }
 };
