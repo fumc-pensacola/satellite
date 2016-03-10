@@ -3,6 +3,7 @@
 let mongoose = require('mongoose'),
     request = require('request'),
     Stream = require('highland'),
+    tryFormatPhone = require('../utils/try-format-phone'),
     sequence = require('../utils/sequence'),
     unary = require('lodash/unary'),
     flatten = require('lodash/flatten'),
@@ -156,7 +157,7 @@ function toMember(individual) {
     isChild: individual.FamilyPosition === 'Child',
     phones: individual.Phones.filter(listedNotDeleted).map(p => ({
       label: p.PhoneType,
-      value: p.PhoneNumber
+      value: tryFormatPhone(p.PhoneNumber)
     })),
     emails: individual.Emails.filter(listedNotDeleted).map(e => ({
       label: e.EmailType,
