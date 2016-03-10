@@ -13,7 +13,10 @@ let express = require('express'),
 
 module.exports = function(server) {
   
-  server.use(morgan('combined'));
+  if (process.env.NODE_ENV !== 'test') {
+    server.use(morgan('tiny'));
+  }
+  
   let v2 = express.Router(),
       v3 = express.Router();
   

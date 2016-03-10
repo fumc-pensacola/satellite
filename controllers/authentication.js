@@ -133,6 +133,7 @@ module.exports = function(router) {
           return saveUserAndToken(user, token)
             .then(() => createSignedTokenString(token))
             .then(signedToken => {
+              console.log(signedToken);
               res.json({
                 access_token: signedToken, // eslint-disable-line
                 scopes: token.scopes,
@@ -141,7 +142,7 @@ module.exports = function(router) {
             });
         });
       }).catch(err => {
-        console.log(err.stack);
+        console.error(err.stack);
         res.status(500).end();
       });
   });

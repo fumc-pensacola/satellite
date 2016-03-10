@@ -22,6 +22,7 @@
     "body-parser": "^1.12.2",
     "dotenv": "^1.1.0",
     "express": "^4.12.3",
+    "express-jwt": "^3.3.0",
     "highland": "^2.6.0",
     "icalendar": "^0.7.1",
     "json-api": "andrewbranch/json-api",

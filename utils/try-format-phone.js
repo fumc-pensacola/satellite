@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function tryFormatPhone(phone) {
   let sanitized = String(phone).replace(/[^\d]/g, '');
   if (sanitized.length === 7) {
