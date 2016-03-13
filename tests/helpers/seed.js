@@ -151,4 +151,4 @@ module.exports = {
     "end": new Date("2015-05-01T13:00:00Z"),
     "calendar": "584948b7-f9da-4df9-a221-a3f9009c216a"
   }]
-}
+};
