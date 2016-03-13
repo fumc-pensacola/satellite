@@ -30,4 +30,19 @@ describe('Authentication', () => {
       .expect(401, done);
   });
   
+  it('prevents tampering with X-Auth-Service-Provider', done => {
+    request(appServer)
+      .post('/v3/authenticate/digits')
+      .set('X-Auth-Service-Provider', 'https://malicious.url')
+      .expect(400, done);
+  });
+  
+  it('prevents tampering with oauth_consumer_key', done => {
+    request(appServer)
+      .post('/v3/authenticate/digits')
+      .set('X-Auth-Service-Provider', 'https://api.digits.com/validate_credentials.json')
+      .set('oauth_consumer_key', 'SomeoneElsesAppsConsumerKey')
+      .expect(400, done);
+  });
+  
 });

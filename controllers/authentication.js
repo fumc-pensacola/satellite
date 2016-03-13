@@ -1,6 +1,7 @@
 "use strict";
 
 let request = require('request'),
+    url = require('url'),
     moment = require('moment'),
     bodyParser = require('body-parser'),
     jwt = require('jsonwebtoken'),
@@ -123,10 +124,20 @@ module.exports = function(router) {
   });
   
   router.post('/authenticate/digits', (req, res) => {
-    let url = req.headers['x-auth-service-provider'],
-        credentials = req.headers['x-verify-credentials-authorization'];
+    let endpoint = req.headers['x-auth-service-provider'],
+        credentials = req.headers['x-verify-credentials-authorization'],
+        consumerKey = req.headers['oauth_consumer_key'];
     
-    getDigitsUser(url, credentials)
+    if (url.parse(endpoint).host !== 'api.digits.com') {
+      console.log(`Potential malicious login attempt: X-Auth-Service-Provider was ${endpoint}.`);
+      return res.status(400).end();
+    }
+    if (consumerKey !== process.env.DIGITS_CONSUMER_KEY) {
+      console.log(`Potential malicious login attempt: oauth_consumer_key was ${consumerKey}.`);
+      return res.status(400).end();
+    }
+    
+    getDigitsUser(endpoint, credentials)
       .then(findOrCreateUser)
       .then(user => {
         return createTokenForUser(user).then(token => {
