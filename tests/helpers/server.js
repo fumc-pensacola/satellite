@@ -7,7 +7,7 @@ const ACS_SITENUMBER = process.env.ACS_SITENUMBER;
 let eventPages = [
   require('./events-page-1.json'),
   require('./events-page-2.json'),
-  require('./events-page-3.json'),
+  require('./events-page-3.json')
 ];
 
 let calendarResponse = require('./calendars.json'),
@@ -39,6 +39,7 @@ nock.enableNetConnect();
 module.exports = {
   create: function() {
     nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
     
     nock('https://secure.accessacs.com/acscfwsv2')
       .post('/wsca.asmx')
@@ -69,6 +70,20 @@ module.exports = {
       .reply(200, JSON.stringify(switcheroo(calendarResponse)))
       .get('/calendars')
       .reply(200, JSON.stringify(deleteOne(calendarResponse)));
+      
+    nock('https://api.digits.com', {
+      reqheaders: { authorization: 'OAuthCredentialsFromNonMemberLogin' }
+    }).get('/validate_credentials.json').reply(200, JSON.stringify({
+      "id": 123456789,
+      "phone_number": '+18501234567'
+    }));
+    
+    nock('https://api.digits.com', {
+      reqheaders: { authorization: 'OAuthCredentialsFrom8503246214Login' }
+    }).get('/validate_credentials.json').reply(200, JSON.stringify({
+      "id": 987654321,
+      "phone_number": '+18503246214'
+    }));
   },
   destroy: function() {
     nock.enableNetConnect();

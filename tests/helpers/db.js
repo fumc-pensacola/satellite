@@ -9,7 +9,8 @@ let mongoose = require('mongoose'),
       Feature: require('../../models/feature'),
       Notification: require('../../models/notification'),
       Setting: require('../../models/setting'),
-      Witness: require('../../models/witness')
+      Witness: require('../../models/witness'),
+      Member: require('../../models/member')
     };
     
 const MONGO_TEST = process.env.MONGO_TEST;

@@ -127,7 +127,7 @@ module.exports = function(router) {
     let endpoint = req.headers['x-auth-service-provider'],
         credentials = req.headers['x-verify-credentials-authorization'],
         consumerKey = req.headers['oauth_consumer_key'];
-    
+
     if (url.parse(endpoint).host !== 'api.digits.com') {
       console.log(`Potential malicious login attempt: X-Auth-Service-Provider was ${endpoint}.`);
       return res.status(400).end();

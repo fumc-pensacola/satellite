@@ -1,6 +1,25 @@
 "use strict";
 
 module.exports = {
+  "Member": [{
+    "acsId": 70,
+    "emails": [{
+      "value": "drewbranch@mail.com",
+      "label": "Home"
+    }],
+    "phones": [{
+      "value": "+18503246214",
+      "label": "Cell Phone"
+    }],
+    "isChild": false,
+    "goesBy": "Drew",
+    "suffix": null,
+    "title": "Mr",
+    "firstName": "Andrew",
+    "acsFamilyId": 8982,
+    "isDeleted": false,
+    "lastName": "Branch"
+  }],
   "Bulletin": [{
     "date": new Date("2015-04-19T07:00:00.000Z"),
     "service": "ICON",
