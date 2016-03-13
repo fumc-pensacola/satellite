@@ -1,6 +1,6 @@
 "use strict";
 
-try { require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') }); } catch (e) {}
+try { require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env.test') }); } catch (e) {}
 
 let assert = require('assert'),
     moment = require('moment-timezone'),

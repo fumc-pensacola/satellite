@@ -4,6 +4,7 @@ logs
 
 # secrets
 .env
+.env.*
 
 # compiled output
 /tmp

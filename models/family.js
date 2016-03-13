@@ -221,47 +221,50 @@ schema.statics.scrape = () => {
   console.log('Starting individuals scrape...');
   let logErrorStack = compose(console.error, get('stack'));
   
-  gatherIndividuals().then(_individuals => {
-    console.log('Finished getting individuals overview.');
-    console.log('Getting detailed information about each individual...');
-    let individuals = Stream(_individuals);
-    let rateLimited = individuals.ratelimit(1, RATELIMIT);
-    
-    purgeMembers(_individuals)
-      .then(() => console.log('Finished removing any extraneous members.'))
-      .catch(logErrorStack)
-    
-    let detailedIndividuals = rateLimited
-      .map(getIndividualDetails)
-      .map(Stream).merge()
-      .map(get('body'));
-    
-    let addresses = {};
-    detailedIndividuals
-      .tap(i => addresses[i.PrimFamily] = i.Addresses)
-      .map(toMember)
-      .map(upsertMember)
-      .map(Stream).merge()
-      .errors(logErrorStack)
-      .toArray(members => {
-        console.log('Finished saving members.');
-        let getId = get('acsId');
-        let getIdOfArgs = overArgs([getId, getId]);
-        Stream(members)
-          .map(toFamily)
-          .uniqBy(getIdOfArgs(eq))
-          .map(withMembers(members))
-          .map(withAddresses(addresses))
-          .map(upsertFamily)
-          .map(Stream).merge()
-          .errors(logErrorStack)
-          .done(() => {
-            removeEmptyFamilies()
-              .then(() => console.log(`Finished scraping directory info after ${Math.round((Date.now() - startTime) / 1000 / 60)} minutes.`))
-              .catch(logErrorStack);
-          });
-      });
-  }).catch(logErrorStack);
+  return gatherIndividuals().then(_individuals => {
+    return new Promise((resolve, reject) => {
+      console.log('Finished getting individuals overview.');
+      console.log('Getting detailed information about each individual...');
+      let individuals = Stream(_individuals);
+      let rateLimited = individuals.ratelimit(1, RATELIMIT);
+      
+      purgeMembers(_individuals)
+        .then(() => console.log('Finished removing any extraneous members.'))
+        .catch(logErrorStack)
+      
+      let detailedIndividuals = rateLimited
+        .map(getIndividualDetails)
+        .map(Stream).merge()
+        .map(get('body'));
+      
+      let addresses = {};
+      detailedIndividuals
+        .tap(i => addresses[i.PrimFamily] = i.Addresses)
+        .map(toMember)
+        .map(upsertMember)
+        .map(Stream).merge()
+        .errors(logErrorStack)
+        .toArray(members => {
+          console.log('Finished saving members.');
+          let getId = get('acsId');
+          let getIdOfArgs = overArgs([getId, getId]);
+          Stream(members)
+            .map(toFamily)
+            .uniqBy(getIdOfArgs(eq))
+            .map(withMembers(members))
+            .map(withAddresses(addresses))
+            .map(upsertFamily)
+            .map(Stream).merge()
+            .errors(logErrorStack)
+            .done(() => {
+              removeEmptyFamilies()
+                .then(() => console.log(`Finished scraping directory info after ${Math.round((Date.now() - startTime) / 1000 / 60)} minutes.`))
+                .then(resolve)
+                .catch(logErrorStack);
+            });
+        });
+    }).catch(logErrorStack);
+  });
 };
 
 const Family = mongoose.models.Family || mongoose.model('Family', schema);

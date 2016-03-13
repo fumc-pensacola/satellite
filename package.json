@@ -43,7 +43,7 @@
   "devDependencies": {
     "eslint": "^1.5.0",
     "mocha": "^2.2.5",
-    "nock": "^2.0.1",
+    "nock": "^7.4.0",
     "supertest": "^1.2.0"
   }
 }

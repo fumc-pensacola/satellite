@@ -1,0 +1,72 @@
+{
+  "a": [
+    [{
+      "IndvId": 10159,
+      "FamId": 7248,
+      "FamilyPosition": "Head",
+      "Title": "Ms",
+      "FirstName": "Denie",
+      "LastName": "Abrams",
+      "MiddleName": "G.",
+      "GoesByName": "Denie",
+      "Suffix": null,
+      "PictureUrl": "",
+      "StatusSelected": null
+    }],
+    [{
+      "IndvId": 1079,
+      "FamId": 1581,
+      "FamilyPosition": "Head",
+      "Title": "Mrs",
+      "FirstName": "Mary",
+      "LastName": "Algore",
+      "MiddleName": "Kathryn",
+      "GoesByName": "Kathy",
+      "Suffix": null,
+      "PictureUrl": "",
+      "StatusSelected": null
+    }, {
+      "IndvId": 70,
+      "FamId": 8982,
+      "FamilyPosition": "Head",
+      "Title": "Mr",
+      "FirstName": "Andrew",
+      "LastName": "Branch",
+      "MiddleName": "Christopher",
+      "GoesByName": "Drew",
+      "Suffix": null,
+      "PictureUrl": "",
+      "StatusSelected": null
+    }]
+  ],
+  "b": [
+    [{
+      "IndvId": 70,
+      "FamId": 8982,
+      "FamilyPosition": "Head",
+      "Title": "Mr",
+      "FirstName": "Andrew",
+      "LastName": "Branch",
+      "MiddleName": "Christopher",
+      "GoesByName": "Drew",
+      "Suffix": null,
+      "PictureUrl": "",
+      "StatusSelected": null
+    }]
+  ],
+  "z": [
+    [{
+      "IndvId": 2172,
+      "FamId": 2207,
+      "FamilyPosition": "Head",
+      "Title": null,
+      "FirstName": "Jessica",
+      "LastName": "Zanzibar",
+      "MiddleName": "A.",
+      "GoesByName": null,
+      "Suffix": null,
+      "PictureUrl": "",
+      "StatusSelected": null
+    }]
+  ]
+}

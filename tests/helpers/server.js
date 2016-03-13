@@ -1,8 +1,38 @@
 "use strict";
 
 let nock = require('nock');
+let sequence = require('../../utils/sequence');
+let unary = require('lodash/unary');
 
+const LETTERS = sequence(97, 122).map(unary(String.fromCharCode));
 const ACS_SITENUMBER = process.env.ACS_SITENUMBER;
+
+function makeIndividualRequestMocks(responses) {
+  return LETTERS.reduce((scope, q) => {
+    return responses[q] ? responses[q].reduce((scope, page, i) => {
+      let query = i ? { pageSize: 500, q, pageIndex: i } : { pageSize: 500, q };
+      return scope.get('/individuals')
+        .query(query)
+        .reply(200, JSON.stringify({
+          Page: page,
+          PageIndex: i,
+          PageCount: responses[q].length,
+          PageSize: 500
+        }));
+    }, scope) : scope.get('/individuals').query({ pageSize: 500, q }).reply(200, JSON.stringify({
+      Page: [],
+      PageIndex: 0,
+      PageCount: 1,
+      PageSize: 500
+    }));
+  }, nock(`https://secure.accessacs.com/api_accessacs_mobile/v2/${ACS_SITENUMBER}`));
+}
+
+function makeIndividualDetailsRequestMocks(responses) {
+  return Object.values(responses).reduce((scope, individual) => {
+    return scope.get(`/${individual.IndvId}`).reply(200, JSON.stringify(individual));
+  }, nock(`https://secure.accessacs.com/api_accessacs_mobile/v2/${ACS_SITENUMBER}/individuals`));
+}
     
 let eventPages = [
   require('./events-page-1.json'),
@@ -11,9 +41,11 @@ let eventPages = [
 ];
 
 let calendarResponse = require('./calendars.json'),
-    eventsSinglePage = require('./events-single-page.json');
+    eventsSinglePage = require('./events-single-page.json'),
+    individuals = require('../helpers/individuals.json'),
+    individualDetails = require('../helpers/individual-details.json');
 
-function switcheroo (json) {
+function switcheroo(json) {
   // Event
   if (json.Page) {
     json.Page[0].EventName = 'Weekend at Bernie’s';
@@ -24,7 +56,7 @@ function switcheroo (json) {
   return json;
 }
 
-function deleteOne (json) {
+function deleteOne(json) {
   // Event
   if (json.Page) {
     json.Page.shift();
@@ -84,6 +116,9 @@ module.exports = {
       "id": 987654321,
       "phone_number": '+18503246214'
     }));
+    
+    makeIndividualRequestMocks(individuals);
+    makeIndividualDetailsRequestMocks(individualDetails);
   },
   destroy: function() {
     nock.enableNetConnect();

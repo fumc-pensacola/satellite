@@ -1,6 +1,6 @@
 "use strict";
 
-try { require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') }); } catch (e) {} // eslint-disable-line
+try { require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env.test') }); } catch (e) {} // eslint-disable-line
 
 let assert = require('assert'),
     request = require('supertest'),
