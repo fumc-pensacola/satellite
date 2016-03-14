@@ -4,11 +4,14 @@ let mongoose = require('mongoose'),
     timestamps = require('mongoose-timestamp'),
     request = require('request'),
     Stream = require('highland'),
+    hash = require('object-hash'),
     tryFormatPhone = require('../utils/try-format-phone'),
+    toString = require('lodash/toString'),
     sequence = require('../utils/sequence'),
     unary = require('lodash/unary'),
     flatten = require('lodash/flatten'),
     compose = require('lodash/flowRight'),
+    identity = require('lodash/identity'),
     get = require('lodash/fp').get,
     uniqBy = require('lodash/fp').uniqBy,
     not = require('lodash/fp').negate,
@@ -25,7 +28,7 @@ const ACS_USERNAME = process.env.ACS_USERNAME,
 
 let schema = new mongoose.Schema({
   acsId: { type: Number, required: true },
-  members: { type: [mongoose.Schema.Types.ObjectId], ref: 'Member' },
+  members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Member' }],
   photo: String,
   addresses: [{
     label: String,
@@ -37,7 +40,8 @@ let schema = new mongoose.Schema({
     state: String,
     zip: String
   }],
-  isDeleted: { type: Boolean, required: true, default: false }
+  isDeleted: { type: Boolean, required: true, default: false },
+  hash: { type: String, required: true }
 });
 
 schema.plugin(timestamps);
@@ -145,9 +149,14 @@ function getIndividualDetails(individual) {
   );
 }
 
+function isNotUnlisted(individual) {
+  let records = individual.Phones.concat(individual.Emails);
+  return !(records.length && records.every(x => x.Listed === false));
+}
+
 const listedNotDeleted = x => x.Listed && !x.Delete;
 function toMember(individual) {
-  return {
+  let member = {
     acsId: individual.IndvId,
     acsFamilyId: individual.PrimFamily,
     firstName: individual.FirstName,
@@ -166,6 +175,8 @@ function toMember(individual) {
     })),
     isDeleted: false
   };
+  member.hash = hash.sha1(member);
+  return member;
 }
 
 function toFamily(member) {
@@ -192,18 +203,37 @@ const withAddresses = addresses => family => Object.assign({}, family, {
   }))
 });
 
+const withHash = family => Object.assign({}, family, {
+  hash: hash(family, {
+    algorithm: 'sha1',
+    replacer: x => {
+      if (x instanceof mongoose.Types.ObjectId) {
+        return x.toString();
+      }
+      return x;
+    }
+  })
+});
+
 function upsertMember(member) {
   console.log(`Saving ${member.firstName} ${member.lastName}...`);
   let query = { acsId: member.acsId };
   let options = { upsert: true, new: true };
-  return Member.findOneAndUpdate(query, member, options).exec();
+  return Member.findOne(query).exec().then(m => {
+    if (m && m.hash === member.hash) return m;
+    return Member.findOneAndUpdate(query, member, options).exec();
+  });
 }
 
 function upsertFamily(family) {
   console.log(`Saving family with ${family.members.length} members...`);
-  return Family.update({ acsId: family.acsId }, family, { upsert: true }).exec().then(() => {
-    console.log(`Saved family ${family.acsId}.`);
-    return family;
+  let query = { acsId: family.acsId };
+  return Family.findOne(query).exec().then(f => {
+    if (f && f.hash === family.hash) return family;
+    return Family.update(query, family, { upsert: true }).exec().then(() => {
+      console.log(`Saved family ${family.acsId}.`);
+      return family;
+    });
   });
 }
 
@@ -239,6 +269,7 @@ schema.statics.scrape = () => {
       
       let addresses = {};
       detailedIndividuals
+        .filter(isNotUnlisted)
         .tap(i => addresses[i.PrimFamily] = i.Addresses)
         .map(toMember)
         .map(upsertMember)
@@ -249,10 +280,12 @@ schema.statics.scrape = () => {
           let getId = get('acsId');
           let getIdOfArgs = overArgs([getId, getId]);
           Stream(members)
+            .filter(identity)
             .map(toFamily)
             .uniqBy(getIdOfArgs(eq))
             .map(withMembers(members))
             .map(withAddresses(addresses))
+            .map(withHash)
             .map(upsertFamily)
             .map(Stream).merge()
             .errors(logErrorStack)

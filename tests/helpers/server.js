@@ -3,6 +3,7 @@
 let nock = require('nock');
 let sequence = require('../../utils/sequence');
 let unary = require('lodash/unary');
+let omit = require('lodash/omit');
 
 const LETTERS = sequence(97, 122).map(unary(String.fromCharCode));
 const ACS_SITENUMBER = process.env.ACS_SITENUMBER;
@@ -118,6 +119,28 @@ module.exports = {
     }));
     
     makeIndividualRequestMocks(individuals);
+    makeIndividualDetailsRequestMocks(individualDetails);
+    
+    makeIndividualRequestMocks(individuals);
+    makeIndividualDetailsRequestMocks(Object.assign({}, individualDetails, {
+      "70": Object.assign({}, individualDetails['70'], {
+        "Phones": [{
+          "PhoneId": 6492,
+          "Preferred": false,
+          "PhoneTypeId": 7,
+          "PhoneType": "Cell Phone",
+          "FamilyPhone": false,
+          "PhoneNumber": "123-4567",
+          "Extension": null,
+          "Listed": true,
+          "AddrPhone": false,
+          "PhoneRef": 1234567,
+          "Delete": false
+        }]
+      })
+    }));
+    
+    makeIndividualRequestMocks(omit(individuals, 'z'));
     makeIndividualDetailsRequestMocks(individualDetails);
   },
   destroy: function() {

@@ -11,7 +11,7 @@ let schema = new mongoose.Schema({
   title: { type: String },
   suffix: { type: String },
   goesBy: { type: String },
-  isChild: { type: Boolean, required: true },
+  isChild: { type: Boolean, required: true, default: false },
   photo: { type: String },
   emails: [{
     label: String,
@@ -21,7 +21,8 @@ let schema = new mongoose.Schema({
     label: String,
     value: String
   }],
-  isDeleted: { type: Boolean, required: true, default: false }
+  isDeleted: { type: Boolean, required: true, default: false },
+  hash: { type: String, required: true }
 });
 
 schema.plugin(timestamps);

@@ -18,7 +18,8 @@ module.exports = {
     "firstName": "Andrew",
     "acsFamilyId": 8982,
     "isDeleted": false,
-    "lastName": "Branch"
+    "lastName": "Branch",
+    "hash": "f1234123412341234"
   }],
   "Bulletin": [{
     "date": new Date("2015-04-19T07:00:00.000Z"),
