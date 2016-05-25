@@ -12,7 +12,7 @@ let request = require('request'),
     scopes = require('../utils/scopes'),
     noop = require('lodash/noop');
 
-const log = process.env.NODE_ENV !== 'test' ? log : noop;    
+const log = process.env.NODE_ENV !== 'test' ? console.log : noop;    
 const AMAZON_CLIENT_ID = process.env.AMAZON_CLIENT_ID;
 
 function getDigitsUser(url, token) {

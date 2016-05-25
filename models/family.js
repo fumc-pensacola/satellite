@@ -26,7 +26,7 @@ const ACS_USERNAME = process.env.ACS_USERNAME,
       BASE = `https://secure.accessacs.com/api_accessacs_mobile/v2/${ACS_SITENUMBER}`,
       LETTERS = sequence(97, 122).map(unary(String.fromCharCode));
 
-const log = process.env.NODE_ENV !== 'test' ? log : noop;
+const log = process.env.NODE_ENV !== 'test' ? console.log : noop;
 
 let schema = new mongoose.Schema({
   acsId: { type: Number, required: true },

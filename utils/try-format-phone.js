@@ -1,7 +1,7 @@
 "use strict";
 
 const noop = require('lodash/noop');
-const log = process.env.NODE_ENV !== 'test' ? log : noop;
+const log = process.env.NODE_ENV !== 'test' ? console.log : noop;
 
 module.exports = function tryFormatPhone(phone) {
   let sanitized = String(phone).replace(/[^\d]/g, '');
