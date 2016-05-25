@@ -10,25 +10,25 @@ let assert = require('assert'),
 
 describe('Family', function() {
   this.timeout(5000);
-  
+
   describe('scrape', () => {
-    
+
     beforeEach(() => {
       server.create();
     });
-    
+
     before(done => {
       db.connect().then(() => {
         db.clear();
         done();
       }).catch(done);
     });
-    
+
     after(done => {
       server.destroy();
       db.disconnect().then(done);
     });
-    
+
     let preUpdateMary, preUpdateAndrew;
     it('gets all pages of all letters and saves them as Members within Families', done => {
       Family.scrape().then(() => {
@@ -42,7 +42,7 @@ describe('Family', function() {
         });
       }).catch(done);
     });
-    
+
     it('excludes members whose emails and phones are all marked unlisted', done => {
       Member.count({ firstName: 'Unlisted' }, (err, count) => {
         if (err) return done(err);
@@ -50,7 +50,7 @@ describe('Family', function() {
         done();
       });
     });
-    
+
     it('updates a member', done => {
       Family.scrape().then(() => {
         Member.findOne({ acsId: 70 }, (err, postUpdateAndrew) => {
@@ -63,20 +63,29 @@ describe('Family', function() {
         });
       });
     });
-    
+
+    let deletedMemberId;
     it('soft-deletes a removed or newly unlisted member', done => {
       Family.scrape().then(() => {
         Member.find({ isDeleted: true }, (err, members) => {
           if (err) return done(err);
           assert.equal(members.length, 1);
           assert.equal(members[0].lastName, 'Zanzibar');
+          deletedMemberId = members[0]._id;
           done();
         });
       });
     });
-    
-    it.skip('soft-deletes families with no non-deleted members');
-    
+
+    it('soft-deletes families with no listed members', done => {
+      Family.find({ isDeleted: true }, (err, families) => {
+        if (err) return done(err);
+        assert.equal(families.length, 1);
+        assert.equal(families[0].members[0].toString(), deletedMemberId);
+        done();
+      });
+    });
+
     it('does not update updatedAt if there were no changes to a member', done => {
       Member.findOne({ lastName: 'Algore' }, (err, postUpdateMary) => {
         if (err) return done(err);

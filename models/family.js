@@ -18,7 +18,7 @@ let mongoose = require('mongoose'),
     eq = require('lodash/fp').eq,
     overArgs = require('lodash/fp').overArgs,
     Member = require('./member');
-      
+
 const ACS_USERNAME = process.env.ACS_USERNAME,
       ACS_PASSWORD = process.env.ACS_PASSWORD,
       ACS_SITENUMBER = process.env.ACS_SITENUMBER,
@@ -67,7 +67,7 @@ function fetch(url, query) {
       if (error) {
         return reject(error);
       }
-      
+
       resolve({ url, query, body });
     });
   });
@@ -107,7 +107,7 @@ function extractData(bodies) {
 
 function gatherIndividuals() {
   return new Promise((resolve, reject) => {
-    Stream(LETTERS).ratelimit(1, RATELIMIT).map(q => 
+    Stream(LETTERS).ratelimit(1, RATELIMIT).map(q =>
       fetch(`${BASE}/individuals`, { pageSize: 500, q })
         .then(verifyFamilyResponse)
         .then(aggregatePages)
@@ -134,11 +134,11 @@ function verifyIndividualResponse(response) {
     && body.IndvId
     && body.FirstName
     && body.LastName; // that seems like enough
-  
+
   if (!valid) {
     throw new Error('ACS API individual details response was not as expected.', body);
   }
-  
+
   return response;
 }
 
@@ -239,34 +239,42 @@ function upsertFamily(family) {
 
 function removeEmptyFamilies() {
   return Family.find({
-    isDeleted: false,
-    members: { $size: 0 }
-  }).update({
-    isDeleted: true
-  }).exec();
+    isDeleted: false
+  }).populate({
+    path: 'members',
+    match: { isDeleted: false }
+  }).exec().then(families => {
+    return Promise.all(families
+      .filter(f => !f.members.length)
+      .map(f => {
+        f.isDeleted = true;
+        return f.save();
+      })
+    )
+  });
 }
 
 schema.statics.scrape = () => {
   let startTime = Date.now();
   console.log('Starting individuals scrape...');
   let logErrorStack = compose(console.error, get('stack'));
-  
+
   return gatherIndividuals().then(_individuals => {
     return new Promise((resolve, reject) => {
       console.log('Finished getting individuals overview.');
       console.log('Getting detailed information about each individual...');
       let individuals = Stream(_individuals);
       let rateLimited = individuals.ratelimit(1, RATELIMIT);
-      
+
       purgeMembers(_individuals)
         .then(() => console.log('Finished removing any extraneous members.'))
         .catch(logErrorStack)
-      
+
       let detailedIndividuals = rateLimited
         .map(getIndividualDetails)
         .map(Stream).merge()
         .map(get('body'));
-      
+
       let addresses = {};
       detailedIndividuals
         .filter(isNotUnlisted)
