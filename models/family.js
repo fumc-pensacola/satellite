@@ -6,12 +6,12 @@ let mongoose = require('mongoose'),
     Stream = require('highland'),
     hash = require('object-hash'),
     tryFormatPhone = require('../utils/try-format-phone'),
-    toString = require('lodash/toString'),
     sequence = require('../utils/sequence'),
     unary = require('lodash/unary'),
     flatten = require('lodash/flatten'),
     compose = require('lodash/flowRight'),
     identity = require('lodash/identity'),
+    noop = require('lodash/noop'),
     get = require('lodash/fp').get,
     uniqBy = require('lodash/fp').uniqBy,
     not = require('lodash/fp').negate,
@@ -25,6 +25,8 @@ const ACS_USERNAME = process.env.ACS_USERNAME,
       RATELIMIT = process.env.MEMBER_REQUEST_RATELIMIT,
       BASE = `https://secure.accessacs.com/api_accessacs_mobile/v2/${ACS_SITENUMBER}`,
       LETTERS = sequence(97, 122).map(unary(String.fromCharCode));
+
+const log = process.env.NODE_ENV !== 'test' ? log : noop;
 
 let schema = new mongoose.Schema({
   acsId: { type: Number, required: true },
@@ -117,7 +119,7 @@ function gatherIndividuals() {
 }
 
 function purgeMembers(individuals) {
-  console.log('Removing any members not in the list...');
+  log('Removing any members not in the list...');
   return Member.find({
     isDeleted: false,
     acsId: { $nin: individuals.map(get('IndvId')) }
@@ -143,7 +145,7 @@ function verifyIndividualResponse(response) {
 }
 
 function getIndividualDetails(individual) {
-  console.log(`Getting details for ${individual.FirstName} ${individual.LastName}...`)
+  log(`Getting details for ${individual.FirstName} ${individual.LastName}...`)
   return fetch(`${BASE}/individuals/${individual.IndvId}`).then(
     verifyIndividualResponse
   );
@@ -216,7 +218,7 @@ const withHash = family => Object.assign({}, family, {
 });
 
 function upsertMember(member) {
-  console.log(`Saving ${member.firstName} ${member.lastName}...`);
+  log(`Saving ${member.firstName} ${member.lastName}...`);
   let query = { acsId: member.acsId };
   let options = { upsert: true, new: true };
   return Member.findOne(query).exec().then(m => {
@@ -226,12 +228,12 @@ function upsertMember(member) {
 }
 
 function upsertFamily(family) {
-  console.log(`Saving family with ${family.members.length} members...`);
+  log(`Saving family with ${family.members.length} members...`);
   let query = { acsId: family.acsId };
   return Family.findOne(query).exec().then(f => {
     if (f && f.hash === family.hash) return family;
     return Family.update(query, family, { upsert: true }).exec().then(() => {
-      console.log(`Saved family ${family.acsId}.`);
+      log(`Saved family ${family.acsId}.`);
       return family;
     });
   });
@@ -256,18 +258,18 @@ function removeEmptyFamilies() {
 
 schema.statics.scrape = () => {
   let startTime = Date.now();
-  console.log('Starting individuals scrape...');
+  log('Starting individuals scrape...');
   let logErrorStack = compose(console.error, get('stack'));
 
   return gatherIndividuals().then(_individuals => {
     return new Promise((resolve, reject) => {
-      console.log('Finished getting individuals overview.');
-      console.log('Getting detailed information about each individual...');
+      log('Finished getting individuals overview.');
+      log('Getting detailed information about each individual...');
       let individuals = Stream(_individuals);
       let rateLimited = individuals.ratelimit(1, RATELIMIT);
 
       purgeMembers(_individuals)
-        .then(() => console.log('Finished removing any extraneous members.'))
+        .then(() => log('Finished removing any extraneous members.'))
         .catch(logErrorStack)
 
       let detailedIndividuals = rateLimited
@@ -284,7 +286,7 @@ schema.statics.scrape = () => {
         .map(Stream).merge()
         .errors(logErrorStack)
         .toArray(members => {
-          console.log('Finished saving members.');
+          log('Finished saving members.');
           let getId = get('acsId');
           let getIdOfArgs = overArgs([getId, getId]);
           Stream(members)
@@ -299,7 +301,7 @@ schema.statics.scrape = () => {
             .errors(logErrorStack)
             .done(() => {
               removeEmptyFamilies()
-                .then(() => console.log(`Finished scraping directory info after ${Math.round((Date.now() - startTime) / 1000 / 60)} minutes.`))
+                .then(() => log(`Finished scraping directory info after ${Math.round((Date.now() - startTime) / 1000 / 60)} minutes.`))
                 .then(resolve)
                 .catch(logErrorStack);
             });

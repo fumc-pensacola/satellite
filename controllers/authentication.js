@@ -9,8 +9,10 @@ let request = require('request'),
     Member = require('../models/member'),
     AccessToken = require('../models/identity/access-token'),
     User = require('../models/identity/user'),
-    scopes = require('../utils/scopes');
-    
+    scopes = require('../utils/scopes'),
+    noop = require('lodash/noop');
+
+const log = process.env.NODE_ENV !== 'test' ? log : noop;    
 const AMAZON_CLIENT_ID = process.env.AMAZON_CLIENT_ID;
 
 function getDigitsUser(url, token) {
@@ -51,7 +53,7 @@ function createTokenForUser(user) {
       issuedAt: Date.now(),
       expiresAt: Date.now() + 90 * 24 * 60 * 60 * 1000
     });
-    
+
     user.currentToken = token;
     return token;
   });
@@ -98,7 +100,7 @@ module.exports = function(router) {
         return;
       }
 
-      console.log(data.user_id);
+      log(data.user_id);
 
       if (!~users.indexOf(data.user_id)) {
         res.status(401).send('User not whitelisted');
@@ -122,21 +124,21 @@ module.exports = function(router) {
 
     });
   });
-  
+
   router.post('/authenticate/digits', (req, res) => {
     let endpoint = req.headers['x-auth-service-provider'],
         credentials = req.headers['x-verify-credentials-authorization'],
         consumerKey = req.headers['oauth_consumer_key'];
 
     if (url.parse(endpoint).host !== 'api.digits.com') {
-      console.log(`Potential malicious login attempt: X-Auth-Service-Provider was ${endpoint}.`);
+      log(`Potential malicious login attempt: X-Auth-Service-Provider was ${endpoint}.`);
       return res.status(400).end();
     }
     if (consumerKey !== process.env.DIGITS_CONSUMER_KEY) {
-      console.log(`Potential malicious login attempt: oauth_consumer_key was ${consumerKey}.`);
+      log(`Potential malicious login attempt: oauth_consumer_key was ${consumerKey}.`);
       return res.status(400).end();
     }
-    
+
     getDigitsUser(endpoint, credentials)
       .then(findOrCreateUser)
       .then(user => {

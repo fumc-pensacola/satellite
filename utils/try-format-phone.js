@@ -1,10 +1,13 @@
 "use strict";
 
+const noop = require('lodash/noop');
+const log = process.env.NODE_ENV !== 'test' ? log : noop;
+
 module.exports = function tryFormatPhone(phone) {
   let sanitized = String(phone).replace(/[^\d]/g, '');
   if (sanitized.length === 7) {
     let formatted = `+1850${sanitized}`;
-    console.log(`Assuming area code: saving “${phone}” as “${formatted}”`);
+    log(`Assuming area code: saving “${phone}” as “${formatted}”`);
     return formatted;
   }
   if (sanitized.length === 10) {
@@ -16,7 +19,7 @@ module.exports = function tryFormatPhone(phone) {
   if (!sanitized) {
     return null;
   }
-  
-  console.log(`Could not interpret phone number “${phone}”`);
+
+  log(`Could not interpret phone number “${phone}”`);
   return phone;
 }
