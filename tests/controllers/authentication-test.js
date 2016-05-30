@@ -8,8 +8,9 @@ let assert = require('assert'),
     startApp = require('../../index'),
     db = require('../helpers/db'),
     scopes = require('../../utils/scopes'),
+    AccessToken = require('../../models/identity/access-token'),
     appServer;
-    
+
 describe('Authentication', () => {
   before(done => {
     startApp().then(resolutions => {
@@ -20,26 +21,26 @@ describe('Authentication', () => {
       return db.seed();
     }, done).then(() => done()).catch(done);
   });
-  
+
   after(done => {
     server.destroy();
     appServer.close();
     db.disconnect().then(done);
   });
-  
+
   it('returns 401 when requesting protected routes without a token', done => {
     request(appServer)
       .get('/v3/directory/families')
       .expect(401, done);
   });
-  
+
   it('prevents tampering with X-Auth-Service-Provider', done => {
     request(appServer)
       .post('/v3/authenticate/digits')
       .set('X-Auth-Service-Provider', 'https://malicious.url')
       .expect(400, done);
   });
-  
+
   it('prevents tampering with oauth_consumer_key', done => {
     request(appServer)
       .post('/v3/authenticate/digits')
@@ -47,7 +48,7 @@ describe('Authentication', () => {
       .set('oauth_consumer_key', 'SomeoneElsesAppsConsumerKey')
       .expect(400, done);
   });
-  
+
   it('grants a JWT with restricted scopes after a non-member Digits login', done => {
     request(appServer)
       .post('/v3/authenticate/digits')
@@ -55,13 +56,14 @@ describe('Authentication', () => {
       .set('X-Verify-Credentials-Authorization', 'OAuthCredentialsFromNonMemberLogin')
       .set('oauth_consumer_key', process.env.DIGITS_CONSUMER_KEY)
       .expect(200, (err, res) => {
-        if (err) throw err;
+        if (err) return done(err);
         assert.ok(/[-\w]+\.[-\w]+\.[-\w]/i.test(res.body.access_token));
         assert.deepEqual(res.body.scopes, []);
         done();
       });
   });
-  
+
+  let tokenId;
   it('grants a JWT with directory scopes after a member Digits login', done => {
     request(appServer)
       .post('/v3/authenticate/digits')
@@ -69,11 +71,39 @@ describe('Authentication', () => {
       .set('X-Verify-Credentials-Authorization', 'OAuthCredentialsFrom8503246214Login')
       .set('oauth_consumer_key', process.env.DIGITS_CONSUMER_KEY)
       .expect(200, (err, res) => {
-        if (err) throw err;
+        if (err) return done(err);
+        assert.ok(res.body.id);
+        tokenId = res.body.id;
         assert.ok(/[-\w]+\.[-\w]+\.[-\w]/i.test(res.body.access_token));
         assert.deepEqual(res.body.scopes, [scopes.directory.fullReadAccess]);
+        assert.ok(res.body.needsVerification);
         done();
       });
   });
-  
+
+  it('creates a User and associates the Member by phone number', done => {
+    AccessToken.findById(tokenId).exec().then(token => (
+      token.populate('user').execPopulate()
+    )).then(token => (
+      token.user.populate('member').execPopulate()
+    )).then(user => {
+      assert.ok(user.member);
+      assert.ok(user.member.phones.find(p => p.value === user.phone));
+      done();
+    }).catch(done);
+  });
+
+  it('uses the associated Member when a known User logs in', done => {
+    request(appServer)
+      .post('/v3/authenticate/digits')
+      .set('X-Auth-Service-Provider', 'https://api.digits.com/validate_credentials.json')
+      .set('X-Verify-Credentials-Authorization', 'OAuthCredentialsFrom8503246214Login')
+      .set('oauth_consumer_key', process.env.DIGITS_CONSUMER_KEY)
+      .expect(200, (err, res) => {
+        if (err) return done(err);
+        assert.ok(!res.body.needsVerification);
+        done();
+      });
+  });
+
 });

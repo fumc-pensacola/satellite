@@ -12,7 +12,8 @@ let request = require('request'),
     scopes = require('../utils/scopes'),
     noop = require('lodash/noop');
 
-const log = process.env.NODE_ENV !== 'test' ? console.log : noop;    
+const log = process.env.NODE_ENV !== 'test' ? console.log : noop;
+const warn = process.env.NODE_ENV !== 'test' ? console.warn : noop;
 const AMAZON_CLIENT_ID = process.env.AMAZON_CLIENT_ID;
 
 function getDigitsUser(url, token) {
@@ -39,8 +40,34 @@ function findOrCreateUser(digitsUser) {
 }
 
 function getScopesForUser(user) {
+  if (user.member) {
+    return user.populate('member').execPopulate().then(() => {
+      if (user.member) {
+        if (!user.member.phones || !user.member.phones.some(p => p.value === user.phone)) {
+          warn(`User ${user._id} phone out of sync with member ${user.member._id}`);
+        }
+
+        return [scopes.directory.fullReadAccess];
+      }
+
+      return [];
+    }, err => {
+      log(`User ${user._id} may be associated with nonexistent member (${user.member}).`);
+      throw err;
+    });
+  }
+
   return Member.findOne({ 'phones.value': user.phone }).exec().then(member => {
-    if (member) return [scopes.directory.fullReadAccess];
+    if (member) {
+      user.member = member;
+      return user.save().then(() => [
+        scopes.directory.fullReadAccess
+      ], err => {
+        console.error(err.stack)
+        return [scopes.directory.fullReadAccess];
+      });
+    }
+
     return [];
   });
 }
@@ -142,14 +169,17 @@ module.exports = function(router) {
     getDigitsUser(endpoint, credentials)
       .then(findOrCreateUser)
       .then(user => {
+        const needsVerification = !user.member;
         return createTokenForUser(user).then(token => {
           return saveUserAndToken(user, token)
             .then(() => createSignedTokenString(token))
             .then(signedToken => {
               res.json({
+                id: token.id,
                 access_token: signedToken, // eslint-disable-line
                 scopes: token.scopes,
-                expires: moment(token.expiresAt).utc().format()
+                expires: moment(token.expiresAt).utc().format(),
+                needsVerification
               });
             });
         });

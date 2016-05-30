@@ -10,9 +10,12 @@ let mongoose = require('mongoose'),
       Notification: require('../../models/notification'),
       Setting: require('../../models/setting'),
       Witness: require('../../models/witness'),
-      Member: require('../../models/member')
+      Member: require('../../models/member'),
+      User: require('../../models/identity/user'),
+      AccessToken: require('../../models/identity/access-token'),
+      AccessRequest: require('../../models/identity/access-request')
     };
-    
+
 const MONGO_TEST = process.env.MONGO_TEST;
 
 module.exports = {
