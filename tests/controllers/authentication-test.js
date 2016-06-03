@@ -89,6 +89,8 @@ describe('Authentication', () => {
     )).then(user => {
       assert.ok(user.member);
       assert.ok(user.member.phones.find(p => p.value === user.phone));
+      assert.equal(user.firstName, user.member.firstName);
+      assert.equal(user.lastName, user.member.lastName);
       done();
     }).catch(done);
   });
