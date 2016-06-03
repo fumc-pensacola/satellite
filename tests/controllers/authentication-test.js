@@ -95,6 +95,7 @@ describe('Authentication', () => {
     }).catch(done);
   });
 
+  let signedToken;
   it('uses the associated Member when a known User logs in', done => {
     request(appServer)
       .post('/v3/authenticate/digits')
@@ -103,9 +104,24 @@ describe('Authentication', () => {
       .set('oauth_consumer_key', process.env.DIGITS_CONSUMER_KEY)
       .expect(200, (err, res) => {
         if (err) return done(err);
+        signedToken = res.body.access_token;
+        tokenId = res.body.id;
         assert.ok(!res.body.needsVerification);
         done();
       });
   });
+
+  it('refreshes a token', done => {
+    request(appServer)
+      .post(`/v3/authenticate/digits/refresh/${tokenId}`)
+      .set('Authorization', `Bearer ${signedToken}`)
+      .expect(200, (err, res) => {
+        if (err) return done(err);
+        assert.ok(res.body.id);
+        assert.notEqual(tokenId, res.body.id);
+        assert.equal(res.body.user.firstName, 'Andrew');
+        done();
+      });
+  })
 
 });

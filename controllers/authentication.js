@@ -7,6 +7,7 @@ let request = require('request'),
     jwt = require('jsonwebtoken'),
     get = require('lodash/fp/get'),
     curry = require('lodash/curry'),
+    jwtMiddleware = require('../utils/jwt-middleware'),
     Authentication = require('../authentication'),
     Member = require('../models/member'),
     AccessToken = require('../models/identity/access-token'),
@@ -84,9 +85,9 @@ function createTokenForUser(user, member) {
   return token;
 }
 
-function saveUserAndToken(user, token) {
+const saveUserAndToken = curry((user, token) => {
   return Promise.all([user.save(), token.save()]);
-};
+});
 
 function createSignedTokenString(token) {
   return jwt.sign({
@@ -96,8 +97,25 @@ function createSignedTokenString(token) {
     scopes: token.scopes
   }, process.env.JWT_SECRET, {
     expiresIn: '90 days',
-    jwtid: token.id
+    jwtid: token.id // this becomes req.token.jti
   });
+}
+
+const createTokenResponse = (user, token, needsVerification) => {
+  needsVerification = needsVerification || false;
+  const signedToken = createSignedTokenString(token);
+  return {
+    id: token.id,
+    access_token: signedToken, // eslint-disable-line
+    scopes: token.scopes,
+    expires: moment(token.expiresAt).utc().format(),
+    needsVerification,
+    user: {
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName
+    }
+  };
 }
 
 module.exports = function(router) {
@@ -156,11 +174,11 @@ module.exports = function(router) {
         consumerKey = req.headers['oauth_consumer_key'];
 
     if (url.parse(endpoint).host !== 'api.digits.com') {
-      log(`Potential malicious login attempt: X-Auth-Service-Provider was ${endpoint}.`);
+      warn(`Potential malicious login attempt: X-Auth-Service-Provider was ${endpoint}.`);
       return res.status(400).end();
     }
     if (consumerKey !== process.env.DIGITS_CONSUMER_KEY) {
-      log(`Potential malicious login attempt: oauth_consumer_key was ${consumerKey}.`);
+      warn(`Potential malicious login attempt: oauth_consumer_key was ${consumerKey}.`);
       return res.status(400).end();
     }
 
@@ -172,26 +190,45 @@ module.exports = function(router) {
           .then(syncUserAndMember(user))
           .then(createTokenForUser)
           .then(token => (
-            saveUserAndToken(user, token)
-              .then(() => createSignedTokenString(token))
-              .then(signedToken => {
-                res.json({
-                  id: token.id,
-                  access_token: signedToken, // eslint-disable-line
-                  scopes: token.scopes,
-                  expires: moment(token.expiresAt).utc().format(),
-                  needsVerification,
-                  user: {
-                    id: user._id,
-                    firstName: user.firstName,
-                    lastName: user.lastName
-                  }
-                });
-              })
-            ));
+            saveUserAndToken(user, token).then(() => {
+              res.json(createTokenResponse(user, token, needsVerification));
+            })
+          ));
       }).catch(err => {
         console.error(err.stack);
         res.status(500).end();
       });
+  });
+
+  router.post('/authenticate/digits/refresh/:tokenId', jwtMiddleware, (req, res) => {
+    if (req.token.jti !== req.params.tokenId) {
+      warn(`Token id to refresh (${req.params.tokenId}) didn’t match bearer token (${req.token.jti})`);
+      return res.status(401).end();
+    }
+
+    Promise.all([
+      User.findById(req.token.user).populate('member').exec(),
+      AccessToken.findById(req.params.tokenId).exec()
+    ]).then(resolutions => {
+      const user = resolutions[0];
+      const oldToken = resolutions[1];
+      if (!user.currentToken || user.currentToken.toString() !== oldToken.id) {
+        warn(`Tried to refresh a token (${req.params.tokenId}) that did not currently belong to user (${req.token.user})`);
+        return res.status(401).end();
+      }
+
+      const newToken = createTokenForUser(user, user.member);
+      syncUserAndMember(user, user.member);
+      oldToken.isRevoked = true;
+      return Promise.all([
+        saveUserAndToken(user, newToken),
+        oldToken.save()
+      ]).then(() => {
+        res.json(createTokenResponse(user, newToken));
+      });
+    }).catch(err => {
+      console.error(err.stack);
+      res.status(500).end();
+    })
   });
 };
