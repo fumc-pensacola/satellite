@@ -5,6 +5,8 @@ let request = require('request'),
     moment = require('moment'),
     bodyParser = require('body-parser'),
     jwt = require('jsonwebtoken'),
+    get = require('lodash/fp/get'),
+    curry = require('lodash/curry'),
     Authentication = require('../authentication'),
     Member = require('../models/member'),
     AccessToken = require('../models/identity/access-token'),
@@ -39,53 +41,47 @@ function findOrCreateUser(digitsUser) {
   });
 }
 
-function getScopesForUser(user) {
+function getMemberForUser(user) {
   if (user.member) {
-    return user.populate('member').execPopulate().then(() => {
-      if (user.member) {
-        if (!user.member.phones || !user.member.phones.some(p => p.value === user.phone)) {
-          warn(`User ${user._id} phone out of sync with member ${user.member._id}`);
-        }
-
-        return [scopes.directory.fullReadAccess];
-      }
-
-      return [];
-    }, err => {
-      log(`User ${user._id} may be associated with nonexistent member (${user.member}).`);
-      throw err;
-    });
+    return user.populate('member').execPopulate().then(get('member'));
   }
 
-  return Member.findOne({ 'phones.value': user.phone }).exec().then(member => {
-    if (member) {
-      user.member = member;
-      user.firstName = member.firstName;
-      user.lastName = member.firstName;
-      return user.save().then(() => [
-        scopes.directory.fullReadAccess
-      ], err => {
-        console.error(err.stack)
-        return [scopes.directory.fullReadAccess];
-      });
-    }
-
-    return [];
-  });
+  return Member.findOne({ 'phones.value': user.phone }).exec();
 }
 
-function createTokenForUser(user) {
-  return getScopesForUser(user).then(scopes => {
-    let token = new AccessToken({
-      scopes,
-      user,
-      issuedAt: Date.now(),
-      expiresAt: Date.now() + 90 * 24 * 60 * 60 * 1000
-    });
+const syncUserAndMember = curry((user, member) => {
+  if (member) {
+    user.member = member;
+    user.firstName = member.firstName;
+    user.lastName = member.lastName;
+  }
 
-    user.currentToken = token;
-    return token;
+  return user;
+});
+
+function getScopesForUser(user, member) {
+  if (user.member) {
+    if (!user.member.phones || !user.member.phones.some(p => p.value === user.phone)) {
+      warn(`User ${user._id} phone out of sync with member ${user.member._id}`);
+    }
+
+    return [scopes.directory.fullReadAccess];
+  }
+
+  return [];
+}
+
+function createTokenForUser(user, member) {
+  const scopes = getScopesForUser(user, member);
+  const token = new AccessToken({
+    scopes,
+    user,
+    issuedAt: Date.now(),
+    expiresAt: Date.now() + 90 * 24 * 60 * 60 * 1000
   });
+
+  user.currentToken = token;
+  return token;
 }
 
 function saveUserAndToken(user, token) {
@@ -172,24 +168,27 @@ module.exports = function(router) {
       .then(findOrCreateUser)
       .then(user => {
         const needsVerification = !user.member;
-        return createTokenForUser(user).then(token => {
-          return saveUserAndToken(user, token)
-            .then(() => createSignedTokenString(token))
-            .then(signedToken => {
-              res.json({
-                id: token.id,
-                access_token: signedToken, // eslint-disable-line
-                scopes: token.scopes,
-                expires: moment(token.expiresAt).utc().format(),
-                needsVerification,
-                user: {
-                  id: user._id,
-                  firstName: user.firstName,
-                  lastName: user.lastName
-                }
-              });
-            });
-        });
+        return getMemberForUser(user)
+          .then(syncUserAndMember(user))
+          .then(createTokenForUser)
+          .then(token => (
+            saveUserAndToken(user, token)
+              .then(() => createSignedTokenString(token))
+              .then(signedToken => {
+                res.json({
+                  id: token.id,
+                  access_token: signedToken, // eslint-disable-line
+                  scopes: token.scopes,
+                  expires: moment(token.expiresAt).utc().format(),
+                  needsVerification,
+                  user: {
+                    id: user._id,
+                    firstName: user.firstName,
+                    lastName: user.lastName
+                  }
+                });
+              })
+            ));
       }).catch(err => {
         console.error(err.stack);
         res.status(500).end();
