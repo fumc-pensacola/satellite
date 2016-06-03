@@ -60,6 +60,8 @@ function getScopesForUser(user) {
   return Member.findOne({ 'phones.value': user.phone }).exec().then(member => {
     if (member) {
       user.member = member;
+      user.firstName = member.firstName;
+      user.lastName = member.firstName;
       return user.save().then(() => [
         scopes.directory.fullReadAccess
       ], err => {
@@ -179,7 +181,12 @@ module.exports = function(router) {
                 access_token: signedToken, // eslint-disable-line
                 scopes: token.scopes,
                 expires: moment(token.expiresAt).utc().format(),
-                needsVerification
+                needsVerification,
+                user: {
+                  id: user._id,
+                  firstName: user.firstName,
+                  lastName: user.lastName
+                }
               });
             });
         });
