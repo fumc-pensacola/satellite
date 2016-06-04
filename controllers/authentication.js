@@ -12,7 +12,8 @@ let request = require('request'),
     Member = require('../models/member'),
     AccessToken = require('../models/identity/access-token'),
     User = require('../models/identity/user'),
-    scopes = require('../utils/scopes'),
+    grantScopes = require('../utils/grant-scopes'),
+    UnauthorizedError = require('../utils/unauthorized-error'),
     noop = require('lodash/noop');
 
 const log = process.env.NODE_ENV !== 'test' ? console.log : noop;
@@ -60,30 +61,30 @@ const syncUserAndMember = curry((user, member) => {
   return user;
 });
 
-function getScopesForUser(user, member) {
-  if (user.member) {
-    if (!user.member.phones || !user.member.phones.some(p => p.value === user.phone)) {
-      warn(`User ${user._id} phone out of sync with member ${user.member._id}`);
-    }
-
-    return [scopes.directory.fullReadAccess];
-  }
-
-  return [];
-}
-
-function createTokenForUser(user, member) {
-  const scopes = getScopesForUser(user, member);
-  const token = new AccessToken({
-    scopes,
-    user,
-    issuedAt: Date.now(),
-    expiresAt: Date.now() + 90 * 24 * 60 * 60 * 1000
+// This could be synchronous for now,
+// but making it work with Promises in anticipation of future scope granting functions.
+const getScopesForUser = curry((requestedScopes, user, member) => {
+  return Promise.all(requestedScopes.map(s => (
+    Promise.resolve(grantScopes[s](user, member))
+  ))).then(grants => {
+    if (!grants.every(Boolean)) throw new UnauthorizedError();
+    return requestedScopes;
   });
+});
 
-  user.currentToken = token;
-  return token;
-}
+const createTokenForUser = curry((requestedScopes, user, member) => {
+  return getScopesForUser(requestedScopes, user, member).then(scopes => {
+    const token = new AccessToken({
+      scopes,
+      user,
+      issuedAt: Date.now(),
+      expiresAt: Date.now() + 90 * 24 * 60 * 60 * 1000
+    });
+
+    user.currentToken = token;
+    return token;
+  });
+});
 
 const saveUserAndToken = curry((user, token) => {
   return Promise.all([user.save(), token.save()]);
@@ -117,8 +118,6 @@ const createTokenResponse = (user, token, needsVerification) => {
     }
   };
 }
-
-const tokenIdMatchesBearerTokenId = req => req.token.jti === req.token.jti;
 
 module.exports = function(router) {
 
@@ -173,7 +172,8 @@ module.exports = function(router) {
   router.post('/authenticate/digits', (req, res) => {
     let endpoint = req.headers['x-auth-service-provider'],
         credentials = req.headers['x-verify-credentials-authorization'],
-        consumerKey = req.headers['oauth_consumer_key'];
+        consumerKey = req.headers['oauth_consumer_key'],
+        requestedScopes = req.body.scopes || [];
 
     if (url.parse(endpoint).host !== 'api.digits.com') {
       warn(`Potential malicious login attempt: X-Auth-Service-Provider was ${endpoint}.`);
@@ -190,15 +190,19 @@ module.exports = function(router) {
         const needsVerification = !user.member;
         return getMemberForUser(user)
           .then(syncUserAndMember(user))
-          .then(createTokenForUser)
+          .then(() => createTokenForUser(requestedScopes, user, user.member))
           .then(token => (
             saveUserAndToken(user, token).then(() => {
               res.json(createTokenResponse(user, token, needsVerification));
             })
           ));
       }).catch(err => {
-        console.error(err.stack);
-        res.status(500).end();
+        if (err instanceof UnauthorizedError) {
+          res.status(403).end();
+        } else {
+          console.error(err.stack);
+          res.status(500).end();
+        }
       });
   });
 
@@ -214,19 +218,24 @@ module.exports = function(router) {
         return res.status(401).end();
       }
 
-      const newToken = createTokenForUser(user, user.member);
       syncUserAndMember(user, user.member);
       oldToken.isRevoked = true;
-      return Promise.all([
-        saveUserAndToken(user, newToken),
-        oldToken.save()
-      ]).then(() => {
-        res.json(createTokenResponse(user, newToken));
+      return createTokenForUser(req.body.scopes || [], user, user.member).then(newToken => (
+        Promise.all([
+          saveUserAndToken(user, newToken),
+          oldToken.save()
+        ]).then(() => {
+          res.json(createTokenResponse(user, newToken));
+        })
+      )).catch(err => {
+        if (err instanceof UnauthorizedError) {
+          res.status(403).end();
+        } else {
+          console.error(err.stack);
+          res.status(500).end();
+        }
       });
-    }).catch(err => {
-      console.error(err.stack);
-      res.status(500).end();
-    })
+    });
   });
 
   router.post('/authenticate/digits/revoke', jwtMiddleware, (req, res) => {
@@ -238,5 +247,9 @@ module.exports = function(router) {
       console.error(err.stack);
       res.status(500).end();
     })
+  });
+
+  router.post('/authenticate/digits/request', jwtMiddleware, (req, res) => {
+
   });
 };

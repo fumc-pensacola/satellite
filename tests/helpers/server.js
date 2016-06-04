@@ -112,6 +112,13 @@ module.exports = {
     }));
 
     nock('https://api.digits.com', {
+      reqheaders: { authorization: 'OAuthCredentialsFromNonMemberLogin' }
+    }).get('/validate_credentials.json').reply(200, JSON.stringify({
+      "id": 123456789,
+      "phone_number": '+18501234567'
+    }));
+
+    nock('https://api.digits.com', {
       reqheaders: { authorization: 'OAuthCredentialsFrom8503246214Login' }
     }).get('/validate_credentials.json').reply(200, JSON.stringify({
       "id": 987654321,

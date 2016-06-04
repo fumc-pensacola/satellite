@@ -50,9 +50,10 @@ describe('Authentication', () => {
   });
 
   let tokenWithoutScopes;
-  it('grants a JWT with restricted scopes after a non-member Digits login', done => {
+  it('grants a JWT with no scopes if no scopes are requested', done => {
     request(appServer)
       .post('/v3/authenticate/digits')
+      .send({ scopes: [] })
       .set('X-Auth-Service-Provider', 'https://api.digits.com/validate_credentials.json')
       .set('X-Verify-Credentials-Authorization', 'OAuthCredentialsFromNonMemberLogin')
       .set('oauth_consumer_key', process.env.DIGITS_CONSUMER_KEY)
@@ -63,6 +64,16 @@ describe('Authentication', () => {
         assert.deepEqual(res.body.scopes, []);
         done();
       });
+  });
+
+  it('returns 403 if scopes are requested that cannot be granted', done => {
+    request(appServer)
+      .post('/v3/authenticate/digits')
+      .send({ scopes: [scopes.directory.fullReadAccess] })
+      .set('X-Auth-Service-Provider', 'https://api.digits.com/validate_credentials.json')
+      .set('X-Verify-Credentials-Authorization', 'OAuthCredentialsFromNonMemberLogin')
+      .set('oauth_consumer_key', process.env.DIGITS_CONSUMER_KEY)
+      .expect(403, done);
   });
 
   it('returns 403 for an authenticated but unauthorized request', done => {
@@ -76,6 +87,7 @@ describe('Authentication', () => {
   it('grants a JWT with directory scopes after a member Digits login', done => {
     request(appServer)
       .post('/v3/authenticate/digits')
+      .send({ scopes: [scopes.directory.fullReadAccess] })
       .set('X-Auth-Service-Provider', 'https://api.digits.com/validate_credentials.json')
       .set('X-Verify-Credentials-Authorization', 'OAuthCredentialsFrom8503246214Login')
       .set('oauth_consumer_key', process.env.DIGITS_CONSUMER_KEY)
