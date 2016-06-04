@@ -118,6 +118,8 @@ const createTokenResponse = (user, token, needsVerification) => {
   };
 }
 
+const tokenIdMatchesBearerTokenId = req => req.token.jti === req.params.tokenId;
+
 module.exports = function(router) {
 
   router.post('/authenticate', bodyParser.urlencoded({ extended: false }), (req, res) => {
@@ -201,7 +203,7 @@ module.exports = function(router) {
   });
 
   router.post('/authenticate/digits/refresh/:tokenId', jwtMiddleware, (req, res) => {
-    if (req.token.jti !== req.params.tokenId) {
+    if (!tokenIdMatchesBearerTokenId(req)) {
       warn(`Token id to refresh (${req.params.tokenId}) didn’t match bearer token (${req.token.jti})`);
       return res.status(401).end();
     }
@@ -226,6 +228,22 @@ module.exports = function(router) {
       ]).then(() => {
         res.json(createTokenResponse(user, newToken));
       });
+    }).catch(err => {
+      console.error(err.stack);
+      res.status(500).end();
+    })
+  });
+
+  router.post('/authenticate/digits/revoke/:tokenId', jwtMiddleware, (req, res) => {
+    if (!tokenIdMatchesBearerTokenId(req)) {
+      warn(`Token id to revoke (${req.params.tokenId}) didn’t match bearer token (${req.token.jti})`);
+      return res.status(401).end();
+    }
+
+    AccessToken.findByIdAndUpdate(req.params.tokenId, {
+      isRevoked: true
+    }).exec().then(() => {
+      res.status(204).end();
     }).catch(err => {
       console.error(err.stack);
       res.status(500).end();

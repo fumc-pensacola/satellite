@@ -49,6 +49,7 @@ describe('Authentication', () => {
       .expect(400, done);
   });
 
+  let tokenWithoutScopes;
   it('grants a JWT with restricted scopes after a non-member Digits login', done => {
     request(appServer)
       .post('/v3/authenticate/digits')
@@ -57,13 +58,21 @@ describe('Authentication', () => {
       .set('oauth_consumer_key', process.env.DIGITS_CONSUMER_KEY)
       .expect(200, (err, res) => {
         if (err) return done(err);
+        tokenWithoutScopes = res.body.access_token;
         assert.ok(/[-\w]+\.[-\w]+\.[-\w]/i.test(res.body.access_token));
         assert.deepEqual(res.body.scopes, []);
         done();
       });
   });
 
-  let tokenId;
+  it('returns 403 for an authenticated but unauthorized request', done => {
+    request(appServer)
+      .get('/v3/directory/families')
+      .set('Authorization', `Bearer ${tokenWithoutScopes}`)
+      .expect(403, done);
+  })
+
+  let tokenId, tokenWithScopes;
   it('grants a JWT with directory scopes after a member Digits login', done => {
     request(appServer)
       .post('/v3/authenticate/digits')
@@ -74,9 +83,21 @@ describe('Authentication', () => {
         if (err) return done(err);
         assert.ok(res.body.id);
         tokenId = res.body.id;
+        tokenWithScopes = res.body.access_token;
         assert.ok(/[-\w]+\.[-\w]+\.[-\w]/i.test(res.body.access_token));
         assert.deepEqual(res.body.scopes, [scopes.directory.fullReadAccess]);
         assert.ok(res.body.needsVerification);
+        done();
+      });
+  });
+
+  it('successfully completes an authorized request for protected routes', done => {
+    request(appServer)
+      .get('/v3/directory/families')
+      .set('Authorization', `Bearer ${tokenWithScopes}`)
+      .expect(200, (err, res) => {
+        if (err) return done(err);
+        assert.ok(res.body.data instanceof Array);
         done();
       });
   });
@@ -111,17 +132,34 @@ describe('Authentication', () => {
       });
   });
 
+  let newToken, newTokenId;
   it('refreshes a token', done => {
     request(appServer)
       .post(`/v3/authenticate/digits/refresh/${tokenId}`)
       .set('Authorization', `Bearer ${signedToken}`)
       .expect(200, (err, res) => {
         if (err) return done(err);
+        newTokenId = res.body.id;
+        newToken = res.body.access_token;
         assert.ok(res.body.id);
         assert.notEqual(tokenId, res.body.id);
         assert.equal(res.body.user.firstName, 'Andrew');
         done();
       });
-  })
+  });
+
+  it('revokes a token', done => {
+    request(appServer)
+      .post(`/v3/authenticate/digits/revoke/${newTokenId}`)
+      .set('Authorization', `Bearer ${newToken}`)
+      .expect(204, done);
+  });
+
+  it('returns 401 for a request to a protected route with a revoked token', done => {
+    request(appServer)
+      .get(`/v3/directory/families`)
+      .set('Authorization', `Bearer ${newToken}`)
+      .expect(401, done);
+  });
 
 });
