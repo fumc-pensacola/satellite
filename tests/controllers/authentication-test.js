@@ -132,14 +132,13 @@ describe('Authentication', () => {
       });
   });
 
-  let newToken, newTokenId;
+  let newToken;
   it('refreshes a token', done => {
     request(appServer)
-      .post(`/v3/authenticate/digits/refresh/${tokenId}`)
+      .post(`/v3/authenticate/digits/refresh`)
       .set('Authorization', `Bearer ${signedToken}`)
       .expect(200, (err, res) => {
         if (err) return done(err);
-        newTokenId = res.body.id;
         newToken = res.body.access_token;
         assert.ok(res.body.id);
         assert.notEqual(tokenId, res.body.id);
@@ -150,7 +149,7 @@ describe('Authentication', () => {
 
   it('revokes a token', done => {
     request(appServer)
-      .post(`/v3/authenticate/digits/revoke/${newTokenId}`)
+      .post(`/v3/authenticate/digits/revoke`)
       .set('Authorization', `Bearer ${newToken}`)
       .expect(204, done);
   });

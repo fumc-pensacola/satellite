@@ -118,7 +118,7 @@ const createTokenResponse = (user, token, needsVerification) => {
   };
 }
 
-const tokenIdMatchesBearerTokenId = req => req.token.jti === req.params.tokenId;
+const tokenIdMatchesBearerTokenId = req => req.token.jti === req.token.jti;
 
 module.exports = function(router) {
 
@@ -202,20 +202,15 @@ module.exports = function(router) {
       });
   });
 
-  router.post('/authenticate/digits/refresh/:tokenId', jwtMiddleware, (req, res) => {
-    if (!tokenIdMatchesBearerTokenId(req)) {
-      warn(`Token id to refresh (${req.params.tokenId}) didn’t match bearer token (${req.token.jti})`);
-      return res.status(401).end();
-    }
-
+  router.post('/authenticate/digits/refresh', jwtMiddleware, (req, res) => {
     Promise.all([
       User.findById(req.token.user).populate('member').exec(),
-      AccessToken.findById(req.params.tokenId).exec()
+      AccessToken.findById(req.token.jti).exec()
     ]).then(resolutions => {
       const user = resolutions[0];
       const oldToken = resolutions[1];
       if (!user.currentToken || user.currentToken.toString() !== oldToken.id) {
-        warn(`Tried to refresh a token (${req.params.tokenId}) that did not currently belong to user (${req.token.user})`);
+        warn(`Tried to refresh a token (${req.token.jti}) that did not currently belong to user (${req.token.user})`);
         return res.status(401).end();
       }
 
@@ -234,13 +229,8 @@ module.exports = function(router) {
     })
   });
 
-  router.post('/authenticate/digits/revoke/:tokenId', jwtMiddleware, (req, res) => {
-    if (!tokenIdMatchesBearerTokenId(req)) {
-      warn(`Token id to revoke (${req.params.tokenId}) didn’t match bearer token (${req.token.jti})`);
-      return res.status(401).end();
-    }
-
-    AccessToken.findByIdAndUpdate(req.params.tokenId, {
+  router.post('/authenticate/digits/revoke', jwtMiddleware, (req, res) => {
+    AccessToken.findByIdAndUpdate(req.token.jti, {
       isRevoked: true
     }).exec().then(() => {
       res.status(204).end();
