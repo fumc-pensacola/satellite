@@ -9,6 +9,7 @@ let assert = require('assert'),
     db = require('../helpers/db'),
     scopes = require('../../utils/scopes'),
     AccessToken = require('../../models/identity/access-token'),
+    AccessRequest = require('../../models/identity/access-request'),
     appServer;
 
 describe('Authentication', () => {
@@ -171,6 +172,28 @@ describe('Authentication', () => {
       .get(`/v3/directory/families`)
       .set('Authorization', `Bearer ${newToken}`)
       .expect(401, done);
+  });
+
+  let accessRequestId;
+  it('creates an access request', done => {
+    request(appServer)
+      .post(`/v3/authenticate/digits/request`)
+      .send({ scopes: [scopes.directory.fullReadAccess] })
+      .set('X-Auth-Service-Provider', 'https://api.digits.com/validate_credentials.json')
+      .set('X-Verify-Credentials-Authorization', 'OAuthCredentialsFromNonMemberLogin')
+      .set('oauth_consumer_key', process.env.DIGITS_CONSUMER_KEY)
+      .expect(200, (err, res) => {
+        if (err) return done(err);
+        assert.ok(res.body.accessRequest.id);
+        accessRequestId = res.body.accessRequest.id;
+        assert.deepEqual(res.body.accessRequest.scopes, [scopes.directory.fullReadAccess]);
+        assert.equal(res.body.accessRequest.status, AccessRequest.ENUMS.STATUS.PENDING);
+        assert.ok(res.body.user.id);
+        assert.equal(res.body.user.phone, '+18501234567');
+        assert.equal(res.body.actions.update.url, `/authenticate/digits/request/${accessRequestId}`);
+        assert.equal(res.body.actions.cancel.url, `/authenticate/digits/request/${accessRequestId}`);
+        done();
+      });
   });
 
 });

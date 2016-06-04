@@ -6,26 +6,40 @@ let request = require('request'),
     bodyParser = require('body-parser'),
     jwt = require('jsonwebtoken'),
     get = require('lodash/fp/get'),
+    pick = require('lodash/pick'),
     curry = require('lodash/curry'),
     jwtMiddleware = require('../utils/jwt-middleware'),
     Authentication = require('../authentication'),
     Member = require('../models/member'),
     AccessToken = require('../models/identity/access-token'),
+    AccessRequest = require('../models/identity/access-request'),
     User = require('../models/identity/user'),
     grantScopes = require('../utils/grant-scopes'),
     UnauthorizedError = require('../utils/unauthorized-error'),
+    BadRequestError = require('../utils/bad-request-error'),
     noop = require('lodash/noop');
 
 const log = process.env.NODE_ENV !== 'test' ? console.log : noop;
 const warn = process.env.NODE_ENV !== 'test' ? console.warn : noop;
 const AMAZON_CLIENT_ID = process.env.AMAZON_CLIENT_ID;
 
-function getDigitsUser(url, token) {
+function getDigitsUser(req) {
   return new Promise((resolve, reject) => {
+    let endpoint = req.headers['x-auth-service-provider'],
+        credentials = req.headers['x-verify-credentials-authorization'],
+        consumerKey = req.headers['oauth_consumer_key'];
+
+    if (url.parse(endpoint).host !== 'api.digits.com') {
+      reject(new BadRequestError(`Potential malicious login attempt: X-Auth-Service-Provider was ${endpoint}.`));
+    }
+    if (consumerKey !== process.env.DIGITS_CONSUMER_KEY) {
+      reject(new BadRequestError(`Potential malicious login attempt: oauth_consumer_key was ${consumerKey}.`));
+    }
+
     request.get({
-      url,
+      url: endpoint,
       json: true,
-      headers: { 'Authorization': token }
+      headers: { 'Authorization': credentials }
     }, (err, response, body) => {
       if (err) return reject(err);
       resolve(body);
@@ -111,13 +125,21 @@ const createTokenResponse = (user, token, needsVerification) => {
     scopes: token.scopes,
     expires: moment(token.expiresAt).utc().format(),
     needsVerification,
-    user: {
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName
-    }
+    user: pick(user, ['id', 'firstName', 'lastName', 'phone'])
   };
 }
+
+const statusCodeErrorHandler = res => err => {
+  if (err instanceof UnauthorizedError) {
+    res.status(403).end();
+  } else if (err instanceof BadRequestError) {
+    warn(err.message);
+    res.status(400).end();
+  } else {
+    console.error(err.stack);
+    res.status(500).end();
+  }
+};
 
 module.exports = function(router) {
 
@@ -170,21 +192,8 @@ module.exports = function(router) {
   });
 
   router.post('/authenticate/digits', (req, res) => {
-    let endpoint = req.headers['x-auth-service-provider'],
-        credentials = req.headers['x-verify-credentials-authorization'],
-        consumerKey = req.headers['oauth_consumer_key'],
-        requestedScopes = req.body.scopes || [];
-
-    if (url.parse(endpoint).host !== 'api.digits.com') {
-      warn(`Potential malicious login attempt: X-Auth-Service-Provider was ${endpoint}.`);
-      return res.status(400).end();
-    }
-    if (consumerKey !== process.env.DIGITS_CONSUMER_KEY) {
-      warn(`Potential malicious login attempt: oauth_consumer_key was ${consumerKey}.`);
-      return res.status(400).end();
-    }
-
-    getDigitsUser(endpoint, credentials)
+    const requestedScopes = req.body.scopes || [];
+    getDigitsUser(req)
       .then(findOrCreateUser)
       .then(user => {
         const needsVerification = !user.member;
@@ -196,14 +205,7 @@ module.exports = function(router) {
               res.json(createTokenResponse(user, token, needsVerification));
             })
           ));
-      }).catch(err => {
-        if (err instanceof UnauthorizedError) {
-          res.status(403).end();
-        } else {
-          console.error(err.stack);
-          res.status(500).end();
-        }
-      });
+      }).catch(statusCodeErrorHandler(res));
   });
 
   router.post('/authenticate/digits/refresh', jwtMiddleware, (req, res) => {
@@ -227,14 +229,7 @@ module.exports = function(router) {
         ]).then(() => {
           res.json(createTokenResponse(user, newToken));
         })
-      )).catch(err => {
-        if (err instanceof UnauthorizedError) {
-          res.status(403).end();
-        } else {
-          console.error(err.stack);
-          res.status(500).end();
-        }
-      });
+      )).catch(statusCodeErrorHandler(res));
     });
   });
 
@@ -243,13 +238,31 @@ module.exports = function(router) {
       isRevoked: true
     }).exec().then(() => {
       res.status(204).end();
-    }).catch(err => {
-      console.error(err.stack);
-      res.status(500).end();
-    })
+    }).catch(statusCodeErrorHandler(res))
   });
 
-  router.post('/authenticate/digits/request', jwtMiddleware, (req, res) => {
-
+  router.post('/authenticate/digits/request', (req, res) => {
+    const scopes = req.body.scopes || [];
+    getDigitsUser(req)
+      .then(findOrCreateUser)
+      .then(user => {
+        const accessRequest = new AccessRequest({ scopes, user });
+        return Promise.all([accessRequest.save(), user.save()]).then(() => {
+          res.json({
+            accessRequest: pick(accessRequest, ['id', 'dateRequested', 'dateSettled', 'status', 'scopes']),
+            user: pick(user, ['id', 'firstName', 'lastName', 'phone']),
+            actions: {
+              update: {
+                method: 'PATCH',
+                url: `/authenticate/digits/request/${accessRequest.id}`
+              },
+              cancel: {
+                method: 'DELETE',
+                url: `/authenticate/digits/request/${accessRequest.id}`
+              }
+            }
+          });
+        });
+      }).catch(statusCodeErrorHandler(res));
   });
 };

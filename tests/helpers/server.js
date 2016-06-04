@@ -132,6 +132,13 @@ module.exports = {
       "phone_number": '+18503246214'
     }));
 
+    nock('https://api.digits.com', {
+      reqheaders: { authorization: 'OAuthCredentialsFromNonMemberLogin' }
+    }).get('/validate_credentials.json').reply(200, JSON.stringify({
+      "id": 123456789,
+      "phone_number": '+18501234567'
+    }));
+
     makeIndividualRequestMocks(individuals);
     makeIndividualDetailsRequestMocks(individualDetails);
 

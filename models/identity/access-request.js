@@ -18,11 +18,8 @@ let schema = new mongoose.Schema({
   dateSettled: Date,
   status: { type: String, enum: Object.values(ENUMS.STATUS), required: true, default: ENUMS.STATUS.PENDING },
   scopes: [{ type: String, enum: ENUMS.SCOPES }],
-  digitsId: String,
-  phone: String,
-  twitter: String,
-  facebook: String,
-  email: String
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }
 });
 
 module.exports = mongoose.models.AccessRequest || mongoose.model('AccessRequest', schema);
+module.exports.ENUMS = ENUMS;
