@@ -285,11 +285,17 @@ module.exports = function(router) {
 
   router.patch('/authenticate/digits/request/:id', (req, res) => {
     Promise.all([
-      AccessRequest.findById(req.params.id).populate('user').exec(),
+      getDigitsUser(req).then(findOrCreateUser),
+      AccessRequest.findById(req.params.id).exec(),
       req.body.facebookToken ? getFacebookUser(req.body.facebookToken) : null
     ]).then(resolutions => {
-      const accessRequest = resolutions[0];
-      const facebookUser = resolutions[1];
+      const user = resolutions[0];
+      const accessRequest = resolutions[1];
+      const facebookUser = resolutions[2];
+      if (accessRequest.user.toString() !== user.id) {
+        throw new BadRequestError(`Digits identified user ${user.id} trying to update AccessRequest belonging to user ${accessRequest.user.toString()}`);
+      }
+
       accessRequest.user.firstName = facebookUser.first_name;
       accessRequest.user.lastName = facebookUser.last_name;
       accessRequest.user.facebook = facebookUser.id;
