@@ -22,6 +22,21 @@ let request = require('request'),
 const log = process.env.NODE_ENV !== 'test' ? console.log : noop;
 const warn = process.env.NODE_ENV !== 'test' ? console.warn : noop;
 const AMAZON_CLIENT_ID = process.env.AMAZON_CLIENT_ID;
+const FACEBOOK_PROFILE_ENDPOINT = 'https://graph.facebook.com/me';
+
+function getFacebookUser(token) {
+  return new Promise((resolve, reject) => {
+    request.get({
+      url: FACEBOOK_PROFILE_ENDPOINT,
+      json: true,
+      qs: { 'access_token': token, fields: 'id,first_name,last_name' }
+    }, (err, response, body) => {
+      if (err) return reject(err);
+      if (!body.id) return reject(new Error('Facebook Graph response was not as expected:', body));
+      resolve(body);
+    });
+  });
+}
 
 function getDigitsUser(req) {
   return new Promise((resolve, reject) => {
@@ -128,6 +143,21 @@ const createTokenResponse = (user, token, needsVerification) => {
     user: pick(user, ['id', 'firstName', 'lastName', 'phone'])
   };
 }
+
+const createAccessRequestResponse = (accessRequest, user) => ({
+  accessRequest: pick(accessRequest, ['id', 'dateRequested', 'dateSettled', 'status', 'scopes']),
+  user: pick(user, ['id', 'firstName', 'lastName', 'phone']),
+  actions: {
+    update: {
+      method: 'PATCH',
+      url: `/authenticate/digits/request/${accessRequest.id}`
+    },
+    cancel: {
+      method: 'DELETE',
+      url: `/authenticate/digits/request/${accessRequest.id}`
+    }
+  }
+});
 
 const statusCodeErrorHandler = res => err => {
   if (err instanceof UnauthorizedError) {
@@ -248,21 +278,25 @@ module.exports = function(router) {
       .then(user => {
         const accessRequest = new AccessRequest({ scopes, user });
         return Promise.all([accessRequest.save(), user.save()]).then(() => {
-          res.json({
-            accessRequest: pick(accessRequest, ['id', 'dateRequested', 'dateSettled', 'status', 'scopes']),
-            user: pick(user, ['id', 'firstName', 'lastName', 'phone']),
-            actions: {
-              update: {
-                method: 'PATCH',
-                url: `/authenticate/digits/request/${accessRequest.id}`
-              },
-              cancel: {
-                method: 'DELETE',
-                url: `/authenticate/digits/request/${accessRequest.id}`
-              }
-            }
-          });
+          res.status(201).json(createAccessRequestResponse(accessRequest, user));
         });
       }).catch(statusCodeErrorHandler(res));
+  });
+
+  router.patch('/authenticate/digits/request/:id', (req, res) => {
+    Promise.all([
+      AccessRequest.findById(req.params.id).populate('user').exec(),
+      req.body.facebookToken ? getFacebookUser(req.body.facebookToken) : null
+    ]).then(resolutions => {
+      const accessRequest = resolutions[0];
+      const facebookUser = resolutions[1];
+      accessRequest.user.firstName = facebookUser.first_name;
+      accessRequest.user.lastName = facebookUser.last_name;
+      accessRequest.user.facebook = facebookUser.id;
+
+      return accessRequest.user.save().then(() => {
+        res.json(createAccessRequestResponse(accessRequest, accessRequest.user));
+      });
+    }).catch(statusCodeErrorHandler(res));
   });
 };
