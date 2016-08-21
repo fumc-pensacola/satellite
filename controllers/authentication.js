@@ -146,7 +146,7 @@ const createTokenResponse = (user, token, needsVerification) => {
 
 const createAccessRequestResponse = (accessRequest, user) => ({
   accessRequest: pick(accessRequest, ['id', 'dateRequested', 'dateSettled', 'status', 'scopes']),
-  user: pick(user, ['id', 'firstName', 'lastName', 'phone']),
+  user: pick(user, ['id', 'firstName', 'lastName', 'phone', 'facebook']),
   actions: {
     update: {
       method: 'PATCH',
