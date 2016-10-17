@@ -22,14 +22,14 @@ function startApp() {
   require('./static')(app);
   require('./api')(app);
 
-  if (process.env.NODE_ENV !== 'test') {
-    let calendarsSchedule = later.parse.text('every 30 minutes');
-    let directorySchedule = later.parse.recur().on(0).hour(); // Every night at midnight
-    later.setInterval(Worker.scrapeCalendars, calendarsSchedule);
-    later.setInterval(Worker.scrapeEvents, calendarsSchedule);
-    later.setInterval(Worker.scrapeVideos, calendarsSchedule);
-    later.setInterval(Worker.scrapeMembers, directorySchedule);
-  }
+  // if (process.env.NODE_ENV !== 'test') {
+  //   let calendarsSchedule = later.parse.text('every 30 minutes');
+  //   let directorySchedule = later.parse.recur().on(0).hour(); // Every night at midnight
+  //   later.setInterval(Worker.scrapeCalendars, calendarsSchedule);
+  //   later.setInterval(Worker.scrapeEvents, calendarsSchedule);
+  //   later.setInterval(Worker.scrapeVideos, calendarsSchedule);
+  //   later.setInterval(Worker.scrapeMembers, directorySchedule);
+  // }
 
   let serverReady = new Promise((resolve, reject) => {
     let server = app.listen(port, function() {
@@ -38,7 +38,7 @@ function startApp() {
       resolve(server);
     });
   });
-  
+
   return Promise.all([dbReady, serverReady]);
 }
 
