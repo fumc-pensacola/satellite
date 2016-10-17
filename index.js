@@ -19,11 +19,11 @@ function startApp() {
 
   if (process.env.NODE_ENV !== 'test') {
     let calendarsSchedule = later.parse.text('every 30 minutes');
-    later.setInterval(Worker.scrapeCalendars, calendarsSchedule);
-    later.setInterval(Worker.scrapeEvents, calendarsSchedule);
+    // later.setInterval(Worker.scrapeCalendars, calendarsSchedule);
+    // later.setInterval(Worker.scrapeEvents, calendarsSchedule);
     later.setInterval(Worker.scrapeVideos, calendarsSchedule);
-    Worker.scrapeCalendars();
-    Worker.scrapeEvents();
+    // Worker.scrapeCalendars();
+    // Worker.scrapeEvents();
     Worker.scrapeVideos();
   }
 
@@ -36,7 +36,7 @@ function startApp() {
       resolve(server);
     });
   });
-  
+
   return Promise.all([dbReady, serverReady]);
 }
 
