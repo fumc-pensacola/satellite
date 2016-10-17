@@ -182,7 +182,7 @@ describe('Authentication', () => {
       .set('X-Auth-Service-Provider', 'https://api.digits.com/validate_credentials.json')
       .set('X-Verify-Credentials-Authorization', 'OAuthCredentialsFromNonMemberLogin')
       .set('oauth_consumer_key', process.env.DIGITS_CONSUMER_KEY)
-      .expect(200, (err, res) => {
+      .expect(201, (err, res) => {
         if (err) return done(err);
         assert.ok(res.body.accessRequest.id);
         accessRequestId = res.body.accessRequest.id;
