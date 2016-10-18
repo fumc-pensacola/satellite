@@ -8,7 +8,7 @@
     "npm": "2.5.x"
   },
   "scripts": {
-    "start": "node --harmony_arrow_functions --harmony_classes index.js",
+    "start": "node index.js",
     "test": "NODE_ENV=test node_modules/.bin/mocha --harmony_arrow_functions --harmony_classes 'tests/**/*-test.js'"
   },
   "repository": {
