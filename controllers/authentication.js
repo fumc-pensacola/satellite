@@ -102,16 +102,22 @@ const getScopesForUser = curry((requestedScopes, user, member) => {
 });
 
 const createTokenForUser = curry((requestedScopes, user, member) => {
-  return getScopesForUser(requestedScopes, user, member).then(scopes => {
-    const token = new AccessToken({
-      scopes,
-      user,
-      issuedAt: Date.now(),
-      expiresAt: Date.now() + 90 * 24 * 60 * 60 * 1000
-    });
+  return user.populate('currentToken').execPopulate().then(() => {
+    if (user.currentToken && user.currentToken.isRevoked) {
+      throw new UnauthorizedError();
+    }
 
-    user.currentToken = token;
-    return token;
+    return getScopesForUser(requestedScopes, user, member).then(scopes => {
+      const token = new AccessToken({
+        scopes,
+        user,
+        issuedAt: Date.now(),
+        expiresAt: Date.now() + 90 * 24 * 60 * 60 * 1000
+      });
+
+      user.currentToken = token;
+      return token;
+    });
   });
 });
 
