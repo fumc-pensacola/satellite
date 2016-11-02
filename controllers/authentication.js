@@ -270,6 +270,7 @@ module.exports = function(router) {
   });
 
   router.post('/authenticate/digits/revoke', jwtMiddleware, (req, res) => {
+    // TODO alert someone about this
     AccessToken.findByIdAndUpdate(req.token.jti, {
       isRevoked: true
     }).exec().then(() => {
