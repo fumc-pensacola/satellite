@@ -17,6 +17,7 @@ let request = require('request'),
     grantScopes = require('../utils/grant-scopes'),
     UnauthorizedError = require('../utils/unauthorized-error'),
     BadRequestError = require('../utils/bad-request-error'),
+    gerty = require('../utils/gerty'),
     noop = require('lodash/noop');
 
 const log = process.env.NODE_ENV !== 'test' ? console.log : noop;
@@ -270,11 +271,16 @@ module.exports = function(router) {
   });
 
   router.post('/authenticate/digits/revoke', jwtMiddleware, (req, res) => {
-    // TODO alert someone about this
     AccessToken.findByIdAndUpdate(req.token.jti, {
       isRevoked: true
-    }).exec().then(() => {
+    }, { new: true }).exec().then(token => {
       res.status(204).end();
+      token.populate('user').execPopulate().then(() => {
+        const name = [token.user.firstName, token.user.lastName].join(' ').trim();
+        const user = name ? `${name} (${token.user.id})` : `User ${token.user.id}`;
+        const reason = req.body.reason || 'No reason was given.';
+        return gerty.alert('everyone', `${user} just had their access token (${token.id}) revoked. ${reason}`);
+      }, warn.bind(console)).catch(warn.bind(console));
     }).catch(statusCodeErrorHandler(res))
   });
 
